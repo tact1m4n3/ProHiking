@@ -5,34 +5,29 @@ import (
 	"net/http"
 )
 
-type StatusCode int
-
-func (s StatusCode) String() string {
-	switch s {
-	case http.StatusBadRequest:
-		return "bad request"
-	case http.StatusInternalServerError:
-		return "internal"
-	case http.StatusNotFound:
-		return "not found"
-	case http.StatusUnauthorized:
-		return "unauthorized"
-	default:
-		return "unknown"
-	}
-}
-
 type O map[string]interface{}
 
-func JSON(w http.ResponseWriter, code StatusCode, data interface{}) {
+var errorCodeToString = map[int]string{
+	http.StatusBadRequest:          "bad request",
+	http.StatusInternalServerError: "internal",
+	http.StatusNotFound:            "not found",
+	http.StatusUnauthorized:        "unauthorized",
+}
+
+func JSON(w http.ResponseWriter, code int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(int(code))
+	w.WriteHeader(code)
 	json.NewEncoder(w).Encode(data)
 }
 
-func Error(w http.ResponseWriter, code StatusCode, message string) {
+func Error(w http.ResponseWriter, code int, message string) {
+	_error, ok := errorCodeToString[code]
+	if !ok {
+		_error = "unknown"
+	}
+
 	JSON(w, code, O{
-		"error":   code.String(),
+		"error":   _error,
 		"message": message,
 	})
 }
