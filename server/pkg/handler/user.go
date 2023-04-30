@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/mail"
 	"server/pkg/auth"
@@ -10,10 +11,10 @@ import (
 	"server/pkg/model"
 	"server/pkg/response"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/go-chi/chi"
+	"github.com/go-sql-driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -39,7 +40,7 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !payload.validate() {
-		response.Error(w, http.StatusBadRequest, "invalid login credentials")
+		response.Error(w, http.StatusBadRequest, "invalid login payload")
 		return
 	}
 
@@ -99,7 +100,7 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !payload.validate() {
-		response.Error(w, http.StatusBadRequest, "invalid register credentials")
+		response.Error(w, http.StatusBadRequest, "invalid register payload")
 		return
 	}
 
@@ -116,7 +117,8 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := database.Instance.Create(user).Error; err != nil {
-		if strings.Contains(err.Error(), "Error 1062") {
+		var mysqlErr *mysql.MySQLError
+		if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
 			response.Error(w, http.StatusBadRequest, "username or email already exist")
 		} else {
 			response.Error(w, http.StatusInternalServerError, err.Error())
@@ -148,7 +150,11 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 
 	user := &model.User{}
 	if err := database.Instance.Table("users").Where("id = ?", id).First(user).Error; err != nil {
-		response.Error(w, http.StatusInternalServerError, err.Error())
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			response.Error(w, http.StatusNotFound, fmt.Sprintf("user with id=%v does not exist", id))
+		} else {
+			response.Error(w, http.StatusInternalServerError, err.Error())
+		}
 		return
 	}
 
