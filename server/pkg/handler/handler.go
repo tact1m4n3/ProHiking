@@ -2,7 +2,9 @@ package handler
 
 import (
 	"net/http"
+	"os"
 	my_middleware "server/pkg/handler/middleware"
+	"server/pkg/response"
 	"time"
 
 	chi_middleware "github.com/go-chi/chi/middleware"
@@ -21,13 +23,20 @@ func New() chi.Router {
 
 	r.Use(chi_middleware.Timeout(30 * time.Second))
 
+	// TODO: maybe better handlers
+	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusMethodNotAllowed, "route not found")
+	})
+
+	r.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusMethodNotAllowed, "method not allowed")
+	})
+
+	origin := os.Getenv("CORS_ORIGIN")
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"https://*"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-		ExposedHeaders:   []string{"Link"},
-		AllowCredentials: false,
-		MaxAge:           300,
+		AllowedOrigins:   []string{origin},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		AllowCredentials: true,
 	}))
 
 	r.Mount("/api", Routes())

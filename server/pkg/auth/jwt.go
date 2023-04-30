@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"errors"
 	"os"
 	"time"
 
@@ -32,10 +31,6 @@ func ParseJWT(tokenString string) (*jwt.Token, error) {
 
 	if err != nil {
 		return nil, err
-	}
-
-	if !token.Valid {
-		return nil, errors.New("invalid jwt")
 	}
 
 	return token, nil

@@ -9,7 +9,11 @@ import (
 	"gorm.io/gorm/logger"
 )
 
+// TODO: make a structure for holding the database... pass it to the handler
 var Instance *gorm.DB
+
+// TODO: Abstract database communication in here
+// TODO: Add custom errors for those methods
 
 func Init() error {
 	db, err := gorm.Open(mysql.Open(os.Getenv("DATABASE_URL")+"?parseTime=true"), &gorm.Config{
