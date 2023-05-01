@@ -9,15 +9,19 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-// TODO: make a structure for holding the database... pass it to the handler
-var Instance *gorm.DB
+var (
+	ErrNotFound      = gorm.ErrRecordNotFound
+	ErrDuplicatedKey = gorm.ErrDuplicatedKey
+)
 
-// TODO: Abstract database communication in here
-// TODO: Add custom errors for those methods
+var Instance *gorm.DB
 
 func Init() error {
 	db, err := gorm.Open(mysql.Open(os.Getenv("DATABASE_URL")+"?parseTime=true"), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
+
+		PrepareStmt:    true,
+		TranslateError: true,
 	})
 
 	if err != nil {

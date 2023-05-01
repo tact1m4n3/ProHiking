@@ -14,11 +14,31 @@ import (
 	"time"
 
 	"github.com/go-chi/chi"
-	"github.com/go-sql-driver/mysql"
-	"gorm.io/gorm"
 )
 
 const TokenExpirationTime = 2 * time.Hour
+
+func GetUserById(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, "user id not valid")
+		return
+	}
+
+	user, err := database.GetUserById(id)
+	if err != nil {
+		if errors.Is(err, database.ErrNotFound) {
+			response.Error(w, http.StatusNotFound, fmt.Sprintf(
+				"no user found with id %v", id,
+			))
+		} else {
+			response.Error(w, http.StatusInternalServerError, err.Error())
+		}
+		return
+	}
+
+	response.JSON(w, http.StatusOK, user)
+}
 
 type loginPayload struct {
 	Username string `json:"username"`
@@ -32,7 +52,7 @@ func (lp *loginPayload) validate() bool {
 	return true
 }
 
-func loginUser(w http.ResponseWriter, r *http.Request) {
+func LoginUser(w http.ResponseWriter, r *http.Request) {
 	payload := &loginPayload{}
 	if err := json.NewDecoder(r.Body).Decode(payload); err != nil {
 		response.Error(w, http.StatusInternalServerError, err.Error())
@@ -44,10 +64,12 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := &model.User{}
-	if err := database.Instance.Table("users").Where("username = ?", payload.Username).First(user).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			response.Error(w, http.StatusNotFound, "user does not exist")
+	user, err := database.GetUserByName(payload.Username)
+	if err != nil {
+		if errors.Is(err, database.ErrNotFound) {
+			response.Error(w, http.StatusNotFound, fmt.Sprintf(
+				"no user found with name '%v'", payload.Username,
+			))
 		} else {
 			response.Error(w, http.StatusInternalServerError, err.Error())
 		}
@@ -92,7 +114,7 @@ func (rp *registerPayload) validate() bool {
 	return true
 }
 
-func registerUser(w http.ResponseWriter, r *http.Request) {
+func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	payload := &registerPayload{}
 	if err := json.NewDecoder(r.Body).Decode(payload); err != nil {
 		response.Error(w, http.StatusInternalServerError, err.Error())
@@ -116,9 +138,8 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 		Password: hashedPassword,
 	}
 
-	if err := database.Instance.Create(user).Error; err != nil {
-		var mysqlErr *mysql.MySQLError
-		if errors.As(err, &mysqlErr) && mysqlErr.Number == 1062 {
+	if err := database.CreateUser(user); err != nil {
+		if errors.Is(err, database.ErrDuplicatedKey) {
 			response.Error(w, http.StatusBadRequest, "username or email already exist")
 		} else {
 			response.Error(w, http.StatusInternalServerError, err.Error())
@@ -126,10 +147,10 @@ func registerUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.JSON(w, http.StatusAccepted, user)
+	response.JSON(w, http.StatusCreated, user)
 }
 
-func logoutUser(w http.ResponseWriter, r *http.Request) {
+func LogoutUser(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:    "jwt",
 		Value:   "",
@@ -139,24 +160,4 @@ func logoutUser(w http.ResponseWriter, r *http.Request) {
 	})
 
 	w.Write([]byte("logged out"))
-}
-
-func getUser(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(chi.URLParam(r, "id"))
-	if err != nil {
-		response.Error(w, http.StatusBadRequest, "user id not valid")
-		return
-	}
-
-	user := &model.User{}
-	if err := database.Instance.Table("users").Where("id = ?", id).First(user).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			response.Error(w, http.StatusNotFound, fmt.Sprintf("user with id=%v not found", id))
-		} else {
-			response.Error(w, http.StatusInternalServerError, err.Error())
-		}
-		return
-	}
-
-	response.JSON(w, http.StatusOK, user)
 }

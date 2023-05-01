@@ -28,36 +28,36 @@ func New() chi.Router {
 		AllowCredentials: true,
 	}))
 
-	r.NotFound(routeNotFound)
-	r.MethodNotAllowed(methodNotAllowed)
+	r.NotFound(RouteNotFound)
+	r.MethodNotAllowed(MethodNotAllowed)
 
-	r.Mount("/api", routes())
+	r.Mount("/api", Routes())
 
 	return r
 }
 
-func routes() chi.Router {
+func Routes() chi.Router {
 	r := chi.NewRouter()
 
 	r.Route("/user", func(r chi.Router) {
-		r.Post("/login", loginUser)
-		r.Post("/register", registerUser)
-		r.Post("/logout", logoutUser)
+		r.Post("/login", LoginUser)
+		r.Post("/register", RegisterUser)
+		r.Post("/logout", LogoutUser)
 	})
 
 	r.Group(func(r chi.Router) {
 		r.Use(my_middleware.Auth)
 
 		r.Route("/users/{id}", func(r chi.Router) {
-			r.Get("/", getUser)
+			r.Get("/", GetUserById)
 		})
 
 		r.Route("/trails", func(r chi.Router) {
-			r.Get("/search", searchTrails)
+			r.Get("/search", SearchTrails)
 
 			r.Route("/{id}", func(r chi.Router) {
-				r.Get("/", getTrail)
-				r.Get("/path", getTrailPath)
+				r.Get("/", GetTrailById)
+				r.Get("/path", GetTrailPath)
 			})
 		})
 	})

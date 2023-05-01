@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"server/pkg/database"
@@ -15,7 +16,8 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		log.Fatalln("usage: ./mktraildb [input file]")
+		fmt.Fprintln(os.Stderr, "usage: ./mktraildb [input file]")
+		os.Exit(1)
 	}
 
 	if err := database.Init(); err != nil {
@@ -30,7 +32,6 @@ func main() {
 	collection, err := geojson.UnmarshalFeatureCollection(data)
 	if err != nil {
 		log.Fatalf("failed to unmarshal feature collection: %v\n", err)
-		os.Exit(1)
 	}
 
 	for _, feature := range collection.Features {
@@ -53,8 +54,12 @@ func main() {
 					trail.Points = append(trail.Points, point)
 				}
 
-				database.Instance.Create(trail)
+				if err := database.CreateTrail(trail); err != nil {
+					log.Fatalln(err)
+				}
 			}
 		}
 	}
+
+	log.Println("everything is ok :))")
 }
