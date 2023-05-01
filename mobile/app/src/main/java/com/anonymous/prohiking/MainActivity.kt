@@ -1,15 +1,20 @@
-package com.anonymous.app
+package com.anonymous.prohiking
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Explore
+import androidx.compose.material.icons.outlined.LibraryBooks
+import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.outlined.People
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,14 +23,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.anonymous.app.ui.theme.AppTheme
+import com.anonymous.prohiking.ui.theme.ProHikingTheme
 import ovh.plrapps.mapcompose.api.addLayer
 import ovh.plrapps.mapcompose.api.setPreloadingPadding
 import ovh.plrapps.mapcompose.api.shouldLoopScale
@@ -40,8 +46,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AppTheme() {
-                AppUI()
+            ProHikingTheme {
+                ProHikingApp()
             }
         }
     }
@@ -49,51 +55,75 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppUI() {
+fun ProHikingApp() {
     val navController = rememberNavController()
+
     val navBarItems = listOf(
-        NavBarItem.Explore,
-        NavBarItem.Map,
-        NavBarItem.Library,
-        NavBarItem.Profile,
+        Screen.Explore,
+        Screen.Map,
+        Screen.Library,
+        Screen.Profile,
     )
+
     Scaffold(modifier = Modifier.fillMaxSize(), bottomBar = {
         NavBarScreen(navController = navController, items = navBarItems)
     }) {it
-        NavHost(navHostController = navController)
+        NavHost(navController = navController, startDestination = Screen.Explore.route) {
+            composable(route = Screen.Explore.route) {
+                ExploreScreen()
+            }
+            composable(route = Screen.Map.route) {
+                MapScreen()
+            }
+            composable(route = Screen.Library.route) {
+                LibraryScreen()
+            }
+            composable(route = Screen.Profile.route) {
+                ProfileScreen()
+            }
+        }
     }
 }
 
-sealed class NavBarItem(val title: String, val route: String, @DrawableRes val icon: Int) {
-    object Explore: NavBarItem(
-        title = "Explore",
-        route = "explore_route",
-        icon = R.drawable.baseline_travel_explore_24
+@Preview
+@Composable
+fun AppPreview() {
+    ProHikingTheme {
+        ProHikingApp()
+    }
+}
+
+sealed class Screen(val route: String, @StringRes val title: Int, val icon: ImageVector) {
+    object Explore: Screen(
+        route = "explore",
+        title = R.string.explore,
+        icon = Icons.Outlined.Explore,
     )
 
-    object Map: NavBarItem(
-        title = "Map",
-        route = "map_route",
-        icon = R.drawable.baseline_navigation_24
+    object Map: Screen(
+        route = "map",
+        title = R.string.map,
+        icon = Icons.Outlined.Map
     )
 
-    object Library: NavBarItem(
-        title = "Library",
-        route = "library_route",
-        icon = R.drawable.baseline_saved_search_24
+    object Library: Screen(
+        route = "library",
+        title = R.string.library,
+        icon = Icons.Outlined.LibraryBooks
     )
 
-    object Profile: NavBarItem(
-        title = "Profile",
-        route = "profile_route",
-        icon = R.drawable.baseline_person_outline_24
+    object Profile: Screen(
+        route = "profile",
+        title = R.string.profile,
+        icon = Icons.Outlined.People
     )
 }
 
 @Composable
-fun NavBarScreen(navController: NavController, items: List<NavBarItem>) {
+fun NavBarScreen(navController: NavController, items: List<Screen>) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination= navBackStackEntry?.destination
+
     BottomNavigation {
         items.forEach {
                 item ->
@@ -104,30 +134,12 @@ fun NavBarScreen(navController: NavController, items: List<NavBarItem>) {
                 },
                 icon = {
                     Icon(
-                        painter = painterResource(id = item.icon),
+                        item.icon,
                         contentDescription = null
                     )
                 },
-                label = { Text(text = item.title) }
+                label = { Text(text = stringResource(id = item.title)) }
             )
-        }
-    }
-}
-
-@Composable
-fun NavHost(navHostController: NavHostController) {
-    NavHost(navController = navHostController, startDestination = NavBarItem.Explore.route) {
-        composable(route = NavBarItem.Explore.route) {
-            ExploreScreen()
-        }
-        composable(route = NavBarItem.Map.route) {
-            MapScreen()
-        }
-        composable(route = NavBarItem.Library.route) {
-            LibraryScreen()
-        }
-        composable(route = NavBarItem.Profile.route) {
-            ProfileScreen()
         }
     }
 }

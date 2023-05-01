@@ -1,4 +1,4 @@
-package com.anonymous.app.ui.theme
+package com.anonymous.prohiking.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
