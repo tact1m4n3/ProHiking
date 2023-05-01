@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"net/mail"
 	"server/pkg/auth"
@@ -150,7 +151,7 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 	user := &model.User{}
 	if err := database.Instance.Table("users").Where("id = ?", id).First(user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			response.Error(w, http.StatusNotFound, "user not found")
+			response.Error(w, http.StatusNotFound, fmt.Sprintf("user with id=%v not found", id))
 		} else {
 			response.Error(w, http.StatusInternalServerError, err.Error())
 		}

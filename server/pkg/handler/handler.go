@@ -1,10 +1,8 @@
 package handler
 
 import (
-	"net/http"
 	"os"
 	my_middleware "server/pkg/handler/middleware"
-	"server/pkg/response"
 	"time"
 
 	chi_middleware "github.com/go-chi/chi/middleware"
@@ -23,15 +21,6 @@ func New() chi.Router {
 
 	r.Use(chi_middleware.Timeout(30 * time.Second))
 
-	// TODO: maybe better handlers
-	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		response.Error(w, http.StatusMethodNotAllowed, "route not found")
-	})
-
-	r.MethodNotAllowed(func(w http.ResponseWriter, r *http.Request) {
-		response.Error(w, http.StatusMethodNotAllowed, "method not allowed")
-	})
-
 	origin := os.Getenv("CORS_ORIGIN")
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{origin},
@@ -39,12 +28,15 @@ func New() chi.Router {
 		AllowCredentials: true,
 	}))
 
-	r.Mount("/api", Routes())
+	r.NotFound(routeNotFound)
+	r.MethodNotAllowed(methodNotAllowed)
+
+	r.Mount("/api", routes())
 
 	return r
 }
 
-func Routes() chi.Router {
+func routes() chi.Router {
 	r := chi.NewRouter()
 
 	r.Route("/user", func(r chi.Router) {
@@ -55,8 +47,6 @@ func Routes() chi.Router {
 
 	r.Group(func(r chi.Router) {
 		r.Use(my_middleware.Auth)
-
-		r.Get("/test", testHandler)
 
 		r.Route("/users/{id}", func(r chi.Router) {
 			r.Get("/", getUser)
@@ -73,8 +63,4 @@ func Routes() chi.Router {
 	})
 
 	return r
-}
-
-func testHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello world"))
 }

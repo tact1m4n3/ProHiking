@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"server/pkg/database"
 	"server/pkg/model"
@@ -40,7 +41,7 @@ func getTrail(w http.ResponseWriter, r *http.Request) {
 	trail := &model.Trail{}
 	if err := database.Instance.Table("trails").Where("id = ?", id).First(trail).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			response.Error(w, http.StatusNotFound, "trail not found")
+			response.Error(w, http.StatusNotFound, fmt.Sprintf("trail with id=%v not found", id))
 		} else {
 			response.Error(w, http.StatusInternalServerError, err.Error())
 		}
@@ -60,7 +61,7 @@ func getTrailPath(w http.ResponseWriter, r *http.Request) {
 	trail := &model.Trail{}
 	if err := database.Instance.Table("trails").Where("id = ?", id).Preload("Points").First(trail).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			response.Error(w, http.StatusNotFound, "trail not found")
+			response.Error(w, http.StatusNotFound, fmt.Sprintf("trail with id=%v not found", id))
 		} else {
 			response.Error(w, http.StatusInternalServerError, err.Error())
 		}
