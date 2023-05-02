@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"server/pkg/database"
-	"server/pkg/handler"
+	"server/internal/database"
+	"server/internal/handler"
 	"syscall"
 	"time"
 

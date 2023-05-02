@@ -3,7 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
-	"server/pkg/response"
+	"server/internal/response"
 )
 
 func RouteNotFound(w http.ResponseWriter, r *http.Request) {

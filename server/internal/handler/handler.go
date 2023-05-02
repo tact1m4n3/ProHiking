@@ -3,7 +3,7 @@ package handler
 import (
 	"log"
 	"os"
-	my_middleware "server/pkg/handler/middleware"
+	my_middleware "server/internal/handler/middleware"
 	"time"
 
 	chi_middleware "github.com/go-chi/chi/middleware"

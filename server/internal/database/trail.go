@@ -1,7 +1,7 @@
 package database
 
 import (
-	"server/pkg/model"
+	"server/internal/model"
 	"strings"
 )
 

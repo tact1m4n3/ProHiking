@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"net/http"
-	"server/pkg/auth"
-	"server/pkg/response"
+	"server/internal/auth"
+	"server/internal/response"
 )
 
 func Auth(next http.Handler) http.Handler {

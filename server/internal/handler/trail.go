@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"server/pkg/database"
-	"server/pkg/response"
+	"server/internal/database"
+	"server/internal/response"
 	"strconv"
 
 	"github.com/go-chi/chi"

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"server/pkg/database"
-	"server/pkg/model"
+	"server/internal/database"
+	"server/internal/model"
 	"strconv"
 	"strings"
 
