@@ -15,6 +15,10 @@ import (
 )
 
 func main() {
+	if err := setupLogging(); err != nil {
+		log.Fatalf("failed to setup logging: %v\n", err)
+	}
+
 	log.Println("starting server...")
 
 	if err := database.Init(); err != nil {
@@ -27,7 +31,8 @@ func main() {
 	}
 
 	go func() {
-		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		err := server.ListenAndServeTLS(os.Getenv("TLS_CERT"), os.Getenv("TLS_KEY"))
+		if err != nil && err != http.ErrServerClosed {
 			log.Fatalf("server error: %v\n", err)
 		}
 	}()
@@ -45,4 +50,16 @@ func main() {
 	if err := server.Shutdown(ctx); err != nil {
 		log.Fatalf("failed to shutdown server: %v\n", err)
 	}
+}
+
+func setupLogging() error {
+	logFilePath := os.Getenv("LOG_FILE")
+	if logFilePath != "" {
+		logFile, err := os.Create(logFilePath)
+		if err != nil {
+			return err
+		}
+		log.SetOutput(logFile)
+	}
+	return nil
 }

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"log"
 	"os"
 	my_middleware "server/pkg/handler/middleware"
 	"time"
@@ -13,6 +14,13 @@ import (
 
 func New() chi.Router {
 	r := chi.NewRouter()
+
+	chi_middleware.DefaultLogger = chi_middleware.RequestLogger(
+		&chi_middleware.DefaultLogFormatter{
+			Logger:  log.Default(),
+			NoColor: true,
+		},
+	)
 
 	r.Use(chi_middleware.RequestID)
 	r.Use(chi_middleware.RealIP)
