@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class ExploreViewModel: ViewModel() {
-
     private val _searchText = MutableStateFlow("")
     val searchText= _searchText.asStateFlow()
 
@@ -45,12 +44,12 @@ class ExploreViewModel: ViewModel() {
 }
 
 data class Track(
-    val trackName: String
+    val name: String
 ) {
     fun doesMatchSearchQuery(query: String): Boolean {
         val matchingCombinations = listOf(
-            "$trackName",
-            "${trackName.first()}"
+            name,
+            "${name.first()}"
         )
         return matchingCombinations.any {
             it.contains(query, ignoreCase = true)
@@ -60,16 +59,15 @@ data class Track(
 
 private val allTracks= listOf(
     Track (
-        trackName= "Cabana Omu"
+        name = "Cabana Omu"
     ),
     Track (
-        trackName = "Cabana Diham"
+        name = "Cabana Diham"
     ),
     Track (
-        trackName = "Moroeni - Plaiul Proporului - Cabana Scropoasa"
+        name = "Moroeni - Plaiul Proporului - Cabana Scropoasa"
     ),
     Track (
-        trackName = "Sinaia- Bucegi- Platoul Masivului Bucegi - Sinaia"
-
+        name = "Sinaia- Bucegi- Platoul Masivului Bucegi - Sinaia"
     )
 )
