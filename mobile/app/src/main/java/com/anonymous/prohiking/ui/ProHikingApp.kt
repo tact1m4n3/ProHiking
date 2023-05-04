@@ -23,10 +23,12 @@ import com.anonymous.prohiking.ui.theme.ProHikingTheme
 fun ProHikingApp() {
     val navController = rememberNavController()
 
-    Scaffold(modifier = Modifier.fillMaxSize(), bottomBar = {
-        BottomNavBarScreen(navController = navController)
-    }) {it
-        NavigationGraph(navHostController = navController)
+    ProHikingTheme {
+        Scaffold(modifier = Modifier.fillMaxSize(), bottomBar = {
+            BottomNavBarScreen(navController = navController)
+        }) {it
+            NavigationGraph(navHostController = navController)
+        }
     }
 }
 
@@ -39,7 +41,7 @@ enum class NavDestinations(val route: String) {
 
 @Composable
 fun NavigationGraph(navHostController: NavHostController) {
-    NavHost(navController = navHostController, startDestination = NavDestinations.ExploreScreen.route) {
+    NavHost(navController = navHostController, startDestination = NavDestinations.MapScreen.route) {
         composable(route = NavDestinations.ExploreScreen.route) {
             ExploreScreen()
         }

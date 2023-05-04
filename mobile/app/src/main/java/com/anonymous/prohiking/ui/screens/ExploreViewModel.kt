@@ -1,4 +1,4 @@
-package com.anonymous.prohiking
+package com.anonymous.prohiking.ui.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
