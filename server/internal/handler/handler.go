@@ -1,12 +1,12 @@
 package handler
 
 import (
-	"log"
 	"os"
 	my_middleware "server/internal/handler/middleware"
 	"time"
 
 	chi_middleware "github.com/go-chi/chi/middleware"
+	"github.com/go-chi/httprate"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
@@ -15,19 +15,19 @@ import (
 func New() chi.Router {
 	r := chi.NewRouter()
 
-	chi_middleware.DefaultLogger = chi_middleware.RequestLogger(
-		&chi_middleware.DefaultLogFormatter{
-			Logger:  log.Default(),
-			NoColor: true,
-		},
-	)
-
 	r.Use(chi_middleware.RequestID)
 	r.Use(chi_middleware.RealIP)
 	r.Use(chi_middleware.Logger)
 	r.Use(chi_middleware.Recoverer)
 
 	r.Use(chi_middleware.Timeout(30 * time.Second))
+
+	r.Use(httprate.Limit(
+		20,
+		1*time.Minute,
+		httprate.WithKeyByIP(),
+		httprate.WithLimitHandler(TooManyRequests)),
+	)
 
 	origin := os.Getenv("CORS_ORIGIN")
 	r.Use(cors.Handler(cors.Options{

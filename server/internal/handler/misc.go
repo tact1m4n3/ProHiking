@@ -19,3 +19,7 @@ func MethodNotAllowed(w http.ResponseWriter, r *http.Request) {
 		r.Method, r.URL.Path,
 	))
 }
+
+func TooManyRequests(w http.ResponseWriter, r *http.Request) {
+	response.Error(w, http.StatusTooManyRequests, "too many requests... slow down")
+}
