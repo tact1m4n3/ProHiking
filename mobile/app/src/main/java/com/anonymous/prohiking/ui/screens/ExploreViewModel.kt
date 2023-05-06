@@ -39,7 +39,8 @@ class ExploreViewModel: ViewModel() {
         )
 
     fun onSearchTextChange(text: String) {
-            _searchText.value=text
+            _searchText.value=text.trimEnd('\n')
+
     }
 }
 

@@ -8,6 +8,7 @@ import androidx.compose.material.icons.outlined.LibraryBooks
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.People
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,7 +23,7 @@ fun BottomNavBarScreen(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation {
+    BottomNavigation( backgroundColor = MaterialTheme.colorScheme.primary) {
         BottomNavigationItem(
             selected = currentDestination?.route == NavDestinations.ExploreScreen.route,
             onClick = { navController.navigate(NavDestinations.ExploreScreen.route) },

@@ -14,8 +14,10 @@ import androidx.navigation.compose.rememberNavController
 import com.anonymous.prohiking.ui.screens.BottomNavBarScreen
 import com.anonymous.prohiking.ui.screens.ExploreScreen
 import com.anonymous.prohiking.ui.screens.LibraryScreen
+import com.anonymous.prohiking.ui.screens.LoginScreen
 import com.anonymous.prohiking.ui.screens.MapScreen
 import com.anonymous.prohiking.ui.screens.ProfileScreen
+import com.anonymous.prohiking.ui.screens.RegisterScreen
 import com.anonymous.prohiking.ui.theme.ProHikingTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,6 +28,7 @@ fun ProHikingApp() {
     ProHikingTheme {
         Scaffold(modifier = Modifier.fillMaxSize(), bottomBar = {
             BottomNavBarScreen(navController = navController)
+
         }) {it
             NavigationGraph(navHostController = navController)
         }
@@ -33,6 +36,8 @@ fun ProHikingApp() {
 }
 
 enum class NavDestinations(val route: String) {
+    LoginScreen("login_screen"),
+    RegisterScreen("signup_screen"),
     ExploreScreen("explore_screen"),
     MapScreen("map_screen"),
     LibraryScreen("library_screen"),
@@ -41,7 +46,13 @@ enum class NavDestinations(val route: String) {
 
 @Composable
 fun NavigationGraph(navHostController: NavHostController) {
-    NavHost(navController = navHostController, startDestination = NavDestinations.MapScreen.route) {
+    NavHost(navController = navHostController, startDestination = NavDestinations.LoginScreen.route) {
+       composable(route =NavDestinations.LoginScreen.route) {
+           LoginScreen()
+       }
+        composable(route =NavDestinations.RegisterScreen.route) {
+            RegisterScreen()
+        }
         composable(route = NavDestinations.ExploreScreen.route) {
             ExploreScreen()
         }
