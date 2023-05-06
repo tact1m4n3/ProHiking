@@ -1,4 +1,4 @@
-module server
+module prohiking-server
 
 go 1.20
 

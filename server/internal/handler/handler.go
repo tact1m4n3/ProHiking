@@ -2,7 +2,7 @@ package handler
 
 import (
 	"os"
-	my_middleware "server/internal/handler/middleware"
+	my_middleware "prohiking-server/internal/handler/middleware"
 	"time"
 
 	chi_middleware "github.com/go-chi/chi/middleware"

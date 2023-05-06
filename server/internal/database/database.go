@@ -2,7 +2,7 @@ package database
 
 import (
 	"os"
-	"server/internal/model"
+	"prohiking-server/internal/model"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

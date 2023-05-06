@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"server/internal/database"
-	"server/internal/handler"
+	"prohiking-server/internal/database"
+	"prohiking-server/internal/handler"
 	"syscall"
 	"time"
 
