@@ -28,13 +28,13 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface ProHikingApiService {
-    @POST("user/register")
+    @POST("api/user/register")
     suspend fun registerUser(@Body payload: RegisterPayload): UserInfo?
 
-    @POST("user/login")
+    @POST("api/user/login")
     suspend fun loginUser(@Body payload: LoginPayload): UserInfo?
 
-    @POST("user/logout")
+    @POST("api/user/logout")
     suspend fun logoutUser(): String?
 }
 

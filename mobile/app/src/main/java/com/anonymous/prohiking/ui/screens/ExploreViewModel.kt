@@ -55,7 +55,7 @@ class ExploreViewModel: ViewModel() {
         viewModelScope.launch {
             try {
                 val loginPayload = LoginPayload(
-                    "tact1m4n3", "badpassword",
+                    "testuser", "testpass",
                 )
 
                 val result = ProHikingApi.retrofitService.loginUser(loginPayload)
@@ -83,7 +83,7 @@ data class Track(
     }
 }
 
-private val allTracks= listOf(
+private val allTracks = listOf(
     Track (
         name = "Cabana Omu"
     ),

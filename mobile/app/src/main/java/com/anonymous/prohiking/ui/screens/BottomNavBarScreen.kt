@@ -23,7 +23,7 @@ fun BottomNavBarScreen(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation {
+    BottomNavigation( backgroundColor = MaterialTheme.colorScheme.primary) {
         BottomNavigationItem(
             selected = currentDestination?.route == NavDestinations.ExploreScreen.route,
             onClick = { navController.navigate(NavDestinations.ExploreScreen.route) },

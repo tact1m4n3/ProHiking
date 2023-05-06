@@ -1,5 +1,6 @@
 package com.anonymous.prohiking.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -16,6 +18,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.anonymous.prohiking.ui.theme.best_color
+import com.anonymous.prohiking.ui.theme.md_theme_light_primaryContainer
 
 @Composable
 fun ExploreScreen() {
@@ -26,6 +30,7 @@ fun ExploreScreen() {
     Column(
         modifier= Modifier
             .fillMaxSize()
+            .background(best_color)
             .padding(16.dp)
     ){
         TextField(
@@ -33,6 +38,12 @@ fun ExploreScreen() {
             onValueChange =  viewModel::onSearchTextChange,
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text(text = "Search") },
+            colors = TextFieldDefaults.textFieldColors(
+                focusedIndicatorColor = md_theme_light_primaryContainer,
+                backgroundColor = best_color,
+                cursorColor = md_theme_light_primaryContainer,
+                unfocusedIndicatorColor = md_theme_light_primaryContainer
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -43,6 +54,7 @@ fun ExploreScreen() {
             LazyColumn(
                 modifier= Modifier
                     .fillMaxWidth()
+                    .background(best_color)
                     .weight(1f)
             ) {
                 items(tracks) {track ->
