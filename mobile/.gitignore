@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+/app/src/main/res/raw/client_cert.pem
+/app/src/main/res/raw/client_key.pem
+/app/src/main/res/raw/server_cert.pem

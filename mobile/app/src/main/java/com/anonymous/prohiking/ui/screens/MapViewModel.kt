@@ -44,7 +44,6 @@ class MapViewModel : ViewModel() {
             scale(0f)
         }.apply {
             addLayer(tileStreamProvider)
-            //minimumScaleMode = Forced(0.02f)
             setPreloadingPadding(1 * 512)
         }
     )

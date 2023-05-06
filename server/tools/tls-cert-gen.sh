@@ -1,7 +1,9 @@
 #!/bin/bash
 
+# TODO: maybe add a passphrase
+
 if [ "$#" -ne 1 ] || ![ -e "$1" ]; then
-    echo "usage: ./tls-cert-gen directory" >&2
+    echo "usage: ./tls-cert-gen [directory]" >&2
     exit 1
 fi
 

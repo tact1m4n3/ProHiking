@@ -41,7 +41,7 @@ enum class NavDestinations(val route: String) {
 
 @Composable
 fun NavigationGraph(navHostController: NavHostController) {
-    NavHost(navController = navHostController, startDestination = NavDestinations.MapScreen.route) {
+    NavHost(navController = navHostController, startDestination = NavDestinations.ExploreScreen.route) {
         composable(route = NavDestinations.ExploreScreen.route) {
             ExploreScreen()
         }
