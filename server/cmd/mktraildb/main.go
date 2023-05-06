@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"server/internal/database"
-	"server/internal/model"
+	"prohiking-server/internal/database"
+	"prohiking-server/internal/model"
 	"strconv"
 	"strings"
 

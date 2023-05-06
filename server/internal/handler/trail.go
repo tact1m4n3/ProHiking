@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"server/internal/database"
-	"server/internal/response"
+	"prohiking-server/internal/database"
+	"prohiking-server/internal/response"
 	"strconv"
 
 	"github.com/go-chi/chi"

@@ -1,7 +1,7 @@
 package database
 
 import (
-	"server/internal/model"
+	"prohiking-server/internal/model"
 )
 
 func GetUserById(id int) (*model.User, error) {
