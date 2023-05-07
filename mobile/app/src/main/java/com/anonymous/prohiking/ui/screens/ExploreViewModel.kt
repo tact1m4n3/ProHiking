@@ -1,9 +1,16 @@
 package com.anonymous.prohiking.ui.screens
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import com.anonymous.prohiking.data.remote.LoginPayload
-import com.anonymous.prohiking.data.remote.ProHikingApi
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.anonymous.prohiking.ProHikingApplication
+import com.anonymous.prohiking.data.UserRepository
+import com.anonymous.prohiking.data.UserRepositoryImpl
+import com.anonymous.prohiking.data.utils.ErrorType
+import com.anonymous.prohiking.data.utils.ResultWrapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +23,7 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-class ExploreViewModel: ViewModel() {
+class ExploreViewModel(private val userRepository: UserRepository): ViewModel() {
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
@@ -44,26 +51,43 @@ class ExploreViewModel: ViewModel() {
         )
 
     init {
-        loginUser()
+        getUser()
     }
 
     fun onSearchTextChange(text: String) {
         _searchText.value = text.trimEnd('\n')
     }
 
-    private fun loginUser() {
+    private fun getUser() {
         viewModelScope.launch {
-            try {
-                val loginPayload = LoginPayload(
-                    "testuser", "testpass",
-                )
+            viewModelScope.launch {
+                when (val result = userRepository.loginUser("testuser", "testpass123")) {
+                    is ResultWrapper.Success -> {
+                        println(result.data)
+                    }
+                    is ResultWrapper.Error -> {
+                        println("failed to login")
+                    }
+                }
+            }.join()
 
-                val result = ProHikingApi.retrofitService.loginUser(loginPayload)
-                println(result)
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } catch (e: HttpException) {
-                e.printStackTrace()
+            when (val result = userRepository.getUserById(1)) {
+                is ResultWrapper.Success -> {
+                    println(result.data)
+                }
+                is ResultWrapper.Error -> {
+                    println("failed to fetch user")
+                }
+            }
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = ProHikingApplication.instance
+                val userRepository = application.container.userRepository
+                ExploreViewModel(userRepository = userRepository)
             }
         }
     }

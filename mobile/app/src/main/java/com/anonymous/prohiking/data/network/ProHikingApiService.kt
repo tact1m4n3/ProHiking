@@ -1,8 +1,9 @@
-package com.anonymous.prohiking.data.remote
+package com.anonymous.prohiking.data.network
 
 import com.anonymous.prohiking.BuildConfig
 import com.anonymous.prohiking.ProHikingApplication
 import com.anonymous.prohiking.R
+import com.anonymous.prohiking.data.model.User
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -13,38 +14,45 @@ import okhttp3.tls.HandshakeCertificates
 import okhttp3.tls.HeldCertificate
 import retrofit2.Retrofit
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import java.net.CookieManager
 import java.net.CookiePolicy
 import java.nio.charset.Charset
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 
-@OptIn(ExperimentalSerializationApi::class)
-private val retrofit = Retrofit.Builder()
-    .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-    .baseUrl(BuildConfig.PROHIKING_API_URL)
-    .client(newHttpClient())
-    .build()
-
 interface ProHikingApiService {
+    @GET("api/users/{id}")
+    suspend fun getUserById(@Path("id") id: Int): User
+
     @POST("api/user/register")
-    suspend fun registerUser(@Body payload: RegisterPayload): UserInfo?
+    suspend fun registerUser(@Body payload: RegisterPayload): User
 
     @POST("api/user/login")
-    suspend fun loginUser(@Body payload: LoginPayload): UserInfo?
+    suspend fun loginUser(@Body payload: LoginPayload): User
 
     @POST("api/user/logout")
-    suspend fun logoutUser(): String?
+    suspend fun logoutUser(): String
 }
 
-object ProHikingApi {
-    val retrofitService : ProHikingApiService by lazy {
+fun newProHikingApiService(): ProHikingApiService {
+    @OptIn(ExperimentalSerializationApi::class)
+    val retrofit = Retrofit.Builder()
+        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+        .baseUrl(BuildConfig.PROHIKING_API_URL)
+        .client(newHttpClient())
+        .build()
+
+    val proHikingApiService: ProHikingApiService by lazy {
         retrofit.create(ProHikingApiService::class.java)
     }
+
+    return proHikingApiService
 }
 
-fun newHttpClient(): OkHttpClient {
+private fun newHttpClient(): OkHttpClient {
     val certificateFactory = CertificateFactory.getInstance("X.509")
     val serverCertInputStream = ProHikingApplication.instance.resources.openRawResource(R.raw.server_cert)
     val serverCert = certificateFactory.generateCertificate(serverCertInputStream)

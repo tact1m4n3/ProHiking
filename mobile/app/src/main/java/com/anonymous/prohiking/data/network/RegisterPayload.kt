@@ -1,9 +1,10 @@
-package com.anonymous.prohiking.data.remote
+package com.anonymous.prohiking.data.network
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginPayload(
+data class RegisterPayload(
     val username: String,
+    val email: String,
     val password: String,
 )

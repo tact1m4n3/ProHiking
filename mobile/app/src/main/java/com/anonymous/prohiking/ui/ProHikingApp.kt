@@ -6,7 +6,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,7 +27,6 @@ fun ProHikingApp() {
     ProHikingTheme {
         Scaffold(modifier = Modifier.fillMaxSize(), bottomBar = {
             BottomNavBarScreen(navController = navController)
-
         }) {it
             NavigationGraph(navHostController = navController)
         }
@@ -46,11 +44,11 @@ enum class NavDestinations(val route: String) {
 
 @Composable
 fun NavigationGraph(navHostController: NavHostController) {
-    NavHost(navController = navHostController, startDestination = NavDestinations.ExploreScreen.route) {
-        composable(route =NavDestinations.LoginScreen.route) {
+    NavHost(navController = navHostController, startDestination = NavDestinations.RegisterScreen.route) {
+        composable(route = NavDestinations.LoginScreen.route) {
             LoginScreen()
         }
-        composable(route =NavDestinations.RegisterScreen.route) {
+        composable(route = NavDestinations.RegisterScreen.route) {
             RegisterScreen()
         }
         composable(route = NavDestinations.ExploreScreen.route) {
