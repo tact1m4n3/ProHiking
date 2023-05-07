@@ -33,7 +33,7 @@ fun ProHikingApp() {
     }
 }
 
-enum class NavDestinations(val route: String) {
+enum class NavigationRoutes(val route: String) {
     LoginScreen("login_screen"),
     RegisterScreen("signup_screen"),
     ExploreScreen("explore_screen"),
@@ -44,23 +44,23 @@ enum class NavDestinations(val route: String) {
 
 @Composable
 fun NavigationGraph(navHostController: NavHostController) {
-    NavHost(navController = navHostController, startDestination = NavDestinations.RegisterScreen.route) {
-        composable(route = NavDestinations.LoginScreen.route) {
+    NavHost(navController = navHostController, startDestination = NavigationRoutes.RegisterScreen.route) {
+        composable(route = NavigationRoutes.LoginScreen.route) {
             LoginScreen()
         }
-        composable(route = NavDestinations.RegisterScreen.route) {
+        composable(route = NavigationRoutes.RegisterScreen.route) {
             RegisterScreen()
         }
-        composable(route = NavDestinations.ExploreScreen.route) {
+        composable(route = NavigationRoutes.ExploreScreen.route) {
             ExploreScreen()
         }
-        composable(route = NavDestinations.MapScreen.route) {
+        composable(route = NavigationRoutes.MapScreen.route) {
             MapScreen()
         }
-        composable(route = NavDestinations.LibraryScreen.route) {
+        composable(route = NavigationRoutes.LibraryScreen.route) {
             LibraryScreen()
         }
-        composable(route = NavDestinations.ProfileScreen.route) {
+        composable(route = NavigationRoutes.ProfileScreen.route) {
             ProfileScreen()
         }
     }

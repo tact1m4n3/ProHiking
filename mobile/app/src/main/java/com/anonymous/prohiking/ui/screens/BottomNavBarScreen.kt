@@ -23,7 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.anonymous.prohiking.R
-import com.anonymous.prohiking.ui.NavDestinations
+import com.anonymous.prohiking.ui.NavigationRoutes
 
 @Composable
 fun BottomNavBarScreen(navController: NavController) {
@@ -32,8 +32,8 @@ fun BottomNavBarScreen(navController: NavController) {
     val currentDestination = navBackStackEntry?.destination
 
     when (currentDestination?.route) {
-        NavDestinations.LoginScreen.route -> bottomBarVisibleState.value = false
-        NavDestinations.RegisterScreen.route -> bottomBarVisibleState.value = false
+        NavigationRoutes.LoginScreen.route -> bottomBarVisibleState.value = false
+        NavigationRoutes.RegisterScreen.route -> bottomBarVisibleState.value = false
         else -> bottomBarVisibleState.value = true
     }
 
@@ -44,8 +44,8 @@ fun BottomNavBarScreen(navController: NavController) {
         content = {
             BottomNavigation(backgroundColor = MaterialTheme.colorScheme.primary) {
                 BottomNavigationItem(
-                    selected = currentDestination?.route == NavDestinations.ExploreScreen.route,
-                    onClick = { navController.navigate(NavDestinations.ExploreScreen.route) },
+                    selected = currentDestination?.route == NavigationRoutes.ExploreScreen.route,
+                    onClick = { navController.navigate(NavigationRoutes.ExploreScreen.route) },
                     icon = {
                         Icon(
                             Icons.Outlined.Explore,
@@ -55,8 +55,8 @@ fun BottomNavBarScreen(navController: NavController) {
                     label = { Text(text = stringResource(id = R.string.explore)) }
                 )
                 BottomNavigationItem(
-                    selected = currentDestination?.route == NavDestinations.MapScreen.route,
-                    onClick = { navController.navigate(NavDestinations.MapScreen.route) },
+                    selected = currentDestination?.route == NavigationRoutes.MapScreen.route,
+                    onClick = { navController.navigate(NavigationRoutes.MapScreen.route) },
                     icon = {
                         Icon(
                             Icons.Outlined.Map,
@@ -66,8 +66,8 @@ fun BottomNavBarScreen(navController: NavController) {
                     label = { Text(text = stringResource(id = R.string.map)) }
                 )
                 BottomNavigationItem(
-                    selected = currentDestination?.route == NavDestinations.LibraryScreen.route,
-                    onClick = { navController.navigate(NavDestinations.LibraryScreen.route) },
+                    selected = currentDestination?.route == NavigationRoutes.LibraryScreen.route,
+                    onClick = { navController.navigate(NavigationRoutes.LibraryScreen.route) },
                     icon = {
                         Icon(
                             Icons.Outlined.LibraryBooks,
@@ -77,8 +77,8 @@ fun BottomNavBarScreen(navController: NavController) {
                     label = { Text(text = stringResource(id = R.string.library)) }
                 )
                 BottomNavigationItem(
-                    selected = currentDestination?.route == NavDestinations.ProfileScreen.route,
-                    onClick = { navController.navigate(NavDestinations.ProfileScreen.route) },
+                    selected = currentDestination?.route == NavigationRoutes.ProfileScreen.route,
+                    onClick = { navController.navigate(NavigationRoutes.ProfileScreen.route) },
                     icon = {
                         Icon(
                             Icons.Outlined.People,
