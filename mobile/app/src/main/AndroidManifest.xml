@@ -16,14 +16,19 @@
         android:theme="@style/Theme.ProHiking"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.AuthActivity"
             android:exported="true"
             android:theme="@style/Theme.ProHiking">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ProHiking">
         </activity>
     </application>
 

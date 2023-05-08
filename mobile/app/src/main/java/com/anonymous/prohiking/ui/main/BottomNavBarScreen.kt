@@ -1,10 +1,8 @@
-package com.anonymous.prohiking.ui.screens
+package com.anonymous.prohiking.ui.main
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
@@ -23,19 +21,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.anonymous.prohiking.R
-import com.anonymous.prohiking.ui.NavigationRoutes
+import com.anonymous.prohiking.ui.Screen
 
 @Composable
 fun BottomNavBarScreen(navController: NavController) {
     val bottomBarVisibleState = rememberSaveable { (mutableStateOf(true)) }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-
-    when (currentDestination?.route) {
-        NavigationRoutes.LoginScreen.route -> bottomBarVisibleState.value = false
-        NavigationRoutes.RegisterScreen.route -> bottomBarVisibleState.value = false
-        else -> bottomBarVisibleState.value = true
-    }
 
     AnimatedVisibility(
         visible = bottomBarVisibleState.value,
@@ -44,8 +36,8 @@ fun BottomNavBarScreen(navController: NavController) {
         content = {
             BottomNavigation(backgroundColor = MaterialTheme.colorScheme.primary) {
                 BottomNavigationItem(
-                    selected = currentDestination?.route == NavigationRoutes.ExploreScreen.route,
-                    onClick = { navController.navigate(NavigationRoutes.ExploreScreen.route) },
+                    selected = currentDestination?.route == Screen.Main.Explore.route,
+                    onClick = { navController.navigate(Screen.Main.Explore.route) },
                     icon = {
                         Icon(
                             Icons.Outlined.Explore,
@@ -55,8 +47,8 @@ fun BottomNavBarScreen(navController: NavController) {
                     label = { Text(text = stringResource(id = R.string.explore)) }
                 )
                 BottomNavigationItem(
-                    selected = currentDestination?.route == NavigationRoutes.MapScreen.route,
-                    onClick = { navController.navigate(NavigationRoutes.MapScreen.route) },
+                    selected = currentDestination?.route == Screen.Main.Map.route,
+                    onClick = { navController.navigate(Screen.Main.Map.route) },
                     icon = {
                         Icon(
                             Icons.Outlined.Map,
@@ -66,8 +58,8 @@ fun BottomNavBarScreen(navController: NavController) {
                     label = { Text(text = stringResource(id = R.string.map)) }
                 )
                 BottomNavigationItem(
-                    selected = currentDestination?.route == NavigationRoutes.LibraryScreen.route,
-                    onClick = { navController.navigate(NavigationRoutes.LibraryScreen.route) },
+                    selected = currentDestination?.route == Screen.Main.Library.route,
+                    onClick = { navController.navigate(Screen.Main.Library.route) },
                     icon = {
                         Icon(
                             Icons.Outlined.LibraryBooks,
@@ -77,8 +69,8 @@ fun BottomNavBarScreen(navController: NavController) {
                     label = { Text(text = stringResource(id = R.string.library)) }
                 )
                 BottomNavigationItem(
-                    selected = currentDestination?.route == NavigationRoutes.ProfileScreen.route,
-                    onClick = { navController.navigate(NavigationRoutes.ProfileScreen.route) },
+                    selected = currentDestination?.route == Screen.Main.Profile.route,
+                    onClick = { navController.navigate(Screen.Main.Profile.route) },
                     icon = {
                         Icon(
                             Icons.Outlined.People,

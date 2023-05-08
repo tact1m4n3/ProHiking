@@ -1,4 +1,4 @@
-package com.anonymous.prohiking.ui.screens
+package com.anonymous.prohiking.ui.main
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

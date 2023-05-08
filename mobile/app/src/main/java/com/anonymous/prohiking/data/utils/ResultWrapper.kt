@@ -7,14 +7,9 @@ sealed class ResultWrapper<out T> {
 
 sealed class ErrorType {
     object BadRequest: ErrorType()
-
     object Network: ErrorType()
-
     object NotFound: ErrorType()
-
     object Unauthorized: ErrorType()
-
     data class OtherHttp(val code: Int): ErrorType()
-
     data class Other(val throwable: Throwable): ErrorType()
 }

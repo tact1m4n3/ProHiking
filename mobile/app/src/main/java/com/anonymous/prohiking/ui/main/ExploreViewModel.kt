@@ -1,16 +1,12 @@
-package com.anonymous.prohiking.ui.screens
+package com.anonymous.prohiking.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.anonymous.prohiking.ProHikingApplication
 import com.anonymous.prohiking.data.UserRepository
-import com.anonymous.prohiking.data.UserRepositoryImpl
-import com.anonymous.prohiking.data.utils.ErrorType
-import com.anonymous.prohiking.data.utils.ResultWrapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,9 +15,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
 
 class ExploreViewModel(private val userRepository: UserRepository): ViewModel() {
     private val _searchText = MutableStateFlow("")
@@ -50,43 +43,14 @@ class ExploreViewModel(private val userRepository: UserRepository): ViewModel() 
             _tracks.value
         )
 
-    init {
-        getUser()
-    }
-
     fun onSearchTextChange(text: String) {
         _searchText.value = text.trimEnd('\n')
-    }
-
-    private fun getUser() {
-        viewModelScope.launch {
-            viewModelScope.launch {
-                when (val result = userRepository.loginUser("testuser", "testpass123")) {
-                    is ResultWrapper.Success -> {
-                        println(result.data)
-                    }
-                    is ResultWrapper.Error -> {
-                        println("failed to login")
-                    }
-                }
-            }.join()
-
-            when (val result = userRepository.getUserById(1)) {
-                is ResultWrapper.Success -> {
-                    println(result.data)
-                }
-                is ResultWrapper.Error -> {
-                    println("failed to fetch user")
-                }
-            }
-        }
     }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application = ProHikingApplication.instance
-                val userRepository = application.container.userRepository
+                val userRepository = ProHikingApplication.instance.userRepository
                 ExploreViewModel(userRepository = userRepository)
             }
         }

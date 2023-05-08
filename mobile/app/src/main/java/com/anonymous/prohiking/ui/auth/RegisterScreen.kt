@@ -1,4 +1,4 @@
-package com.anonymous.prohiking.ui.screens
+package com.anonymous.prohiking.ui.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,93 +40,91 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.anonymous.prohiking.R
+import com.anonymous.prohiking.ui.Screen
 import com.anonymous.prohiking.ui.theme.md_theme_light_primaryContainer
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun LoginScreen() {
-
+fun RegisterScreen(navController: NavController) {
     var username by remember {
+        mutableStateOf("")
+    }
+    var email by remember {
         mutableStateOf("")
     }
     var password by remember {
         mutableStateOf("")
     }
-   Box(modifier= Modifier.fillMaxSize()) {
-       Image(painter = painterResource(id = R.drawable.background),
-           contentDescription ="Login",
-           modifier = Modifier
-               .fillMaxSize()
-               .blur(6.dp),
-           contentScale = ContentScale.Crop
-       )
-       Box(modifier = Modifier
-           .fillMaxSize()
-           .padding(28.dp)
-           .alpha(0.6f)
-           .clip(
-               CutCornerShape(
-                   topStart = 8.dp,
-                   topEnd = 16.dp,
-                   bottomStart = 16.dp,
-                   bottomEnd = 8.dp
-               )
-           )
-           .background(MaterialTheme.colorScheme.background)
 
-       )
-       Column(
-           Modifier
-               .fillMaxSize()
-               .padding(48.dp),
-       horizontalAlignment = Alignment.CenterHorizontally,
-       verticalArrangement = Arrangement.SpaceAround) {
-           LoginHeader()
-           LoginFields(username,
-               password,
-               onUsernameChange = {
-                 username = it
-               },
-               onPasswordChange = {
-                   password=it
-               },
-               onForgotPasswordClick = {
+    Box(modifier= Modifier.fillMaxSize()) {
+        Image(painter = painterResource(id = R.drawable.background),
+            contentDescription ="Login",
+            modifier = Modifier
+                .fillMaxSize()
+                .blur(6.dp),
+            contentScale = ContentScale.Crop
+        )
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(28.dp)
+            .alpha(0.6f)
+            .clip(
+                CutCornerShape(
+                    topStart = 8.dp,
+                    topEnd = 16.dp,
+                    bottomStart = 16.dp,
+                    bottomEnd = 8.dp
+                )
+            )
+            .background(MaterialTheme.colorScheme.background)
 
-               }
-           )
-           LoginFooter(
-               onSignInClick ={},
-               onSignUpClick ={}
-           )
+        )
 
-       }
-   }
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(48.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceAround) {
+            RegisterHeader()
+            RegisterFields(username,
+                password,
+                onUsernameChange = {
+                    username = it
+                },
+                onPasswordChange = {
+                    password=it
+                }
+            )
+            RegisterFooter(
+                onSignUpClick = {},
+                onAlreadyHaveAccount = {
+                    navController.navigate(Screen.Auth.Login.route)
+                }
+            )
+
+        }
+    }
 }
 @Composable
-fun LoginHeader() {
+fun RegisterHeader() {
     Column(horizontalAlignment = Alignment.CenterHorizontally){
         Text(text = "Welcome ProHiker", fontSize = 30.sp, fontWeight = FontWeight.ExtraBold)
-        Text(text = "Sign in to continue",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold)
     }
-
-
 }
 @Composable
-fun LoginFields(username: String,
-                            password: String,
-                            onUsernameChange: (String)-> Unit,
-                            onPasswordChange: (String)-> Unit,
-                            onForgotPasswordClick: ()->Unit)
+fun RegisterFields(username: String,
+                password: String,
+                onUsernameChange: (String)-> Unit,
+                onPasswordChange: (String)-> Unit)
+               
 {
     Column{
-        DemoField(value = username,
-            label = "Username",
+        DemoFields(value = username,
+            label = "Email",
             placeholder = "Enter your email address",
             onValueChange = onUsernameChange,
             leadingIcon = {
@@ -137,7 +135,7 @@ fun LoginFields(username: String,
 
         Spacer(modifier= Modifier.height(8.dp))
 
-        DemoField(value = password,
+        DemoFields(value = password,
             label = "Password" ,
             placeholder = "Enter your Password",
             onValueChange = onPasswordChange,
@@ -149,10 +147,18 @@ fun LoginFields(username: String,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Go )
         )
 
-        TextButton(onClick = { onForgotPasswordClick }, modifier = Modifier.align(Alignment.End) ) {
-            Text("Forgot Password", color=md_theme_light_primaryContainer)
+        DemoFields(value = password,
+            label = "Verify your password" ,
+            placeholder = "Enter your Password",
+            onValueChange = onPasswordChange,
+            visualTransformation = PasswordVisualTransformation(),
+            leadingIcon = {
+                Icon(Icons.Default.Lock, contentDescription = "Password")
 
-        }
+            } ,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Go )
+        )
+
 
     }
 
@@ -160,28 +166,26 @@ fun LoginFields(username: String,
 }
 
 @Composable
-fun LoginFooter(
-    onSignInClick: ()-> Unit,
-    onSignUpClick: ()-> Unit
+fun RegisterFooter(
+
+    onSignUpClick: ()-> Unit,
+    onAlreadyHaveAccount: ()->Unit
 
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally){
-        Button(onClick = { onSignInClick }, Modifier.fillMaxWidth(), colors= ButtonDefaults.buttonColors(md_theme_light_primaryContainer) ) {
-            Text(text= "Sign in")
+        Button(onClick = { onSignUpClick() }, Modifier.fillMaxWidth(), colors= ButtonDefaults.buttonColors(md_theme_light_primaryContainer) ) {
+            Text(text= "Sign up")
         }
-        TextButton(onClick = { onSignUpClick }
 
-        ) {
-            Text("Don't have an account, click here", color = md_theme_light_primaryContainer)
-
+        TextButton(onClick = { onAlreadyHaveAccount() }) {
+            Text("Already have an account", color = md_theme_light_primaryContainer)
         }
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DemoField(value: String,
+fun DemoFields(value: String,
               label: String,
               placeholder: String,
               visualTransformation: VisualTransformation= VisualTransformation.None ,
@@ -189,7 +193,7 @@ fun DemoField(value: String,
               leadingIcon: @Composable (() -> Unit)?=null,
               trailingIcon: @Composable (() -> Unit)?=null,
               onValueChange: (String)-> Unit) {
-        OutlinedTextField(
+    OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label= {
@@ -198,13 +202,10 @@ fun DemoField(value: String,
         placeholder= {
             Text(text = placeholder)
         },
-            visualTransformation = visualTransformation,
-            keyboardOptions = keyboardOptions,
-            leadingIcon = leadingIcon,
-            trailingIcon = trailingIcon
-
-
-        )
-
+        visualTransformation = visualTransformation,
+        keyboardOptions = keyboardOptions,
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon
+    )
 }
 

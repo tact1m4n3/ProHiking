@@ -37,7 +37,7 @@ interface ProHikingApiService {
     suspend fun logoutUser(): String
 }
 
-fun newProHikingApiService(): ProHikingApiService {
+fun initProHikingApiService(): ProHikingApiService {
     @OptIn(ExperimentalSerializationApi::class)
     val retrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
