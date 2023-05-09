@@ -12,6 +12,7 @@ import com.anonymous.prohiking.data.utils.ResultWrapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -20,7 +21,8 @@ sealed interface LoginUiState {
 
     data class LoggedOut(
         val usernameText: String = "",
-        val passwordText: String = ""
+        val passwordText: String = "",
+        val errorMessage: String = "",
     ): LoginUiState
 
     object Loading: LoginUiState
@@ -30,11 +32,11 @@ class LoginViewModel(
     private val userRepository: UserRepository,
     private val preferencesRepository: PreferencesRepository,
 ): ViewModel() {
-    private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState.LoggedOut())
+    private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
     init {
-//        tryLogin()
+        tryLogin()
     }
 
     fun updateUsernameText(text: String) {
@@ -57,23 +59,25 @@ class LoginViewModel(
 
     fun onLoginButtonClick() {
         viewModelScope.launch {
-            uiState.collect { uiState ->
-                when (uiState) {
-                    is LoginUiState.LoggedOut -> {
-                        val username = uiState.usernameText
-                        val password = uiState.passwordText
+            when (val currentState = _uiState.getAndUpdate { LoginUiState.Loading }) {
+                is LoginUiState.LoggedOut -> {
+                    val username = currentState.usernameText
+                    val password = currentState.passwordText
 
-                        _uiState.update { LoginUiState.Loading }
-                        if (login(username, password)) {
-                            preferencesRepository.setLoggedIn(true)
+                    when (userRepository.loginUser(username, password)) {
+                        is ResultWrapper.Success -> {
+                            preferencesRepository.updateLoggedIn(true)
+                            preferencesRepository.updateUsernameAndPassword(username, password)
                             _uiState.update { LoginUiState.LoggedIn }
-                        } else {
-                            preferencesRepository.setLoggedIn(false)
-                            _uiState.update { LoginUiState.LoggedOut() }
+                        }
+                        is ResultWrapper.Error -> {
+                            preferencesRepository.updateLoggedIn(false)
+                            preferencesRepository.updateUsernameAndPassword("", "")
+                            _uiState.update { LoginUiState.LoggedOut(errorMessage = "Failed to login") }
                         }
                     }
-                    else -> {}
                 }
+                else -> {}
             }
         }
     }
@@ -89,20 +93,17 @@ class LoginViewModel(
             val username = preferencesRepository.username.first()
             val password = preferencesRepository.password.first()
 
-            if (login(username, password)) {
-                preferencesRepository.setLoggedIn(true)
-                _uiState.update { LoginUiState.LoggedIn }
-            } else {
-                preferencesRepository.setLoggedIn(false)
-                _uiState.update { LoginUiState.LoggedOut() }
+            when (userRepository.loginUser(username, password)) {
+                is ResultWrapper.Success -> {
+                    preferencesRepository.updateLoggedIn(true)
+                    _uiState.update { LoginUiState.LoggedIn }
+                }
+                is ResultWrapper.Error -> {
+                    preferencesRepository.updateLoggedIn(false)
+                    preferencesRepository.updateUsernameAndPassword("", "")
+                    _uiState.update { LoginUiState.LoggedOut(errorMessage = "Failed to login") }
+                }
             }
-        }
-    }
-
-    private suspend fun login(username: String, password: String): Boolean {
-        return when (userRepository.loginUser(username, password)) {
-            is ResultWrapper.Success -> true
-            is ResultWrapper.Error -> false
         }
     }
 

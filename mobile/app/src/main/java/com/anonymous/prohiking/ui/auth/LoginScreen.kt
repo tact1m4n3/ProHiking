@@ -15,7 +15,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -43,7 +42,6 @@ import androidx.navigation.NavController
 import com.anonymous.prohiking.R
 import com.anonymous.prohiking.ui.MainActivity
 import com.anonymous.prohiking.ui.Screen
-import com.anonymous.prohiking.ui.theme.md_theme_light_primaryContainer
 import com.anonymous.prohiking.ui.widgets.CustomTextField
 import com.anonymous.prohiking.ui.widgets.LoadingAnimation
 
@@ -168,14 +166,17 @@ private fun LoggedOutScreen(
                     },
                     modifier = Modifier.align(Alignment.End)
                 ) {
-                    Text("Forgot Password", color = md_theme_light_primaryContainer)
+                    Text("Forgot Password", color = MaterialTheme.colorScheme.primary)
                 }
+
+                if (uiState.errorMessage.isNotEmpty())
+                    Text(uiState.errorMessage, color = MaterialTheme.colorScheme.error)
             }
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(
                     onClick = { loginViewModel.onLoginButtonClick() },
-                    colors = ButtonDefaults.buttonColors(md_theme_light_primaryContainer)
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primaryContainer)
                 ) {
                     Text(text = "Log In")
                 }
@@ -183,7 +184,7 @@ private fun LoggedOutScreen(
                 TextButton(onClick = { navController.navigate(Screen.Auth.Register.route) }) {
                     Text(
                         "Don't have an account, click here",
-                        color = md_theme_light_primaryContainer
+                        color = MaterialTheme.colorScheme.primaryContainer
                     )
                 }
             }

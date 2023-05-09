@@ -17,7 +17,6 @@ suspend fun <T> safeApiCall(dispatcher: CoroutineDispatcher, apiCall: suspend ()
                 when (throwable) {
                     is IOException -> ErrorType.Network
                     is HttpException -> {
-                        println(throwable.response()?.body()?.toString())
                         when (throwable.code()) {
                             HttpURLConnection.HTTP_BAD_REQUEST -> ErrorType.BadRequest
                             HttpURLConnection.HTTP_NOT_FOUND -> ErrorType.NotFound

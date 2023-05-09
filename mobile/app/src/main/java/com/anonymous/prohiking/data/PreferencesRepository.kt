@@ -5,8 +5,6 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 class PreferencesRepository(private val dataStore: DataStore<Preferences>) {
@@ -28,13 +26,13 @@ class PreferencesRepository(private val dataStore: DataStore<Preferences>) {
         preferences[PASSWORD] ?: ""
     }
 
-    suspend fun setLoggedIn(value: Boolean) {
+    suspend fun updateLoggedIn(value: Boolean) {
         dataStore.edit { preferences ->
             preferences[LOGGED_IN] = value
         }
     }
 
-    suspend fun setUsernameAndPassword(username: String, password: String) {
+    suspend fun updateUsernameAndPassword(username: String, password: String) {
         dataStore.edit { preferences ->
             preferences[USERNAME] = username
             preferences[PASSWORD] = password
