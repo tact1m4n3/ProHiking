@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun NavigationGraph(navHostController: NavHostController) {
-    NavHost(navController = navHostController, startDestination = Screen.Main.Explore.route) {
+    NavHost(navController = navHostController, startDestination = Screen.Main.Profile.route) {
         composable(route = Screen.Main.Explore.route) {
             ExploreScreen(navController = navHostController)
         }

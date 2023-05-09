@@ -61,7 +61,7 @@ fun RegisterScreen(navController: NavController) {
 
     Box(modifier= Modifier.fillMaxSize()) {
         Image(painter = painterResource(id = R.drawable.background),
-            contentDescription ="Login",
+            contentDescription ="Register",
             modifier = Modifier
                 .fillMaxSize()
                 .blur(6.dp),

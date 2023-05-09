@@ -2,12 +2,12 @@ package com.anonymous.prohiking.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val best_color= Color(0xFF006C4C)
-val md_theme_light_primary = Color(0xFF006C4C)
-val md_theme_light_onPrimary = Color(0xFFFFFFFF)
+val best_color= Color(0xFF02583F)
+val md_theme_light_primary = Color(0xFF046448)
+val md_theme_light_onPrimary = Color(0xFFB9C5BE)
 val md_theme_light_primaryContainer = Color(0xFF0D462D)
 val md_theme_light_onPrimaryContainer = Color(0xFF002114)
-val md_theme_light_secondary = Color(0xFF4D6357)
+val md_theme_light_secondary = Color(0xBE0D5C31)
 val md_theme_light_onSecondary = Color(0xFFFFFFFF)
 val md_theme_light_secondaryContainer = Color(0xFFCFE9D9)
 val md_theme_light_onSecondaryContainer = Color(0xFF092016)

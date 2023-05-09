@@ -41,10 +41,11 @@ fun BottomNavBarScreen(navController: NavController) {
                     icon = {
                         Icon(
                             Icons.Outlined.Explore,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             contentDescription = null
                         )
                     },
-                    label = { Text(text = stringResource(id = R.string.explore)) }
+                    label = { Text(text = stringResource(id = R.string.explore), color = MaterialTheme.colorScheme.onPrimaryContainer) }
                 )
                 BottomNavigationItem(
                     selected = currentDestination?.route == Screen.Main.Map.route,
@@ -52,10 +53,12 @@ fun BottomNavBarScreen(navController: NavController) {
                     icon = {
                         Icon(
                             Icons.Outlined.Map,
-                            contentDescription = null
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            contentDescription = null,
+
                         )
                     },
-                    label = { Text(text = stringResource(id = R.string.map)) }
+                    label = { Text(text = stringResource(id = R.string.map), color = MaterialTheme.colorScheme.onPrimaryContainer) }
                 )
                 BottomNavigationItem(
                     selected = currentDestination?.route == Screen.Main.Library.route,
@@ -63,10 +66,11 @@ fun BottomNavBarScreen(navController: NavController) {
                     icon = {
                         Icon(
                             Icons.Outlined.LibraryBooks,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             contentDescription = null
                         )
                     },
-                    label = { Text(text = stringResource(id = R.string.library)) }
+                    label = { Text(text = stringResource(id = R.string.library), color = MaterialTheme.colorScheme.onPrimaryContainer) }
                 )
                 BottomNavigationItem(
                     selected = currentDestination?.route == Screen.Main.Profile.route,
@@ -74,10 +78,11 @@ fun BottomNavBarScreen(navController: NavController) {
                     icon = {
                         Icon(
                             Icons.Outlined.People,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             contentDescription = null
                         )
                     },
-                    label = { Text(text = stringResource(id = R.string.profile)) }
+                    label = { Text(text = stringResource(id = R.string.profile), color = MaterialTheme.colorScheme.onPrimaryContainer) }
                 )
             }
         }
