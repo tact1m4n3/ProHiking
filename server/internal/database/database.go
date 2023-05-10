@@ -1,7 +1,6 @@
 package database
 
 import (
-	"os"
 	"prohiking-server/internal/model"
 
 	"gorm.io/driver/mysql"
@@ -16,8 +15,8 @@ var (
 
 var Instance *gorm.DB
 
-func Init() error {
-	db, err := gorm.Open(mysql.Open(os.Getenv("DATABASE_URL")+"?parseTime=true"), &gorm.Config{
+func Init(url string) error {
+	db, err := gorm.Open(mysql.Open(url+"?parseTime=true"), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 
 		PrepareStmt:    true,

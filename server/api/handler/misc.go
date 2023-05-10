@@ -3,7 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
-	"prohiking-server/internal/response"
+	"prohiking-server/api/response"
 )
 
 func RouteNotFound(w http.ResponseWriter, r *http.Request) {

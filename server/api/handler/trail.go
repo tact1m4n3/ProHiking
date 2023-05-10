@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"prohiking-server/api/response"
 	"prohiking-server/internal/database"
-	"prohiking-server/internal/response"
 	"strconv"
 	"strings"
 

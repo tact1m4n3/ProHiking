@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"net/http"
-	"prohiking-server/internal/auth"
-	"prohiking-server/internal/response"
+	"prohiking-server/api/auth"
+	"prohiking-server/api/response"
 )
 
 func Auth(next http.Handler) http.Handler {

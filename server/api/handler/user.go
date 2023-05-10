@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"net/http"
 	"net/mail"
-	"prohiking-server/internal/auth"
+	"prohiking-server/api/auth"
+	"prohiking-server/api/response"
 	"prohiking-server/internal/database"
 	"prohiking-server/internal/model"
-	"prohiking-server/internal/response"
 	"strconv"
 	"time"
 

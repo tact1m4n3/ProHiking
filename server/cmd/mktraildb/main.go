@@ -10,17 +10,15 @@ import (
 	"strings"
 
 	geojson "github.com/paulmach/go.geojson"
-
-	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Fprintln(os.Stderr, "usage: ./mktraildb [input file]")
+	if len(os.Args) < 3 {
+		fmt.Fprintln(os.Stderr, "usage: ./mktraildb [input file] [db url]")
 		os.Exit(1)
 	}
 
-	if err := database.Init(); err != nil {
+	if err := database.Init(os.Args[2]); err != nil {
 		log.Fatalf("failed to initialize database: %v\n", err)
 	}
 
