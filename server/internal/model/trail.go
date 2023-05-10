@@ -3,8 +3,8 @@ package model
 type Trail struct {
 	Id     int      `json:"id" gorm:"primarykey"`
 	Name   string   `json:"name"`
-	From   string   `json:"from"`
-	To     string   `json:"to"`
+	Start  string   `json:"start"`
+	End    string   `json:"end"`
 	Length float64  `json:"length"`
 	Symbol string   `json:"symbol"`
 	Points []*Point `json:"-"`
@@ -13,6 +13,6 @@ type Trail struct {
 type Point struct {
 	Id      int     `json:"-" gorm:"primarykey"`
 	TrailId int     `json:"-"`
-	Lat     float64 `json:"lat"`
-	Long    float64 `json:"long"`
+	Lat     float64 `json:"lat" gorm:"type:decimal(10,6)"`
+	Lon     float64 `json:"lon" gorm:"type:decimal(10,6)"`
 }

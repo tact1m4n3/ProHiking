@@ -40,16 +40,16 @@ func main() {
 				length, _ := strconv.ParseFloat(feature.PropertyMustString("distance", "0"), 64)
 				trail := &model.Trail{
 					Name:   feature.PropertyMustString("name", ""),
-					From:   feature.PropertyMustString("from", ""),
-					To:     feature.PropertyMustString("to", ""),
+					Start:  feature.PropertyMustString("from", ""),
+					End:    feature.PropertyMustString("to", ""),
 					Length: length,
 					Symbol: feature.PropertyMustString("osmc:symbol", ""),
 				}
 
 				for _, coords := range feature.Geometry.LineString {
 					point := &model.Point{
-						Lat:  coords[0],
-						Long: coords[1],
+						Lat: coords[1],
+						Lon: coords[0],
 					}
 					trail.Points = append(trail.Points, point)
 				}
