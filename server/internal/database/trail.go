@@ -30,20 +30,27 @@ func GetTrailPath(id int) ([]*model.Point, error) {
 	return trail.Points, nil
 }
 
-func SearchTrails(limit int, name string, bbox [2][2]float64) ([]*model.Trail, error) {
+func SearchTrails(
+	limit int,
+	offset int,
+	name string,
+	length [2]float64,
+	bbox [2][2]float64,
+) ([]*model.Trail, error) {
 	trails := []*model.Trail{}
-	trailsQuery := Instance.Table("trails").Limit(limit)
+	trailsQuery := Instance.Table("trails").Limit(limit).Offset(offset)
 
 	if name != "" {
 		trailsQuery.Where("name LIKE ?", "%"+strings.ReplaceAll(name, " ", "%")+"%")
 	}
 
+	trailsQuery.Where("length >= ? AND length <= ?", length[0], length[1])
+
 	pointQuery := Instance.Table("points").Distinct("trail_id").Where(
-		"lat >= ? and lat <= ? and lon >= ? and lon <= ?",
+		"lat >= ? AND lat <= ? AND lon >= ? AND lon <= ?",
 		bbox[0][0], bbox[1][0], bbox[0][1], bbox[1][1],
 	)
-
-	trailsQuery.Where("id in (?)", pointQuery)
+	trailsQuery.Where("id IN (?)", pointQuery)
 
 	if err := trailsQuery.Find(&trails).Error; err != nil {
 		return nil, err

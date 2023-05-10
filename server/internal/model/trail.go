@@ -5,7 +5,7 @@ type Trail struct {
 	Name   string   `json:"name"`
 	Start  string   `json:"start"`
 	End    string   `json:"end"`
-	Length float64  `json:"length"`
+	Length float64  `json:"length" gorm:"type:decimal(10,6)"`
 	Symbol string   `json:"symbol"`
 	Points []*Point `json:"-"`
 }
