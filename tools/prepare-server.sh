@@ -1,7 +1,7 @@
 #!/bin/bash
 
-ENV_FILE=${ENV_FILE:-"./server/.env"}
-CERTS_FOLDER=${CERTS_FOLDER:-"./certs"}
+ENV_FILE=${ENV_FILE:-"server/.env"}
+CERTS_FOLDER=${CERTS_FOLDER:-"certs"}
 
 export PORT=${PORT:-8080}
 export TLS_CA_CERT=${TLS_CA_CERT:-"../$CERTS_FOLDER/ca-cert.pem"}

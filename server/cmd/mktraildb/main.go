@@ -18,13 +18,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := database.Init(os.Args[2]); err != nil {
-		log.Fatalf("failed to initialize database: %v\n", err)
-	}
-
 	data, err := os.ReadFile(os.Args[1])
 	if err != nil {
 		log.Fatalf("failed to open file: %v\n", err)
+	}
+
+	if err := database.Init(os.Args[2]); err != nil {
+		log.Fatalf("failed to initialize database: %v\n", err)
 	}
 
 	collection, err := geojson.UnmarshalFeatureCollection(data)

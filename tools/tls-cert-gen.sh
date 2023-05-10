@@ -2,7 +2,7 @@
 
 # should only be called once on the server otherwise fetch them
 
-CERTS_FOLDER=${CERTS_FOLDER:-"./certs"}
+CERTS_FOLDER=${CERTS_FOLDER:-"certs"}
 HOST=${HOST:-"IP:192.168.1.119"} # or DNS:smth.com; change the default!!
 
 CA_CERT=$CERTS_FOLDER/ca-cert.pem
