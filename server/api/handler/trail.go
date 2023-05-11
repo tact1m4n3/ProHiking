@@ -57,17 +57,17 @@ func GetTrailPath(w http.ResponseWriter, r *http.Request) {
 }
 
 type searchTrailsPayload struct {
-	Limit  int           `json:"limit"`
-	Offset int           `json:"offset"`
-	Name   string        `json:"name"`
-	Length [2]float64    `json:"length"`
-	Bbox   [2][2]float64 `json:"bbox"`
+	Limit  int        `json:"limit"`
+	Offset int        `json:"offset"`
+	Name   string     `json:"name"`
+	Length [2]float64 `json:"length"`
+	Bbox   [4]float64 `json:"bbox"`
 }
 
 func SearchTrails(w http.ResponseWriter, r *http.Request) {
 	payload := &searchTrailsPayload{}
 	if err := json.NewDecoder(r.Body).Decode(payload); err != nil {
-		response.Error(w, http.StatusInternalServerError, err.Error())
+		response.Error(w, http.StatusBadRequest, "invalid payload")
 		return
 	}
 

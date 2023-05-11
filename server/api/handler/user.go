@@ -55,12 +55,12 @@ func (lp *loginPayload) validate() bool {
 func LoginUser(w http.ResponseWriter, r *http.Request) {
 	payload := &loginPayload{}
 	if err := json.NewDecoder(r.Body).Decode(payload); err != nil {
-		response.Error(w, http.StatusInternalServerError, err.Error())
+		response.Error(w, http.StatusBadRequest, "invalid payload")
 		return
 	}
 
 	if !payload.validate() {
-		response.Error(w, http.StatusBadRequest, "invalid login payload")
+		response.Error(w, http.StatusBadRequest, "invalid payload")
 		return
 	}
 
@@ -117,12 +117,12 @@ func (rp *registerPayload) validate() bool {
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	payload := &registerPayload{}
 	if err := json.NewDecoder(r.Body).Decode(payload); err != nil {
-		response.Error(w, http.StatusInternalServerError, err.Error())
+		response.Error(w, http.StatusBadRequest, "invalid payload")
 		return
 	}
 
 	if !payload.validate() {
-		response.Error(w, http.StatusBadRequest, "invalid register payload")
+		response.Error(w, http.StatusBadRequest, "invalid payload")
 		return
 	}
 
