@@ -30,7 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.anonymous.prohiking.R
+import com.anonymous.prohiking.ui.theme.ProHikingTheme
 import com.anonymous.prohiking.ui.theme.best_color
 import com.anonymous.prohiking.ui.theme.md_theme_light_primaryContainer
 
@@ -44,7 +46,6 @@ fun ExploreScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(best_color)
             .padding(16.dp)
     ){
         TextField(
@@ -68,7 +69,6 @@ fun ExploreScreen(navController: NavController) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(best_color)
                     .weight(1f)
             ) {
                 items(tracks) {track ->
@@ -84,3 +84,17 @@ fun ExploreScreen(navController: NavController) {
     }
 }
 
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun ExploreScreenPreview() {
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+    }
+}
