@@ -48,7 +48,7 @@ func SearchTrails(
 
 	pointQuery := Instance.Table("points").Distinct("trail_id").Where(
 		"lat >= ? AND lat <= ? AND lon >= ? AND lon <= ?",
-		bbox[0], bbox[1], bbox[2], bbox[3],
+		bbox[0], bbox[2], bbox[1], bbox[3],
 	)
 	trailsQuery.Where("id IN (?)", pointQuery)
 
