@@ -34,8 +34,12 @@ func SearchTrails(
 	limit int,
 	offset int,
 	name string,
-	length [2]float64,
-	bbox [4]float64,
+	minLength float64,
+	maxLength float64,
+	bottomLeftLat float64,
+	bottomLeftLon float64,
+	topRightLat float64,
+	topRightLon float64,
 ) ([]*model.Trail, error) {
 	trails := []*model.Trail{}
 	trailsQuery := Instance.Table("trails").Limit(limit).Offset(offset)
@@ -44,11 +48,11 @@ func SearchTrails(
 		trailsQuery.Where("name LIKE ?", "%"+strings.ReplaceAll(name, " ", "%")+"%")
 	}
 
-	trailsQuery.Where("length >= ? AND length <= ?", length[0], length[1])
+	trailsQuery.Where("length >= ? AND length <= ?", minLength, maxLength)
 
 	pointQuery := Instance.Table("points").Distinct("trail_id").Where(
 		"lat >= ? AND lat <= ? AND lon >= ? AND lon <= ?",
-		bbox[0], bbox[2], bbox[1], bbox[3],
+		bottomLeftLat, topRightLat, bottomLeftLon, topRightLon,
 	)
 	trailsQuery.Where("id IN (?)", pointQuery)
 
