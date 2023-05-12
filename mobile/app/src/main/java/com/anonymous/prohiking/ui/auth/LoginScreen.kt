@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CutCornerShape
@@ -23,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -48,9 +50,10 @@ import com.anonymous.prohiking.ui.widgets.LoadingAnimation
 @Composable
 fun LoginScreen(
     navController: NavController,
-    loginViewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
+    viewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
 ) {
     val context = LocalContext.current
+    val uiState by viewModel.uiState.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -62,9 +65,10 @@ fun LoginScreen(
                 .blur(6.dp)
         )
 
-        when (val uiState = loginViewModel.uiState.collectAsState().value) {
+        when (uiState) {
             is LoginUiState.Loading -> LoadingScreen()
-            is LoginUiState.LoggedOut -> LoggedOutScreen(navController, uiState, loginViewModel)
+            is LoginUiState.LoggedOut -> LoggedOutScreen(navController,
+                uiState as LoginUiState.LoggedOut, viewModel)
             is LoginUiState.LoggedIn -> context.startActivity(
                 Intent(
                     context,
@@ -109,83 +113,94 @@ private fun LoggedOutScreen(
                 .background(MaterialTheme.colorScheme.background)
         )
 
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceAround,
-            modifier = Modifier.fillMaxSize()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(48.dp),
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "Welcome ProHiker", fontSize = 30.sp, fontWeight = FontWeight.ExtraBold)
-
-                Text(
-                    text = "Sign in to continue",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
-
-            Column {
-                CustomTextField(
-                    value = uiState.usernameText,
-                    label = "Username",
-                    placeholder = "Enter your email address",
-                    onValueChange = {
-                        loginViewModel.updateUsernameText(it)
-                    },
-                    leadingIcon = {
-                        Icon(Icons.Default.Email, contentDescription = "Email")
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Next
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                CustomTextField(
-                    value = uiState.passwordText,
-                    label = "Password",
-                    placeholder = "Enter your Password",
-                    onValueChange = {
-                        loginViewModel.updatePasswordText(it)
-                    },
-                    visualTransformation = PasswordVisualTransformation(),
-                    leadingIcon = {
-                        Icon(Icons.Default.Lock, contentDescription = "Password")
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Go
-                    )
-                )
-
-                TextButton(
-                    onClick = {
-                        // forgot password
-                    },
-                    modifier = Modifier.align(Alignment.End)
-                ) {
-                    Text("Forgot Password", color = MaterialTheme.colorScheme.primary)
-                }
-
-                if (uiState.errorMessage.isNotEmpty())
-                    Text(uiState.errorMessage, color = MaterialTheme.colorScheme.error)
-            }
-
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Button(
-                    onClick = { loginViewModel.onLoginButtonClick() },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primaryContainer)
-                ) {
-                    Text(text = "Log In")
-                }
-
-                TextButton(onClick = { navController.navigate(Screen.Auth.Register.route) }) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        "Don't have an account, click here",
-                        color = MaterialTheme.colorScheme.primaryContainer
+                        text = "Welcome ProHiker",
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.ExtraBold
                     )
+
+                    Text(
+                        text = "Sign in to continue",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+
+                Column {
+                    CustomTextField(
+                        value = uiState.usernameText,
+                        label = "Username",
+                        placeholder = "Enter your email address",
+                        onValueChange = {
+                            loginViewModel.updateUsernameText(it)
+                        },
+                        leadingIcon = {
+                            Icon(Icons.Default.Email, contentDescription = "Email")
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Email,
+                            imeAction = ImeAction.Next
+                        )
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    CustomTextField(
+                        value = uiState.passwordText,
+                        label = "Password",
+                        placeholder = "Enter your Password",
+                        onValueChange = {
+                            loginViewModel.updatePasswordText(it)
+                        },
+                        visualTransformation = PasswordVisualTransformation(),
+                        leadingIcon = {
+                            Icon(Icons.Default.Lock, contentDescription = "Password")
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Go
+                        )
+                    )
+
+                    TextButton(
+                        onClick = {
+                            // forgot password
+                        },
+                        modifier = Modifier.align(Alignment.End)
+                    ) {
+                        Text("Forgot Password", color = MaterialTheme.colorScheme.primary)
+                    }
+
+                    if (uiState.errorMessage.isNotEmpty())
+                        Text(uiState.errorMessage, color = MaterialTheme.colorScheme.error)
+                }
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Button(
+                        onClick = { loginViewModel.onLoginButtonClick() },
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primaryContainer),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = "Log In")
+                    }
+
+                    TextButton(onClick = { navController.navigate(Screen.Auth.Register.route) }) {
+                        Text(
+                            "Don't have an account, click here",
+                            color = MaterialTheme.colorScheme.primaryContainer
+                        )
+                    }
                 }
             }
         }

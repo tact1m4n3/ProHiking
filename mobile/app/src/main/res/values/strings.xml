@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ProHiking</string>
     <string name="explore">Explore</string>
-    <string name="map">Map</string>
+    <string name="navigate">Navigate</string>
     <string name="library">Library</string>
     <string name="profile">Profile</string>
 </resources>

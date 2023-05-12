@@ -3,6 +3,9 @@ package com.anonymous.prohiking.ui.main
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.anonymous.prohiking.BuildConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -14,7 +17,7 @@ import java.io.BufferedInputStream
 import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 
-class MapViewModel : ViewModel() {
+class NavigateViewModel() : ViewModel() {
     private val tileStreamProvider =
         TileStreamProvider { row, col, zoomLvl ->
             try {
@@ -47,4 +50,15 @@ class MapViewModel : ViewModel() {
             setPreloadingPadding(1 * 512)
         }
     )
+
+    init {
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                NavigateViewModel()
+            }
+        }
+    }
 }

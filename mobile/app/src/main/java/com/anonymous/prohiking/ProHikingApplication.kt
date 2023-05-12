@@ -6,6 +6,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.anonymous.prohiking.data.PreferencesRepository
+import com.anonymous.prohiking.data.TrailRepository
 import com.anonymous.prohiking.data.UserRepository
 import com.anonymous.prohiking.data.network.ProHikingApiService
 import com.anonymous.prohiking.data.network.initProHikingApiService
@@ -23,14 +24,16 @@ class ProHikingApplication: Application() {
 
     private lateinit var proHikingApiService: ProHikingApiService
 
-    lateinit var userRepository: UserRepository
     lateinit var preferencesRepository: PreferencesRepository
+    lateinit var userRepository: UserRepository
+    lateinit var trailRepository: TrailRepository
 
     override fun onCreate() {
         super.onCreate()
         instance = this
         proHikingApiService = initProHikingApiService()
-        userRepository = UserRepository(proHikingApiService)
         preferencesRepository = PreferencesRepository(dataStore)
+        userRepository = UserRepository(proHikingApiService)
+        trailRepository = TrailRepository(proHikingApiService)
     }
 }

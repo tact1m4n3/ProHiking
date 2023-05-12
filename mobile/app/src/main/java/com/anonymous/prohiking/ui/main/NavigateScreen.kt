@@ -8,7 +8,6 @@ import androidx.navigation.NavController
 import ovh.plrapps.mapcompose.ui.MapUI
 
 @Composable
-fun MapScreen(navController: NavController) {
-    val viewModel = viewModel<MapViewModel>()
+fun NavigateScreen(navController: NavController, viewModel: NavigateViewModel = viewModel(factory = NavigateViewModel.Factory)) {
     MapUI(state = viewModel.state, modifier = Modifier.fillMaxSize())
 }

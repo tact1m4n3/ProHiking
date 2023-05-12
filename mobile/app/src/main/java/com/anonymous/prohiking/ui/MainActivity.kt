@@ -15,14 +15,16 @@ import androidx.navigation.compose.rememberNavController
 import com.anonymous.prohiking.ui.main.BottomNavBarScreen
 import com.anonymous.prohiking.ui.main.ExploreScreen
 import com.anonymous.prohiking.ui.main.LibraryScreen
-import com.anonymous.prohiking.ui.main.MapScreen
+import com.anonymous.prohiking.ui.main.NavigateScreen
 import com.anonymous.prohiking.ui.main.ProfileScreen
 import com.anonymous.prohiking.ui.theme.ProHikingTheme
+
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             val navController = rememberNavController()
 
@@ -43,8 +45,8 @@ private fun NavigationGraph(navHostController: NavHostController) {
         composable(route = Screen.Main.Explore.route) {
             ExploreScreen(navController = navHostController)
         }
-        composable(route = Screen.Main.Map.route) {
-            MapScreen(navController = navHostController)
+        composable(route = Screen.Main.Navigate.route) {
+            NavigateScreen(navController = navHostController)
         }
         composable(route = Screen.Main.Library.route) {
             LibraryScreen(navController = navHostController)
