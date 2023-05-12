@@ -78,3 +78,17 @@ fun ExploreScreen(navController: NavController, viewModel: ExploreViewModel = vi
     }
 }
 
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun ExploreScreenPreview() {
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+    }
+}
