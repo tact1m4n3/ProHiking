@@ -3,18 +3,31 @@ package com.anonymous.prohiking.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val best_color= Color(0xFF02583F)
+
+
+val color_1 = Color(0xFFD8F3C9)
+val color_2 = Color(0xFF205a3b)
+val color_3 = Color(0xFF518167)
+val color_4 = Color(0xFF256945)
+val color_5 = Color(0xFF3d4c44)
+
 val md_theme_light_primary = Color(0xFF046448)
+
 val md_theme_light_onPrimary = Color(0xFFB9C5BE)
 val md_theme_light_primaryContainer = Color(0xFF0D462D)
 val md_theme_light_onPrimaryContainer = Color(0xFF002114)
+
 val md_theme_light_secondary = Color(0xBE0D5C31)
+
 val md_theme_light_onSecondary = Color(0xFFFFFFFF)
 val md_theme_light_secondaryContainer = Color(0xFFCFE9D9)
-val md_theme_light_onSecondaryContainer = Color(0xFF092016)
-val md_theme_light_tertiary = Color(0xFF3D6373)
-val md_theme_light_onTertiary = Color(0xFFFFFFFF)
+val md_theme_light_onSecondaryContainer = Color(0xFF41944E)
+
+val md_theme_light_tertiary = Color(0xFF93c89c)
+val md_theme_light_onTertiary = Color(0xFF5DA57A)
 val md_theme_light_tertiaryContainer = Color(0xFFC1E8FB)
 val md_theme_light_onTertiaryContainer = Color(0xFF001F29)
+
 val md_theme_light_error = Color(0xFFBA1A1A)
 val md_theme_light_errorContainer = Color(0xFFFFDAD6)
 val md_theme_light_onError = Color(0xFFFFFFFF)

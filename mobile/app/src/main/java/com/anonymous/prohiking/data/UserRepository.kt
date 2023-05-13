@@ -1,32 +1,41 @@
 package com.anonymous.prohiking.data
 
+import android.content.Context
 import com.anonymous.prohiking.data.model.User
 import com.anonymous.prohiking.data.network.LoginPayload
 import com.anonymous.prohiking.data.network.ProHikingApiService
-import com.anonymous.prohiking.data.utils.ResultWrapper
+import com.anonymous.prohiking.data.utils.Result
 import com.anonymous.prohiking.data.network.RegisterPayload
 import com.anonymous.prohiking.data.network.utils.enforceLogin
 import com.anonymous.prohiking.data.network.utils.safeApiCall
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
-class UserRepository(
+interface UserRepository {
+    suspend fun getUserById(id: Int): Result<User>
+    suspend fun registerUser(username: String, email: String, password: String): Result<User>
+    suspend fun loginUser(username: String, password: String): Result<User>
+    suspend fun logoutUser(): Result<String>
+}
+
+class DefaultUserRepository(
+    private val context: Context,
     private val proHikingApiService: ProHikingApiService,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-) {
-    suspend fun getUserById(id: Int): ResultWrapper<User> {
-        return enforceLogin { safeApiCall(dispatcher) { proHikingApiService.getUserById(id) } }
+): UserRepository {
+    override suspend fun getUserById(id: Int): Result<User> {
+        return enforceLogin(context) { safeApiCall(dispatcher) { proHikingApiService.getUserById(id) } }
     }
 
-    suspend fun registerUser(username: String, email: String, password: String): ResultWrapper<User> {
+    override suspend fun registerUser(username: String, email: String, password: String): Result<User> {
         return safeApiCall(dispatcher) { proHikingApiService.registerUser(RegisterPayload(username, email, password)) }
     }
 
-    suspend fun loginUser(username: String, password: String): ResultWrapper<User> {
+    override suspend fun loginUser(username: String, password: String): Result<User> {
         return safeApiCall(dispatcher) { proHikingApiService.loginUser(LoginPayload(username, password)) }
     }
 
-    suspend fun logoutUser(): ResultWrapper<String> {
+    override suspend fun logoutUser(): Result<String> {
         return safeApiCall(dispatcher) { proHikingApiService.logoutUser() }
     }
 }

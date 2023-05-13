@@ -3,6 +3,8 @@ package com.anonymous.prohiking.data.network
 import com.anonymous.prohiking.BuildConfig
 import com.anonymous.prohiking.ProHikingApplication
 import com.anonymous.prohiking.R
+import com.anonymous.prohiking.data.model.Point
+import com.anonymous.prohiking.data.model.Trail
 import com.anonymous.prohiking.data.model.User
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -17,6 +19,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 import java.net.CookieManager
 import java.net.CookiePolicy
 import java.nio.charset.Charset
@@ -35,6 +38,21 @@ interface ProHikingApiService {
 
     @POST("api/user/logout")
     suspend fun logoutUser(): String
+
+    @GET("api/trails/{id}")
+    suspend fun getTrailById(@Path("id") id: Int): Trail
+
+    @GET("api/trails/{id}/path")
+    suspend fun getTrailPath(@Path("id") id: Int): List<Point>
+
+    @GET("api/trails/search")
+    suspend fun searchTrails(
+        @Query("limit") limit: Int,
+        @Query("offset") offset: Int,
+        @Query("name") name: String,
+        @Query("length") length: String,
+        @Query("bbox") bbox: String,
+    ): List<Trail>
 }
 
 fun initProHikingApiService(): ProHikingApiService {

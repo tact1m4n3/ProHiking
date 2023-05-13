@@ -8,7 +8,7 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.LibraryBooks
-import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.outlined.Navigation
 import androidx.compose.material.icons.outlined.People
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -48,17 +48,17 @@ fun BottomNavBarScreen(navController: NavController) {
                     label = { Text(text = stringResource(id = R.string.explore), color = MaterialTheme.colorScheme.onPrimaryContainer) }
                 )
                 BottomNavigationItem(
-                    selected = currentDestination?.route == Screen.Main.Map.route,
-                    onClick = { navController.navigate(Screen.Main.Map.route) },
+                    selected = currentDestination?.route == Screen.Main.Navigate.route,
+                    onClick = { navController.navigate(Screen.Main.Navigate.route) },
                     icon = {
                         Icon(
-                            Icons.Outlined.Map,
+                            Icons.Outlined.Navigation,
                             tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             contentDescription = null,
 
                         )
                     },
-                    label = { Text(text = stringResource(id = R.string.map), color = MaterialTheme.colorScheme.onPrimaryContainer) }
+                    label = { Text(text = stringResource(id = R.string.navigate), color = MaterialTheme.colorScheme.onPrimaryContainer) }
                 )
                 BottomNavigationItem(
                     selected = currentDestination?.route == Screen.Main.Library.route,

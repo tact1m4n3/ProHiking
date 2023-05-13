@@ -8,7 +8,8 @@ sealed class Screen(val route: String) {
 
     sealed class Main {
         object Explore: Screen(route = "explore_screen")
-        object Map: Screen(route = "map_screen")
+        object TrailDetails: Screen(route = "trail_details_screen")
+        object Navigate: Screen(route = "navigate_screen")
         object Library: Screen(route = "library_screen")
         object Profile: Screen(route = "profile_screen")
     }

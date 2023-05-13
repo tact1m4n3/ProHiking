@@ -38,8 +38,8 @@ func main() {
 				length, _ := strconv.ParseFloat(feature.PropertyMustString("distance", "0"), 64)
 				trail := &model.Trail{
 					Name:   feature.PropertyMustString("name", ""),
-					Start:  feature.PropertyMustString("from", ""),
-					End:    feature.PropertyMustString("to", ""),
+					From:   feature.PropertyMustString("from", ""),
+					To:     feature.PropertyMustString("to", ""),
 					Length: length,
 					Symbol: feature.PropertyMustString("osmc:symbol", ""),
 				}
