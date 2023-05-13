@@ -3,6 +3,7 @@ package com.anonymous.prohiking.ui.main
 
 import android.content.Context
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,12 +22,20 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetState
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.ContactPage
 import androidx.compose.material.icons.outlined.Explore
@@ -55,6 +64,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -65,95 +75,44 @@ import androidx.navigation.compose.rememberNavController
 import com.anonymous.prohiking.ProHikingApplication
 import com.anonymous.prohiking.R
 import com.anonymous.prohiking.ui.theme.ProHikingTheme
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.ArrayList
+
 /*
-@Composable
-fun ProfileScreen(navController: NavController) {
-    //val preferencesRepository = ProHikingApplication.instance.preferencesRepository
-    // val username = preferencesRepository.username.collectAsState(initial = "")
-    // ${username.value?:"ProHiker"
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.onPrimaryContainer)
-    ) {
 
-
-        Column(
-            modifier = Modifier
-                .padding(36.dp)
-                .fillMaxWidth(),
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically)
-
-            {
-                Text("Welcome back,\nProhiker !", fontSize = 28.sp, lineHeight = 35.sp)
-                Spacer(modifier = Modifier.weight(1.0f))
-                Card(
-                    shape = CircleShape,
-
-                    backgroundColor = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier
-                        .size(100.dp)
-                )
-                {
-                    Image(
-                        painter = painterResource(id = R.drawable.baseline_person_outline_24),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .wrapContentSize()
-                            .fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.size(50.dp))
-            Row()
-            {
-                Icon(
-                    Icons.Default.Email,
-                    contentDescription = "Email",
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(Modifier.size(10.dp))
-                Text("Email:", fontWeight = FontWeight.SemiBold, fontSize = 24.sp)
-            }
-
-            Spacer(modifier = Modifier.size(50.dp))
-            Text("Trails:", fontWeight = FontWeight.SemiBold, fontSize = 24.sp)
-
-
-            //Contact data
-            Column(
-                modifier = Modifier
-                    .padding(vertical = 150.dp, horizontal = 40.dp)
-                    .fillMaxWidth(),
-            ) {
                 //Text("Dicu Tudor-Andrei\ntudor.andrei.dicu@gmail.com\n+40737387783\n\n" +
                 //"Peța Andrei-Mathias\nandrei.peta2005@gmail.com\n+40733056003")
-            }
-        }
-    }
 
-}
 */
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun ProfileScreenPreview() {
 
     ProHikingTheme {
-       ProfileScreen(rememberNavController())
+        ProfileScreen(rememberNavController())
     }
 }
 
 private val optionsList: ArrayList<OptionsData> = ArrayList()
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ProfileScreen(navController: NavController, context: Context = LocalContext.current.applicationContext) {
+fun ProfileScreen(
+    navController: NavController,
+    context: Context = LocalContext.current.applicationContext
+) {
+        val sheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
+    )
+    val coroutineScope = rememberCoroutineScope()
+    BackHandler(sheetState.isVisible) {
+        coroutineScope.launch { sheetState.hide() }
+    }
+
     var listPrepared by remember {
         mutableStateOf(false)
     }
@@ -164,31 +123,32 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
             listPrepared = true
         }
     }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.onPrimaryContainer)
-    ){
-        if (listPrepared) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                item {
 
-                    // User's image, name, email
-                    UserDetails(context = context)
-                }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.onPrimaryContainer)
+        ) {
+            if (listPrepared) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    item {
 
-                items(optionsList) { item ->
-                    OptionsItemsStyle(item = item, context = context)
+                        // User's image, name, email
+                        UserDetails(context = context)
+                    }
 
+                    items(optionsList) { item ->
+                        OptionsItemsStyle(item = item, sheetState = sheetState, coroutineScope = coroutineScope)
+
+                    }
                 }
             }
         }
     }
 
 
-}
 
 @Composable
 private fun UserDetails(context: Context) {
@@ -265,11 +225,14 @@ private fun UserDetails(context: Context) {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun OptionsItemsStyle(item: OptionsData, context: Context) {
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
-    )
-    val coroutineScope = rememberCoroutineScope()
+private fun OptionsItemsStyle(item: OptionsData, sheetState: ModalBottomSheetState, coroutineScope: CoroutineScope ){
+
+
+    ModalBottomSheetLayout(
+        sheetState = sheetState,
+        sheetContent = { BottomSheet() },
+        modifier = Modifier.fillMaxSize()
+    ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -280,7 +243,7 @@ private fun OptionsItemsStyle(item: OptionsData, context: Context) {
         verticalAlignment = Alignment.CenterVertically,
 
 
-    ) {
+        ) {
         Icon(
             modifier = Modifier.size(32.dp),
             imageVector = item.icon,
@@ -308,10 +271,10 @@ private fun OptionsItemsStyle(item: OptionsData, context: Context) {
                 )
                 Spacer(modifier = Modifier.height(2.dp))
 
-                    //Sub-title
+                //Sub-title
                 Text(
-                    text= item.subTitle,
-                    style= TextStyle(
+                    text = item.subTitle,
+                    style = TextStyle(
                         fontSize = 14.sp,
                         letterSpacing = (0.8).sp,
                         fontFamily = FontFamily.Default,
@@ -319,26 +282,18 @@ private fun OptionsItemsStyle(item: OptionsData, context: Context) {
                     )
                 )
             }
-            Icon(
-                modifier = Modifier
-                    .weight(weight = 1f, fill = false),
-                imageVector = Icons.Outlined.ChevronRight,
-                contentDescription = item.title,
-                tint = Color.Black.copy(alpha = 0.70f)
-            )
-            Button(onClick = {
-                coroutineScope.launch {
-
-                    if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                        bottomSheetScaffoldState.bottomSheetState.expand()
-                    } else {
-                        bottomSheetScaffoldState.bottomSheetState.collapse()
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        if (sheetState.isVisible) sheetState.hide()
+                        else sheetState.show()
                     }
                 }
-            },
-            modifier= Modifier.weight(weight= 1f, fill = false)){
-
+            ) {
+                Text(text = "Click ")
             }
+
+        }
         }
     }
 }
@@ -369,99 +324,71 @@ private fun prepareOptionsData() {
 }
 
 data class OptionsData(val icon: ImageVector, val title: String, val subTitle: String)
-/*
-@Preview(showBackground = true, showSystemUi = true)
-@ExperimentalMaterialApi
+
+
+
+// @OptIn(ExperimentalMaterialApi::class)
+//@Composable
+//fun ProfileScreen(
+//    navController: NavController,
+//    context: Context = LocalContext.current.applicationContext
+//) {
+//    val sheetState = rememberModalBottomSheetState(
+//        initialValue = ModalBottomSheetValue.Hidden,
+//        confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded }
+//    )
+//    val coroutineScope = rememberCoroutineScope()
+//
+//    BackHandler(sheetState.isVisible) {
+//        coroutineScope.launch { sheetState.hide() }
+//    }
+//
+//    ModalBottomSheetLayout(
+//        sheetState = sheetState,
+//        sheetContent = { BottomSheet() },
+//        modifier = Modifier.fillMaxSize()
+//    ) {
+//        Column(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(top = 24.dp)
+//                .padding(horizontal = 24.dp),
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            Text(
+//                text = "Welcome to bottom sheet playground!",
+//                modifier = Modifier.fillMaxWidth(),
+//                style = MaterialTheme.typography.displayMedium,
+//                textAlign = TextAlign.Center
+//            )
+//            Spacer(modifier = Modifier.height(32.dp))
+//            Button(
+//                onClick = {
+//                    coroutineScope.launch {
+//                        if (sheetState.isVisible) sheetState.hide()
+//                        else sheetState.show()
+//                    }
+//                }
+//            ) {
+//                Text(text = "Click to show bottom sheet")
+//            }
+//        }
+//    }
+//}
+
 @Composable
-fun HomeScreen() {
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
-    )
-    val coroutineScope = rememberCoroutineScope()
-    BottomSheetScaffold(
-        scaffoldState = bottomSheetScaffoldState,
-        sheetContent = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(enabled = true) {
-
-                    }
-                    .padding(all = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-
-
-                ) {
-                Icon(
-                    modifier = Modifier.size(32.dp),
-                    imageVector = item.icon,
-                    contentDescription = item.title,
-                    tint = MaterialTheme.colorScheme.primaryContainer
-                )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .weight(weight = 3f, fill = false)
-                            .padding(start = 16.dp)
-                    ) {
-                        Text(
-                            text = item.title,
-                            style = TextStyle(
-                                fontSize = 18.sp,
-                                fontFamily = FontFamily.Default
-                            )
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
-
-                        //Sub-title
-                        Text(
-                            text = item.subTitle,
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                letterSpacing = (0.8).sp,
-                                fontFamily = FontFamily.Default,
-                                color = Color.Gray
-                            )
-                        )
-                    }
-                    Icon(
-                        modifier = Modifier
-                            .weight(weight = 1f, fill = false),
-                        imageVector = Icons.Outlined.ChevronRight,
-                        contentDescription = item.title,
-                        tint = Color.Black.copy(alpha = 0.70f)
-                    )
-                    Button(
-                        onClick = {
-                            coroutineScope.launch {
-
-                                if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                                    bottomSheetScaffoldState.bottomSheetState.expand()
-                                } else {
-                                    bottomSheetScaffoldState.bottomSheetState.collapse()
-                                }
-                            }
-                        },
-                        modifier = Modifier.weight(weight = 1f, fill = false)
-                    ) {
-
-                    }
-
-                }
-            }
-        }
+fun BottomSheet() {
+    Column(
+        modifier = Modifier.padding(32.dp)
+    ) {
+        Text(
+            text = "Bottom sheet",
+            style = MaterialTheme.typography.displayMedium
+        )
+       Spacer(modifier = Modifier.height(32.dp))
+        Text(
+            text = "Click outside the bottom sheet to hide it",
+            style = MaterialTheme.typography.displayMedium
+        )
+    }
 }
-*/
-
-
-
-
-
-
-
