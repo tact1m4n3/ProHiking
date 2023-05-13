@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.anonymous.prohiking.ui.Screen
 import com.anonymous.prohiking.ui.widgets.TrailPreview
+import com.anonymous.prohiking.ui.widgets.TrailSymbol
 
 
 @Composable
@@ -57,7 +57,7 @@ fun TrailDetailsScreen(
             .background(MaterialTheme.colorScheme.onPrimaryContainer)) {
             TopAppBar (backgroundColor =MaterialTheme.colorScheme.primary){
                 IconButton(onClick = {
-                    navController.navigate(Screen.Main.Explore.route)
+                    navController.popBackStack()
                 }) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null, tint = androidx.compose.material3.MaterialTheme.colorScheme.onPrimaryContainer )
                 }
@@ -78,6 +78,7 @@ fun TrailDetailsScreen(
                 .fillMaxSize()
                 .padding(24.dp)) {
                 selectedTrail?.let { trail ->
+
 
                     Row(modifier = Modifier.fillMaxWidth())
                     {
@@ -183,6 +184,7 @@ fun TrailDetailsScreen(
 
 
                     Spacer( modifier = Modifier.height(100.dp))
+
                     selectedTrailPath?.let { trailPath ->
                         TrailPreview(
                             trail = trail,
