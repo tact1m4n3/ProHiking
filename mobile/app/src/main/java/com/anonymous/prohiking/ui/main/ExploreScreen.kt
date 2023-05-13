@@ -53,13 +53,16 @@ fun ExploreScreen(
 
     println(recommendedTrails)
 
-    Box(modifier = modifier.fillMaxSize()
-        .background(MaterialTheme.colorScheme.onPrimaryContainer)) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.onPrimaryContainer)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
-        ){
+        ) {
             TextField(
                 value = searchText,
                 onValueChange = {
@@ -68,11 +71,10 @@ fun ExploreScreen(
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = { Text(text = "Search") },
                 maxLines = 1,
-              colors = TextFieldDefaults.textFieldColors(
-              focusedIndicatorColor = MaterialTheme.colorScheme.primary ,
-                  cursorColor = MaterialTheme.colorScheme.primary
-
-              )
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                    cursorColor = MaterialTheme.colorScheme.primary
+                )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -92,7 +94,7 @@ fun ExploreScreen(
 
                         .weight(1f)
                 ) {
-                    items(searchedTrails) {trail ->
+                    items(searchedTrails) { trail ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -104,11 +106,12 @@ fun ExploreScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             TrailSymbol(trail.symbol, modifier = Modifier.size(32.dp, 32.dp))
-                            
-                            Column(modifier = Modifier
-                                .fillMaxHeight()
-                                .fillMaxWidth(0.9f)
-                                .padding(start = 8.dp)
+
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .fillMaxWidth(0.9f)
+                                    .padding(start = 8.dp)
                             ) {
                                 Text(
                                     text = trail.name,

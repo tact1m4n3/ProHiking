@@ -39,7 +39,6 @@ import com.anonymous.prohiking.ui.Screen
 import com.anonymous.prohiking.ui.widgets.TrailPreview
 import com.anonymous.prohiking.ui.widgets.TrailSymbol
 
-
 @Composable
 fun TrailDetailsScreen(
     navController: NavController,
@@ -49,17 +48,25 @@ fun TrailDetailsScreen(
     val selectedTrail by exploreViewModel.selectedTrail.collectAsState()
     val selectedTrailPath by exploreViewModel.selectedTrailPath.collectAsState()
 
-    Box(modifier = modifier
-        .fillMaxSize()
-        .background( MaterialTheme.colorScheme.onPrimaryContainer)) {
-        Column(modifier = Modifier
+    Box(
+        modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.onPrimaryContainer)) {
-            TopAppBar (backgroundColor =MaterialTheme.colorScheme.primary){
+            .background(MaterialTheme.colorScheme.onPrimaryContainer)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.onPrimaryContainer)
+        ) {
+            TopAppBar(backgroundColor = MaterialTheme.colorScheme.primary) {
                 IconButton(onClick = {
                     navController.popBackStack()
                 }) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null, tint = androidx.compose.material3.MaterialTheme.colorScheme.onPrimaryContainer )
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = null,
+                        tint = androidx.compose.material3.MaterialTheme.colorScheme.onPrimaryContainer
+                    )
                 }
 
                 Text(
@@ -74,26 +81,29 @@ fun TrailDetailsScreen(
                 )
             }
 
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp)
+            ) {
                 selectedTrail?.let { trail ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        TrailSymbol(text = trail.symbol, modifier = Modifier.size(100.dp))
 
-
-                    Row(modifier = Modifier.fillMaxWidth())
-                    {
                         Card(
                             elevation = CardDefaults.elevatedCardElevation(),
                             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
                             modifier = Modifier.size(100.dp)
-                        ){
+                        ) {
                             Column(
-                                modifier = Modifier
-
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    modifier = Modifier
-                                        .align(Alignment.CenterHorizontally),
                                     text = "Length",
                                     style = TextStyle(
                                         fontSize = 16.sp,
@@ -103,87 +113,19 @@ fun TrailDetailsScreen(
                                     )
                                 )
 
-                                Spacer(modifier = Modifier.height(2.dp))
-
                                 Text(
-                                    text ="${trail.length} km" ,
-                                    color= MaterialTheme.colorScheme.onPrimaryContainer,
+                                    text = "${trail.length} km",
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                                     style = TextStyle(
                                         fontSize = 24.sp,
                                         fontFamily = FontFamily.Default
                                     )
                                 )
-
-                                
                             }
-
-                        }
-                        Card(elevation = CardDefaults.elevatedCardElevation(),
-                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
-                            modifier = Modifier.size(100.dp),
-                        ){
-                            Column(modifier = Modifier.padding(horizontal =10.dp , vertical =15.dp )) {
-                                Text(
-                                    text = "From",
-                                    style = TextStyle(
-                                        fontSize = 15.sp,
-                                        letterSpacing = (0.8).sp,
-                                        fontFamily = FontFamily.Default,
-                                        color = Color.Gray
-                                    )
-                                )
-
-                                Spacer(modifier = Modifier.height(2.dp))
-
-
-                                Text(
-                                    text = trail.from,
-                                    color= MaterialTheme.colorScheme.onPrimaryContainer,
-                                    style = TextStyle(
-                                        fontSize = 24.sp,
-                                        fontFamily = FontFamily.Default
-                                    )
-                                )
-
-
-                            }
-
-                        }
-                        Card(elevation = CardDefaults.elevatedCardElevation(),
-                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
-                            modifier = Modifier.size(100.dp),
-                        ){
-                            Column(modifier = Modifier.padding(horizontal =10.dp , vertical =15.dp )) {
-                                Text(
-                                    text = "To",
-                                    style = TextStyle(
-                                        fontSize = 15.sp,
-                                        letterSpacing = (0.8).sp,
-                                        fontFamily = FontFamily.Default,
-                                        color = Color.Gray
-                                    )
-                                )
-
-                                Spacer(modifier = Modifier.height(2.dp))
-
-
-                                Text(
-                                    text = trail.to,
-                                    color= MaterialTheme.colorScheme.onPrimaryContainer,
-                                    style = TextStyle(
-                                        fontSize = 24.sp,
-                                        fontFamily = FontFamily.Default
-                                    )
-                                )
-
-
-                            }
-
                         }
                     }
 
-
-                    Spacer( modifier = Modifier.height(100.dp))
+                    Spacer(modifier = Modifier.height(100.dp))
 
                     selectedTrailPath?.let { trailPath ->
                         TrailPreview(

@@ -97,8 +97,7 @@ private fun UserDetails() {
             backgroundColor = MaterialTheme.colorScheme.secondary,
             modifier = Modifier
                 .size(100.dp)
-        )
-        {
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.baseline_person_outline_24),
                 contentDescription = null,
@@ -156,7 +155,6 @@ private fun UserDetails() {
 
 @Composable
 private fun MenuItem(icon: ImageVector, title: String, description: String, callback: () -> Unit) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
