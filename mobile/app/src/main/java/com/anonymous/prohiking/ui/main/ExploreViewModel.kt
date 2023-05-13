@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.anonymous.prohiking.ProHikingApplication
 import com.anonymous.prohiking.data.LocationClient
 import com.anonymous.prohiking.data.LocationDetails
+import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.TrailRepository
 import com.anonymous.prohiking.data.model.Point
 import com.anonymous.prohiking.data.model.Trail
@@ -26,6 +27,7 @@ import kotlinx.coroutines.launch
 
 class ExploreViewModel(
     private val trailRepository: TrailRepository,
+    private val preferencesRepository: PreferencesRepository,
     private val locationClient: LocationClient
 ): ViewModel() {
     private val location = locationClient
@@ -86,6 +88,10 @@ class ExploreViewModel(
         }
     }
 
+    fun onStartTrailButtonPressed(trail: Trail) {
+
+    }
+
     private suspend fun recommendedTrails(location: LocationDetails): List<Trail> {
         return when (val result = trailRepository.searchTrails(
             5,
@@ -123,8 +129,13 @@ class ExploreViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val trailRepository = ProHikingApplication.instance.trailRepository
+                val preferencesRepository = ProHikingApplication.instance.preferencesRepository
                 val locationClient = ProHikingApplication.instance.locationClient
-                ExploreViewModel(trailRepository = trailRepository, locationClient = locationClient)
+                ExploreViewModel(
+                    trailRepository = trailRepository,
+                    preferencesRepository = preferencesRepository,
+                    locationClient = locationClient
+                )
             }
         }
     }

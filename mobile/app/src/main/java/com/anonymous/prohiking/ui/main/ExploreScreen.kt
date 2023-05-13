@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Navigation
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -32,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.anonymous.prohiking.ui.Screen
+import com.anonymous.prohiking.ui.widgets.TrailSymbol
 
 @Composable
 fun ExploreScreen(
@@ -43,8 +46,6 @@ fun ExploreScreen(
     val isSearching by exploreViewModel.isSearching.collectAsState()
     val recommendedTrails by exploreViewModel.recommendedTrails.collectAsState()
     val searchedTrails by exploreViewModel.searchedTrails.collectAsState()
-
-    println(recommendedTrails)
 
     Box(modifier = modifier.fillMaxSize()) {
         Column(
@@ -93,10 +94,16 @@ fun ExploreScreen(
                                     exploreViewModel.onTrailSelect(trail)
                                     navController.navigate(Screen.Main.TrailDetails.route)
                                 }
-                                .padding(all = 16.dp),
+                                .padding(all = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Column(modifier = Modifier.fillMaxHeight().fillMaxWidth(0.9f)) {
+                            TrailSymbol(trail.symbol, modifier = Modifier.size(32.dp, 32.dp))
+                            
+                            Column(modifier = Modifier
+                                .fillMaxHeight()
+                                .fillMaxWidth(0.9f)
+                                .padding(start = 8.dp)
+                            ) {
                                 Text(
                                     text = trail.name,
                                     fontSize = 18.sp,

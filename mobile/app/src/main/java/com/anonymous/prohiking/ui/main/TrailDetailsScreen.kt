@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,6 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.anonymous.prohiking.ui.Screen
 import com.anonymous.prohiking.ui.widgets.TrailPreview
+import com.anonymous.prohiking.ui.widgets.TrailSymbol
 
 @Composable
 fun TrailDetailsScreen(
@@ -40,7 +43,7 @@ fun TrailDetailsScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             TopAppBar {
                 IconButton(onClick = {
-                    navController.navigate(Screen.Main.Explore.route)
+                    navController.popBackStack()
                 }) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
                 }
@@ -57,8 +60,20 @@ fun TrailDetailsScreen(
                 )
             }
 
-            Column(modifier = Modifier.fillMaxSize().padding(24.dp)) {
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp)) {
                 selectedTrail?.let { trail ->
+                    TrailSymbol(text = trail.symbol, modifier = Modifier.size(75.dp, 75.dp))
+
+                    Button(
+                        onClick = {
+                            navController.navigate(Screen.Main.Navigate.route)
+                        }
+                    ) {
+
+                    }
+
                     selectedTrailPath?.let { trailPath ->
                         TrailPreview(
                             trail = trail,

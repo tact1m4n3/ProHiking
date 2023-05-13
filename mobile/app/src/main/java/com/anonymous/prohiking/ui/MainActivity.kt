@@ -17,13 +17,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.anonymous.prohiking.ui.main.AccountScreen
 import com.anonymous.prohiking.ui.main.BottomNavBarScreen
+import com.anonymous.prohiking.ui.main.ContactScreen
 import com.anonymous.prohiking.ui.main.ExploreScreen
 import com.anonymous.prohiking.ui.main.ExploreViewModel
 import com.anonymous.prohiking.ui.main.LibraryScreen
 import com.anonymous.prohiking.ui.main.NavigateScreen
 import com.anonymous.prohiking.ui.main.NavigateViewModel
 import com.anonymous.prohiking.ui.main.ProfileScreen
+import com.anonymous.prohiking.ui.main.ProfileViewModel
+import com.anonymous.prohiking.ui.main.StatisticsScreen
 import com.anonymous.prohiking.ui.main.TrailDetailsScreen
 import com.anonymous.prohiking.ui.theme.ProHikingTheme
 
@@ -59,6 +63,7 @@ class MainActivity : ComponentActivity() {
 private fun NavigationGraph(navHostController: NavHostController, modifier: Modifier = Modifier) {
     val exploreViewModel = viewModel<ExploreViewModel>(factory = ExploreViewModel.Factory)
     val navigateViewModel = viewModel<NavigateViewModel>()
+    val profileViewModel = viewModel<ProfileViewModel>()
 
     NavHost(navController = navHostController, startDestination = Screen.Main.Explore.route) {
         composable(route = Screen.Main.Explore.route) {
@@ -75,6 +80,15 @@ private fun NavigationGraph(navHostController: NavHostController, modifier: Modi
         }
         composable(route = Screen.Main.Profile.route) {
             ProfileScreen(navController = navHostController, modifier = modifier)
+        }
+        composable(route = Screen.Main.Account.route) {
+            AccountScreen(navController = navHostController, profileViewModel = profileViewModel, modifier = modifier)
+        }
+        composable(route = Screen.Main.Statistics.route) {
+            StatisticsScreen(navController = navHostController, profileViewModel = profileViewModel, modifier = modifier)
+        }
+        composable(route = Screen.Main.Contact.route) {
+            ContactScreen(navController = navHostController, profileViewModel = profileViewModel, modifier = modifier)
         }
     }
 }

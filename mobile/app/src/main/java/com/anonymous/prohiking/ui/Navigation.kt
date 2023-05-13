@@ -12,5 +12,8 @@ sealed class Screen(val route: String) {
         object Navigate: Screen(route = "navigate_screen")
         object Library: Screen(route = "library_screen")
         object Profile: Screen(route = "profile_screen")
+        object Account: Screen(route = "account_screen")
+        object Statistics: Screen(route = "statistics_screen")
+        object Contact: Screen(route = "contact_screen")
     }
 }
