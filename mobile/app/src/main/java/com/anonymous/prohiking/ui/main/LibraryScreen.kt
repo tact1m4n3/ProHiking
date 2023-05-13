@@ -9,11 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 
 @Composable
-fun LibraryScreen(navController: NavController) {
+fun LibraryScreen(navController: NavController, modifier: Modifier = Modifier) {
     Box(
-        modifier= Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        modifier = modifier.fillMaxSize()
     ){
-        Text(text = "Library")
+        Text(text = "Library", modifier = Modifier.align(Alignment.Center))
     }
 }

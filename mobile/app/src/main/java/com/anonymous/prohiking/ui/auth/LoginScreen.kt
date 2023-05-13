@@ -50,10 +50,10 @@ import com.anonymous.prohiking.ui.widgets.LoadingAnimation
 @Composable
 fun LoginScreen(
     navController: NavController,
-    viewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
+    loginViewModel: LoginViewModel = viewModel(factory = LoginViewModel.Factory)
 ) {
     val context = LocalContext.current
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by loginViewModel.uiState.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -68,7 +68,7 @@ fun LoginScreen(
         when (uiState) {
             is LoginUiState.Loading -> LoadingScreen()
             is LoginUiState.LoggedOut -> LoggedOutScreen(navController,
-                uiState as LoginUiState.LoggedOut, viewModel)
+                uiState as LoginUiState.LoggedOut, loginViewModel)
             is LoginUiState.LoggedIn -> context.startActivity(
                 Intent(
                     context,

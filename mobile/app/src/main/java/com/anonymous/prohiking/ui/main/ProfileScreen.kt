@@ -69,6 +69,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.ArrayList
+
 /*
 @Composable
 fun ProfileScreen(navController: NavController) {
@@ -144,16 +145,19 @@ fun ProfileScreen(navController: NavController) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun ProfileScreenPreview() {
-
     ProHikingTheme {
-       ProfileScreen(rememberNavController())
+        ProfileScreen(rememberNavController())
     }
 }
 
 private val optionsList: ArrayList<OptionsData> = ArrayList()
 
 @Composable
-fun ProfileScreen(navController: NavController, context: Context = LocalContext.current.applicationContext) {
+fun ProfileScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    context: Context = LocalContext.current.applicationContext
+) {
     var listPrepared by remember {
         mutableStateOf(false)
     }
@@ -165,10 +169,10 @@ fun ProfileScreen(navController: NavController, context: Context = LocalContext.
         }
     }
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.onPrimaryContainer)
-    ){
+    ) {
         if (listPrepared) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize()
@@ -280,7 +284,7 @@ private fun OptionsItemsStyle(item: OptionsData, context: Context) {
         verticalAlignment = Alignment.CenterVertically,
 
 
-    ) {
+        ) {
         Icon(
             modifier = Modifier.size(32.dp),
             imageVector = item.icon,
@@ -308,10 +312,10 @@ private fun OptionsItemsStyle(item: OptionsData, context: Context) {
                 )
                 Spacer(modifier = Modifier.height(2.dp))
 
-                    //Sub-title
+                //Sub-title
                 Text(
-                    text= item.subTitle,
-                    style= TextStyle(
+                    text = item.subTitle,
+                    style = TextStyle(
                         fontSize = 14.sp,
                         letterSpacing = (0.8).sp,
                         fontFamily = FontFamily.Default,
@@ -326,17 +330,19 @@ private fun OptionsItemsStyle(item: OptionsData, context: Context) {
                 contentDescription = item.title,
                 tint = Color.Black.copy(alpha = 0.70f)
             )
-            Button(onClick = {
-                coroutineScope.launch {
+            Button(
+                onClick = {
+                    coroutineScope.launch {
 
-                    if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                        bottomSheetScaffoldState.bottomSheetState.expand()
-                    } else {
-                        bottomSheetScaffoldState.bottomSheetState.collapse()
+                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                            bottomSheetScaffoldState.bottomSheetState.expand()
+                        } else {
+                            bottomSheetScaffoldState.bottomSheetState.collapse()
+                        }
                     }
-                }
-            },
-            modifier= Modifier.weight(weight= 1f, fill = false)){
+                },
+                modifier = Modifier.weight(weight = 1f, fill = false)
+            ) {
 
             }
         }

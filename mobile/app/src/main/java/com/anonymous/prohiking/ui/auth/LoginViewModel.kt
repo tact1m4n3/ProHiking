@@ -8,7 +8,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.anonymous.prohiking.ProHikingApplication
 import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.UserRepository
-import com.anonymous.prohiking.data.utils.ResultWrapper
+import com.anonymous.prohiking.data.utils.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -65,12 +65,12 @@ class LoginViewModel(
                     val password = currentState.passwordText
 
                     when (userRepository.loginUser(username, password)) {
-                        is ResultWrapper.Success -> {
+                        is Result.Success -> {
                             preferencesRepository.updateLoggedIn(true)
                             preferencesRepository.updateUsernameAndPassword(username, password)
                             _uiState.update { LoginUiState.LoggedIn }
                         }
-                        is ResultWrapper.Error -> {
+                        is Result.Error -> {
                             preferencesRepository.updateLoggedIn(false)
                             preferencesRepository.updateUsernameAndPassword("", "")
                             _uiState.update { LoginUiState.LoggedOut(errorMessage = "Failed to login") }
@@ -94,11 +94,11 @@ class LoginViewModel(
             val password = preferencesRepository.password.first()
 
             when (userRepository.loginUser(username, password)) {
-                is ResultWrapper.Success -> {
+                is Result.Success -> {
                     preferencesRepository.updateLoggedIn(true)
                     _uiState.update { LoginUiState.LoggedIn }
                 }
-                is ResultWrapper.Error -> {
+                is Result.Error -> {
                     preferencesRepository.updateLoggedIn(false)
                     preferencesRepository.updateUsernameAndPassword("", "")
                     _uiState.update { LoginUiState.LoggedOut(errorMessage = "Failed to login") }
