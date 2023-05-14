@@ -2,15 +2,19 @@ package com.anonymous.prohiking.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.getValue
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -37,11 +41,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        ActivityCompat.requestPermissions(
-            this,
+        requestPermissions(
             arrayOf(
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
             ),
             0
         )
@@ -63,9 +66,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun NavigationGraph(navHostController: NavHostController, modifier: Modifier = Modifier) {
     val exploreViewModel = viewModel<ExploreViewModel>(factory = ExploreViewModel.Factory)
-    val navigateViewModel = viewModel<NavigateViewModel>()
+    val navigateViewModel = viewModel<NavigateViewModel>(factory = NavigateViewModel.Factory)
     val profileViewModel = viewModel<ProfileViewModel>()
-
 
     NavHost(navController = navHostController, startDestination = Screen.Main.Explore.route) {
         composable(route = Screen.Main.Explore.route) {

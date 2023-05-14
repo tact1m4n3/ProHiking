@@ -64,14 +64,14 @@ class LoginViewModel(
                     val username = currentState.usernameText
                     val password = currentState.passwordText
 
-                    when (userRepository.loginUser(username, password)) {
+                    when (val result = userRepository.loginUser(username, password)) {
                         is Result.Success -> {
-                            preferencesRepository.updateLoggedIn(true)
+                            preferencesRepository.updateUserId(result.data.id)
                             preferencesRepository.updateUsernameAndPassword(username, password)
                             _uiState.update { LoginUiState.LoggedIn }
                         }
                         is Result.Error -> {
-                            preferencesRepository.updateLoggedIn(false)
+                            preferencesRepository.updateUserId(-1)
                             preferencesRepository.updateUsernameAndPassword("", "")
                             _uiState.update { LoginUiState.LoggedOut(errorMessage = "Failed to login") }
                         }
@@ -84,8 +84,8 @@ class LoginViewModel(
 
     private fun tryLogin() {
         viewModelScope.launch {
-            val loggedIn = preferencesRepository.loggedIn.first()
-            if (!loggedIn) {
+            val userId = preferencesRepository.userId.first()
+            if (userId == -1) {
                 _uiState.update { LoginUiState.LoggedOut() }
                 return@launch
             }
@@ -93,13 +93,13 @@ class LoginViewModel(
             val username = preferencesRepository.username.first()
             val password = preferencesRepository.password.first()
 
-            when (userRepository.loginUser(username, password)) {
+            when (val result = userRepository.loginUser(username, password)) {
                 is Result.Success -> {
-                    preferencesRepository.updateLoggedIn(true)
+                    preferencesRepository.updateUserId(result.data.id)
                     _uiState.update { LoginUiState.LoggedIn }
                 }
                 is Result.Error -> {
-                    preferencesRepository.updateLoggedIn(false)
+                    preferencesRepository.updateUserId(-1)
                     preferencesRepository.updateUsernameAndPassword("", "")
                     _uiState.update { LoginUiState.LoggedOut(errorMessage = "Failed to login") }
                 }

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -65,7 +66,7 @@ fun TrailDetailsScreen(
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = null,
-                        tint = androidx.compose.material3.MaterialTheme.colorScheme.onPrimaryContainer
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
 
@@ -125,7 +126,14 @@ fun TrailDetailsScreen(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(100.dp))
+                    Spacer(modifier = Modifier.height(50.dp))
+
+                    TextButton(onClick = {
+                        exploreViewModel.onStartTrailButtonPressed(trail)
+                        navController.navigate(Screen.Main.Navigate.route)
+                    }) {
+                        Text("Start Trail")
+                    }
 
                     selectedTrailPath?.let { trailPath ->
                         TrailPreview(

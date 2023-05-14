@@ -2,7 +2,6 @@ package com.anonymous.prohiking.data
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -10,28 +9,28 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 interface PreferencesRepository {
-    val loggedIn: Flow<Boolean>
+    val userId: Flow<Int>
     val username: Flow<String>
     val password: Flow<String>
 
     val currentTrailId: Flow<Int>
 
-    suspend fun updateLoggedIn(value: Boolean)
+    suspend fun updateUserId(id: Int)
     suspend fun updateUsernameAndPassword(username: String, password: String)
-    suspend fun updateCurrentTrailId(trailId: Int)
+    suspend fun updateCurrentTrailId(id: Int)
 }
 
 class DefaultPreferencesRepository(private val dataStore: DataStore<Preferences>): PreferencesRepository {
     private companion object {
-        val LOGGED_IN = booleanPreferencesKey("logged_in")
+        val USER_ID = intPreferencesKey("user_id")
         val USERNAME = stringPreferencesKey("username")
         val PASSWORD = stringPreferencesKey("password")
 
         val CURRENT_TRAIL_ID = intPreferencesKey("current_trail_id")
     }
 
-    override val loggedIn = dataStore.data.map { preferences ->
-        preferences[LOGGED_IN] ?: false
+    override val userId = dataStore.data.map { preferences ->
+        preferences[USER_ID] ?: -1
     }
 
     override val username = dataStore.data.map { preferences ->
@@ -46,9 +45,9 @@ class DefaultPreferencesRepository(private val dataStore: DataStore<Preferences>
         preferences[CURRENT_TRAIL_ID] ?: -1
     }
 
-    override suspend fun updateLoggedIn(value: Boolean) {
+    override suspend fun updateUserId(id: Int) {
         dataStore.edit { preferences ->
-            preferences[LOGGED_IN] = value
+            preferences[USER_ID] = id
         }
     }
 
@@ -59,9 +58,9 @@ class DefaultPreferencesRepository(private val dataStore: DataStore<Preferences>
         }
     }
 
-    override suspend fun updateCurrentTrailId(trailId: Int) {
+    override suspend fun updateCurrentTrailId(id: Int) {
         dataStore.edit { preferences ->
-            preferences[CURRENT_TRAIL_ID] = trailId
+            preferences[CURRENT_TRAIL_ID] = id
         }
     }
 }

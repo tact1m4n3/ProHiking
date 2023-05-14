@@ -17,10 +17,16 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.dropWhile
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -32,22 +38,28 @@ class ExploreViewModel(
 ): ViewModel() {
     private val location = locationClient
         .getLocationUpdates(10000L)
+        .catch { e -> e.printStackTrace() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), LocationDetails())
+
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading = _isLoading.asStateFlow()
+
+    private val _recommendedTrails = MutableStateFlow(listOf<Trail>())
+    val recommendedTrails = location
+        .dropWhile { location -> location.latitude == 0.0 && location.longitude == 0.0 }
+        .map { location -> loadRecommendedTrails(location) }
+        .onEach { _isLoading.update { false } }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            _recommendedTrails.value
+        )
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
 
     private val _isSearching = MutableStateFlow(false)
     val isSearching = _isSearching.asStateFlow()
-
-    private val _recommendedTrails = MutableStateFlow(listOf<Trail>())
-    val recommendedTrails = location
-        .map { location -> recommendedTrails(location) }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            _recommendedTrails.value
-        )
 
     private val _searchedTrails = MutableStateFlow(listOf<Trail>())
     @OptIn(FlowPreview::class)
@@ -74,6 +86,23 @@ class ExploreViewModel(
     private val _selectedTrailPath = MutableStateFlow<List<Point>?>(null)
     val selectedTrailPath = _selectedTrailPath.asStateFlow()
 
+    private suspend fun loadRecommendedTrails(location: LocationDetails): List<Trail> {
+        return when (val result = trailRepository.searchTrails(
+            5,
+            0,
+            "",
+            0.0, 300.0,
+            location.latitude - 1, location.longitude - 1,
+            location.latitude + 1, location.longitude + 1,
+        )) {
+            is Result.Success -> result.data
+            is Result.Error -> {
+                println(result.error)
+                listOf()
+            }
+        }
+    }
+
     fun updateSearchText(text: String) {
         _searchText.value = text
     }
@@ -84,27 +113,6 @@ class ExploreViewModel(
             _selectedTrailPath.value = when (val result = trailRepository.getTrailPath(trail.id)) {
                 is Result.Success -> result.data
                 is Result.Error -> null
-            }
-        }
-    }
-
-    fun onStartTrailButtonPressed(trail: Trail) {
-
-    }
-
-    private suspend fun recommendedTrails(location: LocationDetails): List<Trail> {
-        return when (val result = trailRepository.searchTrails(
-            5,
-            0,
-            "",
-            0.0, 300.0,
-            location.latitude - 10, location.longitude - 10,
-            location.latitude + 10, location.longitude + 10,
-        )) {
-            is Result.Success -> result.data
-            is Result.Error -> {
-                println(result.error)
-                listOf()
             }
         }
     }
@@ -122,6 +130,12 @@ class ExploreViewModel(
                 println(result.error)
                 listOf()
             }
+        }
+    }
+
+    fun onStartTrailButtonPressed(trail: Trail) {
+        viewModelScope.launch {
+            preferencesRepository.updateCurrentTrailId(trail.id)
         }
     }
 

@@ -189,7 +189,7 @@ private fun LoggedOutScreen(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Button(
                         onClick = { loginViewModel.onLoginButtonClick() },
-                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primaryContainer),
+                        colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(text = "Log In")
@@ -198,7 +198,7 @@ private fun LoggedOutScreen(
                     TextButton(onClick = { navController.navigate(Screen.Auth.Register.route) }) {
                         Text(
                             "Don't have an account, click here",
-                            color = MaterialTheme.colorScheme.primaryContainer
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
