@@ -27,7 +27,11 @@ func Init(url string) error {
 		return err
 	}
 
-	if err := db.AutoMigrate(&model.Trail{}, &model.Point{}, &model.User{}); err != nil {
+	if err := db.AutoMigrate(
+		&model.User{},
+		&model.Trail{},
+		&model.Point{},
+	); err != nil {
 		return err
 	}
 

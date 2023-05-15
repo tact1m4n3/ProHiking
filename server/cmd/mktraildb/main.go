@@ -7,7 +7,6 @@ import (
 	"prohiking-server/internal/database"
 	"prohiking-server/internal/model"
 	"strconv"
-	"strings"
 
 	geojson "github.com/paulmach/go.geojson"
 )
@@ -33,29 +32,40 @@ func main() {
 	}
 
 	for _, feature := range collection.Features {
-		if source, err := feature.PropertyString("source"); err == nil {
-			if strings.Contains(source, "Muntii Nostri gpx") && feature.Geometry.IsLineString() {
-				length, _ := strconv.ParseFloat(feature.PropertyMustString("distance", "0"), 64)
-				trail := &model.Trail{
-					Name:   feature.PropertyMustString("name", ""),
-					From:   feature.PropertyMustString("from", ""),
-					To:     feature.PropertyMustString("to", ""),
-					Length: length,
-					Symbol: feature.PropertyMustString("osmc:symbol", ""),
-				}
+		// source := feature.PropertyMustString("source")
+		// !strings.Contains(source, "Muntii Nostri gpx") ||
+		if !feature.Geometry.IsLineString() {
+			continue
+		}
 
-				for _, coords := range feature.Geometry.LineString {
-					point := &model.Point{
-						Lat: coords[1],
-						Lon: coords[0],
-					}
-					trail.Points = append(trail.Points, point)
-				}
+		name := feature.PropertyMustString("name", "")
+		from := feature.PropertyMustString("from", "")
+		to := feature.PropertyMustString("to", "")
+		length, _ := strconv.ParseFloat(feature.PropertyMustString("distance", "0"), 64)
+		symbol := feature.PropertyMustString("osmc:symbol", "")
 
-				if err := database.CreateTrail(trail); err != nil {
-					log.Fatalln(err)
-				}
+		if name == "" || from == "" || to == "" || length == 0.0 || symbol == "" {
+			continue
+		}
+
+		trail := &model.Trail{
+			Name:   name,
+			From:   from,
+			To:     to,
+			Length: length,
+			Symbol: symbol,
+		}
+
+		for _, coords := range feature.Geometry.LineString {
+			point := &model.Point{
+				Lat: coords[1],
+				Lon: coords[0],
 			}
+			trail.Points = append(trail.Points, point)
+		}
+
+		if err := database.CreateTrail(trail); err != nil {
+			log.Fatalln(err)
 		}
 	}
 
