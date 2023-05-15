@@ -44,7 +44,6 @@ class ExploreViewModel(
     private val _isLoading = MutableStateFlow(true)
     val isLoading = _isLoading.asStateFlow()
 
-    private val _recommendedTrails = MutableStateFlow(listOf<Trail>())
     val recommendedTrails = location
         .dropWhile { location -> location.latitude == 0.0 && location.longitude == 0.0 }
         .map { location -> loadRecommendedTrails(location) }
@@ -52,7 +51,7 @@ class ExploreViewModel(
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
-            _recommendedTrails.value
+            listOf()
         )
 
     private val _searchText = MutableStateFlow("")
