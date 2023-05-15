@@ -8,7 +8,7 @@ val best_color= Color(0xFF02583F)
 val color_1 = Color(0xFFD8F3C9)
 val color_2 = Color(0xFF205a3b)
 val color_3 = Color(0xFF518167)
-val color_4 = Color(0xFF256945)
+val color_4 = Color(0xFF1B2E24)
 val color_5 = Color(0xFF3d4c44)
 
 val md_theme_light_primary = Color(0xFF046448)
@@ -17,9 +17,9 @@ val md_theme_light_onPrimary = Color(0xFFB9C5BE)
 val md_theme_light_primaryContainer = Color(0xFF0D462D)
 val md_theme_light_onPrimaryContainer = Color(0xFF002114)
 
-val md_theme_light_secondary = Color(0xBE0D5C31)
+val md_theme_light_secondary = Color(0xEEE3ECDD)
 
-val md_theme_light_onSecondary = Color(0xFFFFFFFF)
+val md_theme_light_onSecondary = Color(0xFFf7f2e7)
 val md_theme_light_secondaryContainer = Color(0xFFCFE9D9)
 val md_theme_light_onSecondaryContainer = Color(0xFF41944E)
 

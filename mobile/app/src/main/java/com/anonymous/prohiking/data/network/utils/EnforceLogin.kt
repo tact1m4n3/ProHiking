@@ -23,8 +23,8 @@ private suspend fun <T> loginAndExec(context: Context, safeApiCall: suspend () -
     val userRepository = application.userRepository
     val preferencesRepository = application.preferencesRepository
 
-    val loggedIn = preferencesRepository.loggedIn.first()
-    if (!loggedIn) {
+    val userId = preferencesRepository.userId.first()
+    if (userId == -1) {
         return Result.Error(ErrorType.Unauthorized)
     }
 
