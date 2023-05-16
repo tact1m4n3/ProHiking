@@ -29,29 +29,24 @@ import java.security.cert.X509Certificate
 interface ProHikingApiService {
     @GET("api/users/{id}")
     suspend fun getUserById(@Path("id") id: Int): User
-
     @POST("api/user/register")
     suspend fun registerUser(@Body payload: RegisterPayload): User
-
     @POST("api/user/login")
     suspend fun loginUser(@Body payload: LoginPayload): User
-
     @POST("api/user/logout")
     suspend fun logoutUser(): String
-
     @GET("api/trails/{id}")
     suspend fun getTrailById(@Path("id") id: Int): Trail
-
     @GET("api/trails/{id}/path")
     suspend fun getTrailPath(@Path("id") id: Int): List<Point>
-
     @GET("api/trails/search")
     suspend fun searchTrails(
         @Query("limit") limit: Int,
         @Query("offset") offset: Int,
         @Query("name") name: String,
         @Query("length") length: String,
-        @Query("bbox") bbox: String,
+        @Query("center") center: String,
+        @Query("radius") radius: Double,
     ): List<Trail>
 }
 

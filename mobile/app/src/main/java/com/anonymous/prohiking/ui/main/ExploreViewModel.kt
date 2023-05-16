@@ -91,8 +91,8 @@ class ExploreViewModel(
             0,
             "",
             0.0, 300.0,
-            location.latitude - 1, location.longitude - 1,
-            location.latitude + 1, location.longitude + 1,
+            location.latitude, location.longitude,
+            1.0,
         )) {
             is Result.Success -> result.data
             is Result.Error -> {
@@ -122,7 +122,8 @@ class ExploreViewModel(
             0,
             name,
             0.0, 300.0,
-            43.688444729, 20.2201924985, 48.2208812526, 29.62654341
+            location.value.latitude, location.value.longitude,
+            200.0
         )) {
             is Result.Success -> result.data
             is Result.Error -> {

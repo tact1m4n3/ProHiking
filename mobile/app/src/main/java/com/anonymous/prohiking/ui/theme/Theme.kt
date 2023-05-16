@@ -24,7 +24,7 @@ private val LightColorScheme = lightColorScheme(
     onTertiary = md_theme_light_onTertiary,
     tertiaryContainer = md_theme_light_tertiaryContainer,
     onTertiaryContainer = md_theme_light_onTertiaryContainer,
-    error = md_theme_light_onErrorContainer
+    error = md_theme_light_error
 )
 
 

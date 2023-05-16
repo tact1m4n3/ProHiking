@@ -1,4 +1,4 @@
-package com.anonymous.prohiking.ui.auth
+package com.anonymous.prohiking.ui.start
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -102,7 +102,7 @@ fun RegisterScreen(navController: NavController) {
             RegisterFooter(
                 onSignUpClick = {},
                 onAlreadyHaveAccount = {
-                    navController.navigate(Screen.Auth.Login.route)
+                    navController.navigate(Screen.Start.Login.route)
                 }
             )
 

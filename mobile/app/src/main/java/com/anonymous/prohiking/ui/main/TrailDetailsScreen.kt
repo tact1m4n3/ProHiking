@@ -95,33 +95,32 @@ fun TrailDetailsScreen(
                     .padding(24.dp)
             ) {
                 selectedTrail?.let { trail ->
-
-
-                    Row( modifier = Modifier
-                        .fillMaxWidth(),
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceEvenly
-                       ){
-                         Button(
-                             shape = CircleShape,
-                             onClick = {
-                                  exploreViewModel.onStartTrailButtonPressed(trail)
-                                 navController.navigate(Screen.Main.Navigate.route)
-                        }){
-                             Icon(
-                                 modifier = Modifier
-                                     .weight(weight = 1f, fill = false),
-                                 imageVector = Icons.Outlined.Navigation,
-                                 contentDescription = "Navigate",
-                                 tint = MaterialTheme.colorScheme.onPrimaryContainer
-                             )
+                    ) {
+                        Button(
+                            shape = CircleShape,
+                            onClick = {
+                                exploreViewModel.onStartTrailButtonPressed(trail)
+                                navController.navigate(Screen.Main.Navigate.route)
+                            }) {
+                            Icon(
+                                modifier = Modifier
+                                    .weight(weight = 1f, fill = false),
+                                imageVector = Icons.Outlined.Navigation,
+                                contentDescription = "Navigate",
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
                         }
                         Button(
                             shape = CircleShape,
                             onClick = {
 
 
-                            }){
+                            }) {
                             Icon(
                                 modifier = Modifier
                                     .weight(weight = 1f, fill = false),
@@ -131,12 +130,11 @@ fun TrailDetailsScreen(
                             )
                         }
 
-
                         Button(
                             shape = CircleShape,
                             onClick = {
 
-                            }){
+                            }) {
                             Icon(
                                 modifier = Modifier
                                     .weight(weight = 1f, fill = false),
@@ -167,8 +165,10 @@ fun TrailDetailsScreen(
                             )
                         )
                         Spacer(modifier = Modifier.height(10.dp))
-                        Row(modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center)
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        )
                         {
                             Card(
                                 elevation = CardDefaults.elevatedCardElevation(),
@@ -177,9 +177,10 @@ fun TrailDetailsScreen(
                                     .fillMaxWidth()
                                     .height(186.dp)
 
-                                ) {
+                            ) {
                                 Column(
-                                    modifier = Modifier.fillMaxSize()
+                                    modifier = Modifier
+                                        .fillMaxSize()
                                         .padding(15.dp),
                                     verticalArrangement = Arrangement.Center,
                                     horizontalAlignment = Alignment.Start
@@ -205,7 +206,7 @@ fun TrailDetailsScreen(
                                         modifier = Modifier.fillMaxWidth(),
 
 
-                                    ) {
+                                        ) {
 
 
                                         Card(
@@ -241,14 +242,14 @@ fun TrailDetailsScreen(
                                             }
                                         }
                                         Spacer(modifier = Modifier.width(160.dp))
-                                        TrailSymbol(text = trail.symbol, modifier = Modifier.size(80.dp))
+                                        TrailSymbol(
+                                            text = trail.symbol,
+                                            modifier = Modifier.size(80.dp)
+                                        )
                                     }
                                 }
                             }
                         }
-
-
-
 
 
                     }
@@ -277,7 +278,7 @@ fun TrailDetailsScreen(
                                     .fillMaxWidth()
                                     .fillMaxHeight(0.5f),
                             )
-                            Spacer(modifier =  Modifier.height(15.dp))
+                            Spacer(modifier = Modifier.height(15.dp))
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Center

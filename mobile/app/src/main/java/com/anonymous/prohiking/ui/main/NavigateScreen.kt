@@ -1,5 +1,6 @@
 package com.anonymous.prohiking.ui.main
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
@@ -9,11 +10,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -24,7 +27,9 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowDownward
 import androidx.compose.material.icons.outlined.ArrowUpward
+import androidx.compose.material.icons.outlined.CenterFocusWeak
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material3.Button
@@ -47,6 +52,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.anonymous.prohiking.R
 import com.anonymous.prohiking.data.utils.hasLocationPermission
+import com.anonymous.prohiking.ui.widgets.GoogleMapsButton
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapEffect
@@ -54,6 +60,8 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapsComposeExperimentalApi
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
 import kotlinx.coroutines.launch
 import androidx.compose.material.BottomSheetScaffold as BottomSheetScaffold
@@ -75,9 +83,6 @@ fun NavigateScreen(
     )
     val coroutineScope = rememberCoroutineScope()
 
-
-
-
     if (context.hasLocationPermission()) {
         BottomSheetScaffold(
             sheetShape = RoundedCornerShape(15.dp),
@@ -88,104 +93,87 @@ fun NavigateScreen(
                         .fillMaxWidth()
                         .height(260.dp)
                         .background(MaterialTheme.colorScheme.primary)
-
                 ) {
 
                 }
             }, sheetPeekHeight = 0.dp
         ) {
-
-
-            Box(modifier = modifier.fillMaxSize()) {
+            Box(
+                modifier = modifier.fillMaxSize()
+            ) {
                 GoogleMap(
-                    modifier = Modifier.matchParentSize(),
+                    modifier = Modifier.fillMaxSize(),
                     cameraPositionState = cameraPositionState,
                     properties = MapProperties(
                         isMyLocationEnabled = true,
                         mapType = MapType.SATELLITE
                     ),
                     uiSettings = MapUiSettings(
-                        myLocationButtonEnabled = true
+                        myLocationButtonEnabled = true,
+                        zoomControlsEnabled = false
                     ),
                     onMyLocationClick = {
 
                     }
                 ) {
-                    currentTrailPath?.let { trailPath ->
-                        Polyline(
-                            points = trailPath.map { LatLng(it.lat, it.lon) },
-                            color = Color(0xFF2596BE)
-                        )
-                    }
-                }
+                    currentTrail?.let { trail ->
+                        currentTrailPath?.let { trailPath ->
+                            Marker(
+                                state = MarkerState(position = trailPath[0].let { LatLng(it.lat, it.lon) }),
+                                title = trail.from
+                            )
 
+                            Marker(
+                                state = MarkerState(position = trailPath[trailPath.size-1].let { LatLng(it.lat, it.lon) }),
+                                title = trail.to
+                            )
 
-
-
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.End,
-
-                    )
-                {
-                    Box(
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .padding(top = 65.dp)
-                            .size(40.dp)
-                            .background(Color(0xAAFFFFFF), RoundedCornerShape(4.dp))
-
-                    ) {
-                        IconButton(onClick = {
-                            navigateViewModel.focusOnCurrentTrail()
-                        }, modifier = Modifier.matchParentSize()) {
-                            Icon(
-                                imageVector = Icons.Outlined.Map,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(30.dp)
-                                    .align(Alignment.Center),
-                                tint = Color(0xFF444444)
+                            Polyline(
+                                points = trailPath.map { LatLng(it.lat, it.lon) },
+                                color = Color(0xFF2596BE)
                             )
                         }
-
                     }
+                }
+                
+                GoogleMapsButton(onClick = {
+                    navigateViewModel.focusOnCurrentTrail()
+                }) { modifier, color ->
+                    Icon(
+                        imageVector = Icons.Outlined.CenterFocusWeak,
+                        contentDescription = null,
+                        modifier = modifier,
+                        tint = color
+                    )
+                }
 
-                    Box(
-                        modifier = Modifier
-                            // .padding(10.dp)
-                            .padding(end = 10.dp)
-                            .padding(top = 450.dp)
-                            .size(40.dp)
-                            .background(Color(0xAAFFFFFF), RoundedCornerShape(4.dp))
-
-                    ) {
-
-                        IconButton(onClick = {
-                            coroutineScope.launch {
-
-                                if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                                    bottomSheetScaffoldState.bottomSheetState.expand()
-                                } else {
-                                    bottomSheetScaffoldState.bottomSheetState.collapse()
-                                }
-
-                            }
-
-                        }, modifier = Modifier.matchParentSize()) {
+                GoogleMapsButton(modifier = Modifier.padding(top = 50.dp), onClick = {
+                    coroutineScope.launch {
+                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                            bottomSheetScaffoldState.bottomSheetState.expand()
+                        } else {
+                            bottomSheetScaffoldState.bottomSheetState.collapse()
+                        }
+                    }
+                }) { modifier, color ->
+                    Crossfade(targetState = bottomSheetScaffoldState.bottomSheetState.isCollapsed) { isCollapsed ->
+                        if (isCollapsed) {
                             Icon(
                                 imageVector = Icons.Outlined.ArrowUpward,
                                 contentDescription = null,
-                                modifier = Modifier
-                                    .size(30.dp)
-                                    .align(Alignment.Center),
-                                tint = Color(0xFF444444)
+                                modifier = modifier,
+                                tint = color
+                            )
+                        } else {
+                            Icon(
+                                imageVector = Icons.Outlined.ArrowDownward,
+                                contentDescription = null,
+                                modifier = modifier,
+                                tint = color
                             )
                         }
-
                     }
                 }
-
             }
         }
     } else {
@@ -198,5 +186,3 @@ fun NavigateScreen(
         }
     }
 }
-
-

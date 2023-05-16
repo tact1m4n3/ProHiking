@@ -85,7 +85,7 @@ fun ExploreScreen(
                 )
             )
 
-            Spacer(modifier = Modifier.height(50.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             if (searchText == "") {
                 Text(text = "Top Trails Nearby", fontSize = 28.sp, modifier = Modifier.padding(start = 12.dp), fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.tertiary,textDecoration = TextDecoration.Underline)

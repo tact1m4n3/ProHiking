@@ -19,10 +19,9 @@ interface TrailRepository {
         name: String,
         minLength: Double,
         maxLength: Double,
-        bottomLeftLat: Double,
-        bottomLeftLon: Double,
-        topRightLat: Double,
-        topRightLon: Double
+        centerLat: Double,
+        centerLon: Double,
+        radius: Double
     ): Result<List<Trail>>
 }
 
@@ -45,17 +44,17 @@ class DefaultTrailRepository(
         name: String,
         minLength: Double,
         maxLength: Double,
-        bottomLeftLat: Double,
-        bottomLeftLon: Double,
-        topRightLat: Double,
-        topRightLon: Double
+        centerLat: Double,
+        centerLon: Double,
+        radius: Double
     ): Result<List<Trail>> {
         return enforceLogin(context) { safeApiCall(dispatcher) { proHikingApiService.searchTrails(
             limit,
             offset,
             name,
             "${minLength},${maxLength}",
-            "${bottomLeftLat},${bottomLeftLon},${topRightLat},${topRightLon}"
+            "${centerLat},${centerLon}",
+            radius
         ) } }
     }
 }

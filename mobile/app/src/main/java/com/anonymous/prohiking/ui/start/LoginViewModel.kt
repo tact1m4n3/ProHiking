@@ -1,4 +1,4 @@
-package com.anonymous.prohiking.ui.auth
+package com.anonymous.prohiking.ui.start
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
