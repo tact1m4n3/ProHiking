@@ -24,7 +24,7 @@ class NavigateViewModel(
     private val trailRepository: TrailRepository,
     private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
-    private val currentTrailId = preferencesRepository.currentTrailId
+    private val currentTrailId = preferencesRepository.trailId
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), -1)
 
     val currentTrail = currentTrailId

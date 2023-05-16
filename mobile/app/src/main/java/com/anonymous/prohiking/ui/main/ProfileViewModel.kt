@@ -12,6 +12,7 @@ import com.anonymous.prohiking.data.utils.Result
 import com.anonymous.prohiking.ui.start.LoginViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -19,10 +20,10 @@ class ProfileViewModel(
     private val userRepository: UserRepository,
     private val preferencesRepository: PreferencesRepository
 ): ViewModel() {
-    private val currentTrailId = preferencesRepository.currentTrailId
+    private val currentUserId = preferencesRepository.userId
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), -1)
 
-    val currentUser = currentTrailId
+    val currentUser = currentUserId
         .map { id ->
             if (id == -1) {
                 null
@@ -33,6 +34,7 @@ class ProfileViewModel(
                 }
             }
         }
+        .onEach { println(it) }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),

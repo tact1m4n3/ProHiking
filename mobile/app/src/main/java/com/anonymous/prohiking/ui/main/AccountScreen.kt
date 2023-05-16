@@ -87,97 +87,96 @@ fun AccountScreen(
                 )
             }
 
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)) {
-
-                Card(
-                    elevation = CardDefaults.elevatedCardElevation(),
-                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(170.dp)
-
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(15.dp),
-                        verticalArrangement = Arrangement.SpaceEvenly,
-                        horizontalAlignment = Alignment.Start
-                    ) {
-                        Text(
-                            text = "Username:",
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                letterSpacing = (0.8).sp,
-                                fontFamily = FontFamily.Default,
-                                color = Color.Gray
-                            )
-                        )
-
-                        Text(
-                            text = " TestUser",
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                            style = TextStyle(
-                                fontSize = 20.sp,
-                                fontFamily = FontFamily.Default
-                            )
-                        )
-
-                        Spacer(modifier = Modifier.height(20.dp))
-                        Text(
-                            text = "Email:",
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                letterSpacing = (0.8).sp,
-                                fontFamily = FontFamily.Default,
-                                color = Color.Gray
-                            )
-                        )
-
-                        Text(
-                            text = " testuser@gmail.com",
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                            style = TextStyle(
-                                fontSize = 20.sp,
-                                fontFamily = FontFamily.Default
-                            )
-                        )
-                    }
-                }
-
+            currentUser?.let { user ->
                 Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Bottom
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(10.dp)
                 ) {
-                    Button(
-                        shape = CircleShape,
-                        onClick = {
-                            profileViewModel.onLogoutButtonPressed()
-                            context.startActivity(
-                                Intent(
-                                    context,
-                                    StartActivity::class.java
+
+                    Card(
+                        elevation = CardDefaults.elevatedCardElevation(),
+                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(170.dp)
+
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(15.dp),
+                            verticalArrangement = Arrangement.SpaceEvenly,
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            Text(
+                                text = "Username:",
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    letterSpacing = (0.8).sp,
+                                    fontFamily = FontFamily.Default,
+                                    color = Color.Gray
                                 )
                             )
-                        },
+
+                            Text(
+                                text = user.username,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                style = TextStyle(
+                                    fontSize = 20.sp,
+                                    fontFamily = FontFamily.Default
+                                )
+                            )
+
+                            Spacer(modifier = Modifier.height(20.dp))
+                            Text(
+                                text = "Email:",
+                                style = TextStyle(
+                                    fontSize = 14.sp,
+                                    letterSpacing = (0.8).sp,
+                                    fontFamily = FontFamily.Default,
+                                    color = Color.Gray
+                                )
+                            )
+
+                            Text(
+                                text = user.email,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                style = TextStyle(
+                                    fontSize = 20.sp,
+                                    fontFamily = FontFamily.Default
+                                )
+                            )
+                        }
+                    }
+
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Bottom
                     ) {
-                        Text(
-                            "Log out",
-                            color = MaterialTheme.colorScheme.error
-                        )
+                        Button(
+                            shape = CircleShape,
+                            onClick = {
+                                profileViewModel.onLogoutButtonPressed()
+                                context.startActivity(
+                                    Intent(
+                                        context,
+                                        StartActivity::class.java
+                                    )
+                                )
+                            },
+                        ) {
+                            Text(
+                                "Log out",
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
                     }
                 }
             }
-
-
         }
-
-
     }
-
 }
 
 
