@@ -9,7 +9,6 @@ import com.anonymous.prohiking.ProHikingApplication
 import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.UserRepository
 import com.anonymous.prohiking.data.utils.Result
-import com.anonymous.prohiking.ui.start.LoginViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach

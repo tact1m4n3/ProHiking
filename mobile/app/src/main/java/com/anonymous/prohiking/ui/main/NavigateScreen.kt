@@ -53,7 +53,9 @@ import androidx.navigation.NavController
 import com.anonymous.prohiking.R
 import com.anonymous.prohiking.data.utils.hasLocationPermission
 import com.anonymous.prohiking.ui.widgets.GoogleMapsButton
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapEffect
 import com.google.maps.android.compose.MapProperties
@@ -63,10 +65,11 @@ import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
+import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.launch
 import androidx.compose.material.BottomSheetScaffold as BottomSheetScaffold
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, MapsComposeExperimentalApi::class)
 @Composable
 fun NavigateScreen(
     navController: NavController,
@@ -76,7 +79,8 @@ fun NavigateScreen(
     val context = LocalContext.current
     val currentTrail by navigateViewModel.currentTrail.collectAsState()
     val currentTrailPath by navigateViewModel.currentTrailPath.collectAsState()
-    val cameraPositionState = navigateViewModel.cameraPositionState
+
+    val cameraPositionState = rememberCameraPositionState()
 
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
@@ -116,6 +120,22 @@ fun NavigateScreen(
 
                     }
                 ) {
+                    MapEffect(currentTrailPath) { map ->
+                        currentTrailPath?.let { trailPath ->
+                            val bounds = LatLngBounds.builder().also { builder ->
+                                for (point in trailPath) {
+                                    builder.include(point.let { LatLng(it.lat, it.lon) })
+                                }
+                            }.build()
+
+                            map.animateCamera(
+                                CameraUpdateFactory.newLatLngBounds(
+                                    bounds,
+                                    100
+                                ))
+                        }
+                    }
+
                     currentTrail?.let { trail ->
                         currentTrailPath?.let { trailPath ->
                             Marker(
@@ -137,7 +157,22 @@ fun NavigateScreen(
                 }
                 
                 GoogleMapsButton(onClick = {
-                    navigateViewModel.focusOnCurrentTrail()
+                    currentTrailPath?.let { trailPath ->
+                        val bounds = LatLngBounds.builder().also { builder ->
+                            for (point in trailPath) {
+                                builder.include(point.let { LatLng(it.lat, it.lon) })
+                            }
+                        }.build()
+
+                        coroutineScope.launch {
+                            cameraPositionState.animate(
+                                CameraUpdateFactory.newLatLngBounds(
+                                    bounds,
+                                    100
+                                )
+                            )
+                        }
+                    }
                 }) { modifier, color ->
                     Icon(
                         imageVector = Icons.Outlined.CenterFocusWeak,

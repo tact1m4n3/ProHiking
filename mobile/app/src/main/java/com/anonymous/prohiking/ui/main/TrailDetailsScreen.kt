@@ -118,8 +118,6 @@ fun TrailDetailsScreen(
                         Button(
                             shape = CircleShape,
                             onClick = {
-
-
                             }) {
                             Icon(
                                 modifier = Modifier
@@ -134,7 +132,8 @@ fun TrailDetailsScreen(
                             shape = CircleShape,
                             onClick = {
 
-                            }) {
+                            }
+                        ) {
                             Icon(
                                 modifier = Modifier
                                     .weight(weight = 1f, fill = false),
@@ -143,14 +142,9 @@ fun TrailDetailsScreen(
                                 tint = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
-
                     }
+
                     Spacer(modifier = Modifier.height(20.dp))
-
-
-
-
-
 
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Text(
@@ -168,15 +162,13 @@ fun TrailDetailsScreen(
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
-                        )
-                        {
+                        ) {
                             Card(
                                 elevation = CardDefaults.elevatedCardElevation(),
                                 colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(186.dp)
-
                             ) {
                                 Column(
                                     modifier = Modifier
@@ -230,7 +222,6 @@ fun TrailDetailsScreen(
                                                     )
                                                 )
 
-
                                                 Text(
                                                     text = "${trail.length} km",
                                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -250,11 +241,9 @@ fun TrailDetailsScreen(
                                 }
                             }
                         }
-
-
                     }
-                    Spacer(modifier = Modifier.height(50.dp))
 
+                    Spacer(modifier = Modifier.height(50.dp))
 
                     Column {
                         Text(
@@ -276,7 +265,7 @@ fun TrailDetailsScreen(
                                 trailPath = trailPath,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .fillMaxHeight(0.5f),
+                                    .height(200.dp),
                             )
                             Spacer(modifier = Modifier.height(15.dp))
                             Row(

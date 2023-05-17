@@ -11,6 +11,7 @@ import com.anonymous.prohiking.data.TrailRepository
 import com.anonymous.prohiking.data.model.Point
 import com.anonymous.prohiking.data.utils.Result
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.CameraPositionState
@@ -55,40 +56,11 @@ class NavigateViewModel(
                 }
             }
         }
-        .onEach { trailPath ->
-            trailPath?.let { path ->
-                focusOnTrailPath(path)
-            }
-        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             null
         )
-
-    val cameraPositionState = CameraPositionState()
-
-    fun focusOnCurrentTrail() {
-        viewModelScope.launch {
-            currentTrailPath.value?.let {trailPath ->
-                focusOnTrailPath(trailPath)
-            }
-        }
-    }
-
-    private suspend fun focusOnTrailPath(trailPath: List<Point>) {
-        val bounds = LatLngBounds.builder().also { builder ->
-            for (point in trailPath) {
-                builder.include(point.let { LatLng(it.lat, it.lon) })
-            }
-        }.build()
-
-        cameraPositionState.animate(
-            CameraUpdateFactory.newLatLngBounds(
-                bounds,
-                100
-            ))
-    }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
