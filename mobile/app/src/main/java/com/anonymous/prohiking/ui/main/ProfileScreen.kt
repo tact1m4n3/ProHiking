@@ -1,5 +1,6 @@
 package com.anonymous.prohiking.ui.main
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,8 +29,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.anonymous.prohiking.R
 import com.anonymous.prohiking.ui.Screen
 
 @Composable
@@ -52,6 +57,15 @@ fun ProfileScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.onPrimaryContainer)
     ) {
+
+            Image(
+                painter = painterResource(id = R.drawable.lovepik_com_400203927_green_forest),
+                contentDescription = "Login",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .blur(6.dp)
+            )
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -67,13 +81,6 @@ fun ProfileScreen(
                 navController.navigate(Screen.Main.Account.route)
             }
 
-            MenuItem(
-                icon = Icons.Outlined.Explore,
-                title = "Statistics",
-                description = "Check out your stats"
-            ) {
-                navController.navigate(Screen.Main.Statistics.route)
-            }
 
             MenuItem(
                 icon = Icons.Outlined.ContactPage,
@@ -96,7 +103,7 @@ private fun UserDetails(username: String, email: String) {
     ) {
         Card(
             shape = CircleShape,
-            backgroundColor = MaterialTheme.colorScheme.tertiary,
+            backgroundColor = MaterialTheme.colorScheme.primaryContainer,
             modifier = Modifier
                 .size(100.dp)
         ) {

@@ -103,33 +103,33 @@ fun NavigateScreen(
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(text = "Latitude", color = Color.White, fontSize = 26.sp)
+                                Text(text = "Latitude", color = Color.Gray, fontSize = 15.sp)
                                 Text(
-                                    text = String.format("%.4f", location.latitude),
+                                    text = String.format("%.2f", location.latitude),
                                     color = Color.White,
-                                    fontSize = 20.sp
+                                    fontSize = 25.sp
                                 )
                             }
 
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(text = "Longitude", color = Color.White, fontSize = 26.sp)
+                                Text(text = "Longitude", color = Color.Gray, fontSize = 15.sp)
                                 Text(
-                                    text = String.format("%.4f", location.longitude),
+                                    text = String.format("%.2f", location.longitude),
                                     color = Color.White,
-                                    fontSize = 20.sp
+                                    fontSize = 25.sp
                                 )
                             }
 
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(text = "Altitude", color = Color.White, fontSize = 26.sp)
+                                Text(text = "Altitude", color = Color.Gray, fontSize = 15.sp)
                                 Text(
-                                    text = String.format("%.4f", location.altitude),
+                                    text = String.format("%.2f", location.altitude),
                                     color = Color.White,
-                                    fontSize = 20.sp
+                                    fontSize = 25.sp
                                 )
                             }
                         }

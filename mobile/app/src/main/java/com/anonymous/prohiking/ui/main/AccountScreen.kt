@@ -2,6 +2,7 @@ package com.anonymous.prohiking.ui.main
 
 import android.content.Intent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,9 +52,11 @@ fun AccountScreen(
     val context = LocalContext.current
     val currentUser by profileViewModel.currentUser.collectAsState()
 
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = modifier
+        .fillMaxSize()
+        .background(MaterialTheme.colorScheme.onPrimaryContainer)) {
         Image(
-            painter = painterResource(id = R.drawable.background),
+            painter = painterResource(id = R.drawable.lovepik_com_400203927_green_forest),
             contentDescription = "Login",
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -96,7 +99,7 @@ fun AccountScreen(
 
                     Card(
                         elevation = CardDefaults.elevatedCardElevation(),
-                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
+                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primaryContainer),
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(170.dp)
