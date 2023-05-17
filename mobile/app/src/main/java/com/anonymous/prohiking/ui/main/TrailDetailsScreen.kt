@@ -44,6 +44,7 @@ import androidx.navigation.NavController
 import com.anonymous.prohiking.ui.Screen
 import com.anonymous.prohiking.ui.widgets.TrailPreview
 import com.anonymous.prohiking.ui.widgets.TrailSymbol
+import java.sql.Time
 
 @Composable
 fun TrailDetailsScreen(
@@ -106,7 +107,8 @@ fun TrailDetailsScreen(
                             onClick = {
                                 exploreViewModel.onStartTrailButtonPressed(trail)
                                 navController.navigate(Screen.Main.Navigate.route)
-                            }) {
+                            }
+                        ) {
                             Icon(
                                 modifier = Modifier
                                     .weight(weight = 1f, fill = false),
@@ -118,7 +120,8 @@ fun TrailDetailsScreen(
                         Button(
                             shape = CircleShape,
                             onClick = {
-                            }) {
+                            }
+                        ) {
                             Icon(
                                 modifier = Modifier
                                     .weight(weight = 1f, fill = false),
