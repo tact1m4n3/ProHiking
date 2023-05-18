@@ -118,7 +118,7 @@ fun AccountScreen(
                                     fontSize = 14.sp,
                                     letterSpacing = (0.8).sp,
                                     fontFamily = FontFamily.Default,
-                                    color = Color.Gray
+                                    color = Color.LightGray
                                 )
                             )
 
@@ -138,7 +138,7 @@ fun AccountScreen(
                                     fontSize = 14.sp,
                                     letterSpacing = (0.8).sp,
                                     fontFamily = FontFamily.Default,
-                                    color = Color.Gray
+                                    color = Color.LightGray
                                 )
                             )
 

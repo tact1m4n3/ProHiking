@@ -20,7 +20,6 @@ fun GoogleMapsButton(
 ) {
     Box(
         modifier = modifier
-            .padding(10.dp)
             .size(40.dp)
             .background(Color(0xAAFFFFFF), RoundedCornerShape(4.dp))
     ) {

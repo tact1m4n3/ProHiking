@@ -16,12 +16,10 @@ interface PreferencesRepository {
     val password: Flow<String>
 
     val trailId: Flow<Int>
-    val trailTime: Flow<Long>
 
     suspend fun updateUserId(id: Int)
     suspend fun updateUsernameAndPassword(username: String, password: String)
     suspend fun updateTrailId(id: Int)
-    suspend fun updateTrailTime(time: Long)
 }
 
 class DefaultPreferencesRepository(private val dataStore: DataStore<Preferences>): PreferencesRepository {
@@ -31,7 +29,6 @@ class DefaultPreferencesRepository(private val dataStore: DataStore<Preferences>
         val PASSWORD = stringPreferencesKey("password")
 
         val TRAIL_ID = intPreferencesKey("trail_id")
-        val TRAIL_TIME = longPreferencesKey("trail_time")
     }
 
     override val userId = dataStore.data.map { preferences ->
@@ -50,10 +47,6 @@ class DefaultPreferencesRepository(private val dataStore: DataStore<Preferences>
         preferences[TRAIL_ID] ?: -1
     }
 
-    override val trailTime = dataStore.data.map { preferences ->
-        preferences[TRAIL_TIME] ?: -1
-    }
-
     override suspend fun updateUserId(id: Int) {
         dataStore.edit { preferences ->
             preferences[USER_ID] = id
@@ -70,12 +63,6 @@ class DefaultPreferencesRepository(private val dataStore: DataStore<Preferences>
     override suspend fun updateTrailId(id: Int) {
         dataStore.edit { preferences ->
             preferences[TRAIL_ID] = id
-        }
-    }
-
-    override suspend fun updateTrailTime(time: Long) {
-        dataStore.edit { preferences ->
-            preferences[TRAIL_TIME] = time
         }
     }
 }

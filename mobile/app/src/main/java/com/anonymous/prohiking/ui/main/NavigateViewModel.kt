@@ -1,7 +1,5 @@
 package com.anonymous.prohiking.ui.main
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -13,10 +11,7 @@ import com.anonymous.prohiking.data.LocationDetails
 import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.TrailRepository
 import com.anonymous.prohiking.data.utils.Result
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -27,9 +22,6 @@ class NavigateViewModel(
     private val locationClient: LocationClient
 ) : ViewModel() {
     private val currentTrailId = preferencesRepository.trailId
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), -1)
-
-    val currentTrailTime = preferencesRepository.trailTime
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), -1)
 
     val location = locationClient
@@ -74,19 +66,10 @@ class NavigateViewModel(
             null
         )
 
-    init {
-//        val mainHandler = Handler(Looper.getMainLooper())
-//        mainHandler.post(object : Runnable {
-//            override fun run() {
-//                println(currentTrailTime.value)
-//                if (currentTrailTime.value != -1L && currentTrailTime.value % 5000 == 0L) {
-//                    viewModelScope.launch {
-//                        preferencesRepository.updateTrailTime(currentTrailTime.value + 1000)
-//                    }
-//                    mainHandler.postDelayed(this, 1000)
-//                }
-//            }
-//        })
+    fun onStopTrailButtonClick() {
+        viewModelScope.launch {
+            preferencesRepository.updateTrailId(-1)
+        }
     }
 
     companion object {

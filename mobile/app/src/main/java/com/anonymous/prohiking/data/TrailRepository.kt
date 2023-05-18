@@ -15,7 +15,7 @@ interface TrailRepository {
     suspend fun getTrailPath(id: Int): Result<List<Point>>
     suspend fun searchTrails(
         limit: Int,
-        offset: Int,
+//        offset: Int,
         name: String,
         minLength: Double,
         maxLength: Double,
@@ -40,7 +40,7 @@ class DefaultTrailRepository(
 
     override suspend fun searchTrails(
         limit: Int,
-        offset: Int,
+//        offset: Int,
         name: String,
         minLength: Double,
         maxLength: Double,
@@ -50,7 +50,7 @@ class DefaultTrailRepository(
     ): Result<List<Trail>> {
         return enforceLogin(context) { safeApiCall(dispatcher) { proHikingApiService.searchTrails(
             limit,
-            offset,
+//            offset,
             name,
             "${minLength},${maxLength}",
             "${centerLat},${centerLon}",

@@ -42,7 +42,7 @@ interface ProHikingApiService {
     @GET("api/trails/search")
     suspend fun searchTrails(
         @Query("limit") limit: Int,
-        @Query("offset") offset: Int,
+//        @Query("offset") offset: Int,
         @Query("name") name: String,
         @Query("length") length: String,
         @Query("center") center: String,

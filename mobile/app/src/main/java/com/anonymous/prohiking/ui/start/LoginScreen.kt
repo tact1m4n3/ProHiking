@@ -143,7 +143,7 @@ private fun LoggedOutScreen(
                     )
 
                     Text(
-                        text = "Sign in to continue",
+                        text = "Log in to continue",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -153,12 +153,12 @@ private fun LoggedOutScreen(
                     CustomTextField(
                         value = uiState.usernameText,
                         label = "Username",
-                        placeholder = "Enter your email address",
+                        placeholder = "Enter your username",
                         onValueChange = {
                             loginViewModel.updateUsernameText(it)
                         },
                         leadingIcon = {
-                            Icon(Icons.Default.Email, contentDescription = "Email")
+                            Icon(Icons.Default.Email, contentDescription = "Username")
                         },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Email,
@@ -171,7 +171,7 @@ private fun LoggedOutScreen(
                     CustomTextField(
                         value = uiState.passwordText,
                         label = "Password",
-                        placeholder = "Enter your Password",
+                        placeholder = "Enter your password",
                         onValueChange = {
                             loginViewModel.updatePasswordText(it)
                         },

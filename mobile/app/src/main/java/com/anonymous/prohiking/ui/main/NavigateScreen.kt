@@ -23,12 +23,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDownward
 import androidx.compose.material.icons.outlined.ArrowUpward
 import androidx.compose.material.icons.outlined.CenterFocusWeak
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Pause
-import androidx.compose.material.icons.outlined.Stop
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,12 +34,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.anonymous.prohiking.data.utils.hasLocationPermission
 import com.anonymous.prohiking.ui.widgets.GoogleMapsButton
+import com.anonymous.prohiking.ui.widgets.TrailSymbol
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -58,7 +59,6 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.launch
-import java.sql.Time
 import androidx.compose.material.BottomSheetScaffold as BottomSheetScaffold
 
 @OptIn(ExperimentalMaterialApi::class, MapsComposeExperimentalApi::class)
@@ -70,7 +70,6 @@ fun NavigateScreen(
 ) {
     val context = LocalContext.current
     val location by navigateViewModel.location.collectAsState()
-    val currentTrailTime by navigateViewModel.currentTrailTime.collectAsState()
     val currentTrail by navigateViewModel.currentTrail.collectAsState()
     val currentTrailPath by navigateViewModel.currentTrailPath.collectAsState()
 
@@ -81,6 +80,8 @@ fun NavigateScreen(
     )
     val coroutineScope = rememberCoroutineScope()
 
+    val sheetHeight = if (currentTrail != null) 450.dp else 170.dp
+
     if (context.hasLocationPermission()) {
         BottomSheetScaffold(
             sheetShape = RoundedCornerShape(15.dp),
@@ -89,13 +90,25 @@ fun NavigateScreen(
                 Box(
                     Modifier
                         .fillMaxWidth()
-                        .height(300.dp)
-                        .background(MaterialTheme.colorScheme.primary)
+                        .height(sheetHeight)
+                        .background(MaterialTheme.colorScheme.onPrimaryContainer)
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.fillMaxWidth(),
                     ) {
+                        Text(
+                            text = "Current Location",
+                            style = TextStyle(
+                                fontSize = 25.sp,
+                                letterSpacing = (0.8).sp,
+                                fontFamily = FontFamily.Default,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.tertiary,
+                                textDecoration = TextDecoration.Underline
+                            )
+                        )
+
                         Row(
                             horizontalArrangement = Arrangement.SpaceAround,
                             modifier = Modifier.fillMaxWidth()
@@ -103,10 +116,9 @@ fun NavigateScreen(
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(text = "Latitude", color = Color.Gray, fontSize = 15.sp)
+                                Text(text = "Latitude", fontSize = 18.sp)
                                 Text(
                                     text = String.format("%.2f", location.latitude),
-                                    color = Color.White,
                                     fontSize = 25.sp
                                 )
                             }
@@ -114,10 +126,9 @@ fun NavigateScreen(
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(text = "Longitude", color = Color.Gray, fontSize = 15.sp)
+                                Text(text = "Longitude", fontSize = 18.sp)
                                 Text(
                                     text = String.format("%.2f", location.longitude),
-                                    color = Color.White,
                                     fontSize = 25.sp
                                 )
                             }
@@ -125,86 +136,101 @@ fun NavigateScreen(
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(text = "Altitude", color = Color.Gray, fontSize = 15.sp)
+                                Text(text = "Altitude", fontSize = 18.sp)
                                 Text(
                                     text = String.format("%.2f", location.altitude),
-                                    color = Color.White,
                                     fontSize = 25.sp
                                 )
                             }
                         }
-                        
-                        Spacer(modifier = Modifier.size(10.dp))
-
-                        if (currentTrailTime != -1L) {
-                            Box(modifier = Modifier
-                                .size(100.dp)
-                                .background(Color.Black, CircleShape)
-                            ) {
-                                Text(
-                                    text = Time(currentTrailTime).toString(),
-                                    fontSize = 20.sp,
-                                    color = Color.White,
-                                    modifier = Modifier.align(Alignment.Center)
-                                )
-                            }
-                        }
 
                         Spacer(modifier = Modifier.size(10.dp))
 
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            Button(
-                                shape = CircleShape,
-                                colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-                                onClick = {
-                                }
-                            ) {
-                                Icon(
+                        currentTrail?.let { trail ->
+                            Text(
+                                text = "Description",
+                                style = TextStyle(
+                                    fontSize = 25.sp,
+                                    letterSpacing = (0.8).sp,
+                                    fontFamily = FontFamily.Default,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.tertiary,
+                                    textDecoration = TextDecoration.Underline
+                                )
+                            )
+
+                            Box(modifier = Modifier.fillMaxWidth()) {
+                                Column(
                                     modifier = Modifier
-                                        .weight(weight = 1f, fill = false),
-                                    imageVector = Icons.Outlined.Pause,
-                                    contentDescription = "Pause",
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                        .height(175.dp)
+                                        .padding(15.dp),
+                                ) {
+                                    Text(
+                                        text = "Trail",
+                                        style = TextStyle(
+                                            fontSize = 18.sp,
+                                            letterSpacing = (0.8).sp,
+                                            fontFamily = FontFamily.Default,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                    Text(
+                                        text = trail.name,
+                                        style = TextStyle(
+                                            fontSize = 22.sp,
+                                            fontFamily = FontFamily.SansSerif
+                                        )
+                                    )
+
+                                    Spacer(modifier = Modifier.size(15.dp))
+
+                                    Text(
+                                        text = "Length",
+                                        style = TextStyle(
+                                            fontSize = 18.sp,
+                                            letterSpacing = (0.8).sp,
+                                            fontFamily = FontFamily.Default,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    )
+                                    Text(
+                                        text = "${trail.length} km",
+                                        style = TextStyle(
+                                            fontSize = 22.sp,
+                                            fontFamily = FontFamily.Default
+                                        )
+                                    )
+                                }
+
+                                TrailSymbol(
+                                    text = trail.symbol,
+                                    modifier = Modifier
+                                        .padding(20.dp)
+                                        .size(80.dp)
+                                        .align(Alignment.BottomEnd)
                                 )
                             }
 
-                            Button(
-                                shape = CircleShape,
-                                colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-                                onClick = {
-                                }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
                             ) {
-                                Icon(
-                                    modifier = Modifier
-                                        .weight(weight = 1f, fill = false),
-                                    imageVector = Icons.Outlined.Stop,
-                                    contentDescription = "Stop",
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
-                            }
-
-                            Button(
-                                shape = CircleShape,
-                                colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-                                onClick = {
+                                Button(
+                                    shape = CircleShape,
+                                    onClick = {
+                                        navigateViewModel.onStopTrailButtonClick()
+                                    },
+                                ) {
+                                    Text(
+                                        "Stop Trail",
+                                    )
                                 }
-                            ) {
-                                Icon(
-                                    modifier = Modifier
-                                        .weight(weight = 1f, fill = false),
-                                    imageVector = Icons.Outlined.FavoriteBorder,
-                                    contentDescription = "Save",
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
                             }
                         }
                     }
                 }
-            }, sheetPeekHeight = 0.dp
+            },
+            sheetPeekHeight = 0.dp
         ) {
             Box(
                 modifier = modifier.fillMaxSize()
@@ -236,7 +262,8 @@ fun NavigateScreen(
                                 CameraUpdateFactory.newLatLngBounds(
                                     bounds,
                                     100
-                                ))
+                                )
+                            )
                         }
                     }
 
@@ -259,57 +286,68 @@ fun NavigateScreen(
                         }
                     }
                 }
-                
-                GoogleMapsButton(onClick = {
-                    currentTrailPath?.let { trailPath ->
-                        val bounds = LatLngBounds.builder().also { builder ->
-                            for (point in trailPath) {
-                                builder.include(point.let { LatLng(it.lat, it.lon) })
-                            }
-                        }.build()
 
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Spacer(modifier = Modifier.size(50.dp))
+
+                    if (currentTrail != null) {
+                        GoogleMapsButton(
+                            modifier = Modifier.padding(top = 10.dp, end = 10.dp),
+                            onClick = {
+                                currentTrailPath?.let { trailPath ->
+                                    val bounds = LatLngBounds.builder().also { builder ->
+                                        for (point in trailPath) {
+                                            builder.include(point.let { LatLng(it.lat, it.lon) })
+                                        }
+                                    }.build()
+
+                                    coroutineScope.launch {
+                                        cameraPositionState.animate(
+                                            CameraUpdateFactory.newLatLngBounds(
+                                                bounds,
+                                                100
+                                            )
+                                        )
+                                    }
+                                }
+                            }) { modifier, color ->
+                            Icon(
+                                imageVector = Icons.Outlined.CenterFocusWeak,
+                                contentDescription = null,
+                                modifier = modifier,
+                                tint = color
+                            )
+                        }
+                    }
+
+                    GoogleMapsButton(modifier = Modifier.padding(top = 10.dp, end = 10.dp), onClick = {
                         coroutineScope.launch {
-                            cameraPositionState.animate(
-                                CameraUpdateFactory.newLatLngBounds(
-                                    bounds,
-                                    100
+                            if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                                bottomSheetScaffoldState.bottomSheetState.expand()
+                            } else {
+                                bottomSheetScaffoldState.bottomSheetState.collapse()
+                            }
+                        }
+                    }) { modifier, color ->
+                        Crossfade(targetState = bottomSheetScaffoldState.bottomSheetState.isCollapsed) { isCollapsed ->
+                            if (isCollapsed) {
+                                Icon(
+                                    imageVector = Icons.Outlined.ArrowUpward,
+                                    contentDescription = null,
+                                    modifier = modifier,
+                                    tint = color
                                 )
-                            )
-                        }
-                    }
-                }) { modifier, color ->
-                    Icon(
-                        imageVector = Icons.Outlined.CenterFocusWeak,
-                        contentDescription = null,
-                        modifier = modifier,
-                        tint = color
-                    )
-                }
-
-                GoogleMapsButton(modifier = Modifier.padding(top = 50.dp), onClick = {
-                    coroutineScope.launch {
-                        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                            bottomSheetScaffoldState.bottomSheetState.expand()
-                        } else {
-                            bottomSheetScaffoldState.bottomSheetState.collapse()
-                        }
-                    }
-                }) { modifier, color ->
-                    Crossfade(targetState = bottomSheetScaffoldState.bottomSheetState.isCollapsed) { isCollapsed ->
-                        if (isCollapsed) {
-                            Icon(
-                                imageVector = Icons.Outlined.ArrowUpward,
-                                contentDescription = null,
-                                modifier = modifier,
-                                tint = color
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Outlined.ArrowDownward,
-                                contentDescription = null,
-                                modifier = modifier,
-                                tint = color
-                            )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Outlined.ArrowDownward,
+                                    contentDescription = null,
+                                    modifier = modifier,
+                                    tint = color
+                                )
+                            }
                         }
                     }
                 }
