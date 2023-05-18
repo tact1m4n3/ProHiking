@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.anonymous.prohiking.R
+import com.anonymous.prohiking.data.utils.hasCallPermission
 import com.anonymous.prohiking.data.utils.hasLocationPermission
 import com.anonymous.prohiking.ui.MainActivity
 import com.anonymous.prohiking.ui.Screen
@@ -72,7 +73,7 @@ fun LoginScreen(
             is LoginUiState.LoggedOut -> LoggedOutScreen(navController,
                 uiState as LoginUiState.LoggedOut, loginViewModel)
             is LoginUiState.LoggedIn -> {
-                if (context.hasLocationPermission()) {
+                if (context.hasLocationPermission() && context.hasCallPermission()) {
                     context.startActivity(
                         Intent(
                             context,

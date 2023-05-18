@@ -24,9 +24,9 @@ import com.anonymous.prohiking.ui.main.NavigateScreen
 import com.anonymous.prohiking.ui.main.NavigateViewModel
 import com.anonymous.prohiking.ui.main.ProfileScreen
 import com.anonymous.prohiking.ui.main.ProfileViewModel
-import com.anonymous.prohiking.ui.main.StatisticsScreen
 import com.anonymous.prohiking.ui.main.TrailDetailsScreen
 import com.anonymous.prohiking.ui.theme.ProHikingTheme
+import com.anonymous.prohiking.ui.widgets.EmergencyButton
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -56,6 +56,7 @@ private fun NavigationGraph(navHostController: NavHostController, modifier: Modi
     NavHost(navController = navHostController, startDestination = Screen.Main.Explore.route) {
         composable(route = Screen.Main.Explore.route) {
             ExploreScreen(navController = navHostController, exploreViewModel = exploreViewModel, modifier = modifier)
+            EmergencyButton(modifier = modifier)
         }
         composable(route = Screen.Main.TrailDetails.route) {
             TrailDetailsScreen(navController = navHostController, exploreViewModel = exploreViewModel, modifier = modifier)
@@ -71,9 +72,6 @@ private fun NavigationGraph(navHostController: NavHostController, modifier: Modi
         }
         composable(route = Screen.Main.Account.route) {
             AccountScreen(navController = navHostController, profileViewModel = profileViewModel, modifier = modifier)
-        }
-        composable(route = Screen.Main.Statistics.route) {
-            StatisticsScreen(navController = navHostController, profileViewModel = profileViewModel, modifier = modifier)
         }
         composable(route = Screen.Main.Contact.route) {
             ContactScreen(navController = navHostController, profileViewModel = profileViewModel, modifier = modifier)
