@@ -126,7 +126,7 @@ fun ContactScreen(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontFamily = FontFamily.Default,
-                            color = Color.Gray,
+                            color = Color.DarkGray,
                             letterSpacing = (0.8).sp
                         ),
                         maxLines = 1,
@@ -139,7 +139,7 @@ fun ContactScreen(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontFamily = FontFamily.Default,
-                            color = Color.Gray,
+                            color = Color.DarkGray,
                             letterSpacing = (0.8).sp
                         ),
                         maxLines = 1,
@@ -193,7 +193,7 @@ fun ContactScreen(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontFamily = FontFamily.Default,
-                            color = Color.Gray,
+                            color = Color.DarkGray,
                             letterSpacing = (0.8).sp
                         ),
                         maxLines = 1,
@@ -206,7 +206,7 @@ fun ContactScreen(
                         style = TextStyle(
                             fontSize = 14.sp,
                             fontFamily = FontFamily.Default,
-                            color = Color.Gray,
+                            color = Color.DarkGray,
                             letterSpacing = (0.8).sp
                         ),
                         maxLines = 1,

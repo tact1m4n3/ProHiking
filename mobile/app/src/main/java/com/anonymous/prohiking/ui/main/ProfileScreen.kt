@@ -139,7 +139,7 @@ private fun UserDetails(username: String, email: String) {
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontFamily = FontFamily.Default,
-                    color = Color.Gray,
+                    color = Color.DarkGray,
                     letterSpacing = (0.8).sp
                 ),
                 maxLines = 1,
@@ -193,7 +193,7 @@ private fun MenuItem(icon: ImageVector, title: String, description: String, call
                         fontSize = 14.sp,
                         letterSpacing = (0.8).sp,
                         fontFamily = FontFamily.Default,
-                        color = Color.Gray
+                        color = Color.DarkGray
                     )
                 )
             }
