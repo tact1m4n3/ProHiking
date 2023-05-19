@@ -25,6 +25,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -42,6 +45,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.anonymous.prohiking.R
 import com.anonymous.prohiking.ui.StartActivity
+import com.anonymous.prohiking.ui.widgets.ConfirmDialog
 
 @Composable
 fun AccountScreen(
@@ -51,6 +55,9 @@ fun AccountScreen(
 ) {
     val context = LocalContext.current
     val currentUser by profileViewModel.currentUser.collectAsState()
+
+    var showLogoutConfirmDialog by remember { mutableStateOf(false) }
+    var showDeleteConfirmDialog by remember { mutableStateOf(false) }
 
     Box(modifier = modifier
         .fillMaxSize()
@@ -161,13 +168,7 @@ fun AccountScreen(
                         Button(
                             shape = CircleShape,
                             onClick = {
-                                profileViewModel.onLogoutButtonPressed()
-                                context.startActivity(
-                                    Intent(
-                                        context,
-                                        StartActivity::class.java
-                                    )
-                                )
+                                showLogoutConfirmDialog = true
                             },
                         ) {
                             Text(
@@ -175,10 +176,62 @@ fun AccountScreen(
                                 color = MaterialTheme.colorScheme.error
                             )
                         }
+
+                        Button(
+                            shape = CircleShape,
+                            onClick = {
+                                showDeleteConfirmDialog = true
+                            },
+                        ) {
+                            Text(
+                                "Delete account",
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
                     }
                 }
             }
         }
+    }
+
+    if (showLogoutConfirmDialog) {
+        ConfirmDialog(
+            title = "Do you want to log out?",
+            onDismiss = {
+                showLogoutConfirmDialog = false
+            },
+            onConfirm = {
+                showLogoutConfirmDialog = false
+
+                profileViewModel.onLogoutButtonClick()
+                context.startActivity(
+                    Intent(
+                        context,
+                        StartActivity::class.java
+                    )
+                )
+            }
+        )
+    }
+
+    if (showDeleteConfirmDialog) {
+        ConfirmDialog(
+            title = "Do you want to delete this account?",
+            onDismiss = {
+                showDeleteConfirmDialog = false
+            },
+            onConfirm = {
+                showDeleteConfirmDialog = false
+
+                profileViewModel.onDeleteAccountButtonClick()
+                context.startActivity(
+                    Intent(
+                        context,
+                        StartActivity::class.java
+                    )
+                )
+            }
+        )
     }
 }
 

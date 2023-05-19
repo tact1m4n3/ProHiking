@@ -11,6 +11,10 @@ import androidx.compose.material.icons.rounded.Emergency
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,16 +26,16 @@ import com.anonymous.prohiking.R
 @Composable
 fun EmergencyButton(modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    val sosNumber = stringResource(id = R.string.emergency_number)
+    val emergencyNumber = stringResource(id = R.string.emergency_number)
+
+    var showConfirmDialog by remember {
+        mutableStateOf(false)
+    }
 
     Box(modifier = modifier.fillMaxSize()) {
         FloatingActionButton(
             onClick = {
-                val intent = Intent(
-                    Intent.ACTION_CALL, Uri.parse(
-                        "tel:$sosNumber"
-                    ))
-                context.startActivity(intent)
+                showConfirmDialog = true
             },
             containerColor = Color.Red,
             shape = RoundedCornerShape(16.dp),
@@ -45,5 +49,23 @@ fun EmergencyButton(modifier: Modifier = Modifier) {
                 tint = Color.White,
             )
         }
+    }
+    
+    if (showConfirmDialog) {
+        ConfirmDialog(
+            title = "Do you want to call $emergencyNumber?",
+            onDismiss = {
+                showConfirmDialog = false
+            },
+            onConfirm = {
+                showConfirmDialog = false
+
+                val intent = Intent(
+                    Intent.ACTION_CALL, Uri.parse(
+                        "tel:$emergencyNumber"
+                    ))
+                context.startActivity(intent)
+            }
+        )
     }
 }

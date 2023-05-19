@@ -35,6 +35,8 @@ interface ProHikingApiService {
     suspend fun loginUser(@Body payload: LoginPayload): User
     @POST("api/user/logout")
     suspend fun logoutUser(): String
+    @POST("api/user/delete")
+    suspend fun deleteUser(): String
     @GET("api/trails/{id}")
     suspend fun getTrailById(@Path("id") id: Int): Trail
     @GET("api/trails/{id}/path")
@@ -42,7 +44,7 @@ interface ProHikingApiService {
     @GET("api/trails/search")
     suspend fun searchTrails(
         @Query("limit") limit: Int,
-//        @Query("offset") offset: Int,
+        @Query("offset") offset: Int,
         @Query("name") name: String,
         @Query("length") length: String,
         @Query("center") center: String,

@@ -40,10 +40,21 @@ class ProfileViewModel(
             null
         )
 
-    fun onLogoutButtonPressed() {
+    fun onLogoutButtonClick() {
         viewModelScope.launch {
             preferencesRepository.updateUserId(-1)
             preferencesRepository.updateUsernameAndPassword("", "")
+        }
+    }
+
+    fun onDeleteAccountButtonClick() {
+        viewModelScope.launch {
+            preferencesRepository.updateUserId(-1)
+            preferencesRepository.updateUsernameAndPassword("", "")
+            when (val result = userRepository.deleteUser()) {
+                is Result.Error -> println(result.error)
+                else -> {}
+            }
         }
     }
 

@@ -16,6 +16,7 @@ interface UserRepository {
     suspend fun registerUser(username: String, email: String, password: String): Result<User>
     suspend fun loginUser(username: String, password: String): Result<User>
     suspend fun logoutUser(): Result<String>
+    suspend fun deleteUser(): Result<String>
 }
 
 class DefaultUserRepository(
@@ -36,6 +37,10 @@ class DefaultUserRepository(
     }
 
     override suspend fun logoutUser(): Result<String> {
-        return safeApiCall(dispatcher) { proHikingApiService.logoutUser() }
+        return enforceLogin(context) { safeApiCall(dispatcher) { proHikingApiService.logoutUser() } }
+    }
+
+    override suspend fun deleteUser(): Result<String> {
+        return enforceLogin(context) { safeApiCall(dispatcher) { proHikingApiService.deleteUser() } }
     }
 }
