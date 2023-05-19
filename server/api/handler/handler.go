@@ -23,7 +23,7 @@ func New() chi.Router {
 	r.Use(chi_middleware.Timeout(30 * time.Second))
 
 	r.Use(httprate.Limit(
-		20,
+		100,
 		1*time.Minute,
 		httprate.WithKeyByIP(),
 		httprate.WithLimitHandler(TooManyRequests)),

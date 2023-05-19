@@ -7,6 +7,7 @@ import (
 	"prohiking-server/internal/database"
 	"prohiking-server/internal/model"
 	"strconv"
+	"strings"
 
 	geojson "github.com/paulmach/go.geojson"
 )
@@ -32,9 +33,9 @@ func main() {
 	}
 
 	for _, feature := range collection.Features {
-		// source := feature.PropertyMustString("source")
-		// !strings.Contains(source, "Muntii Nostri gpx") ||
-		if !feature.Geometry.IsLineString() {
+		source := feature.PropertyMustString("source")
+		if !strings.Contains(source, "Muntii Nostri gpx") ||
+			!feature.Geometry.IsLineString() {
 			continue
 		}
 
@@ -63,6 +64,8 @@ func main() {
 			}
 			trail.Points = append(trail.Points, point)
 		}
+
+		trail.Point = trail.Points[0]
 
 		if err := database.CreateTrail(trail); err != nil {
 			log.Fatalln(err)

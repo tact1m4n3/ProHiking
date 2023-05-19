@@ -17,7 +17,7 @@ func SearchTrails(
 	radius float64,
 ) ([]*model.Trail, error) {
 	trails := []*model.Trail{}
-	trailsQuery := Instance.Table("trails t").Limit(limit).Offset(offset)
+	trailsQuery := Instance.Table("trails t").Limit(limit).Offset(offset).Preload("Point")
 
 	if name != "" {
 		trailsQuery.Where("t.name LIKE ?", "%"+strings.ReplaceAll(name, " ", "%")+"%")
@@ -42,7 +42,7 @@ func SearchTrails(
 
 func GetTrailById(id int) (*model.Trail, error) {
 	trail := &model.Trail{}
-	err := Instance.Table("trails").Where("id = ?", id).First(trail).Error
+	err := Instance.Table("trails").Preload("Point").Where("id = ?", id).First(trail).Error
 	if err != nil {
 		return nil, err
 	}
