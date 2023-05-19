@@ -85,6 +85,7 @@ class ExploreViewModel(
     private suspend fun loadRecommendedTrails(location: LocationDetails): List<Trail> {
         return when (val result = trailRepository.searchTrails(
             5,
+            0,
             "",
             0.0, 300.0,
             location.latitude, location.longitude,
@@ -115,6 +116,7 @@ class ExploreViewModel(
     private suspend fun searchTrails(name: String): List<Trail> {
         return when (val result = trailRepository.searchTrails(
             5,
+            0,
             name,
             0.0, 300.0,
             location.value.latitude, location.value.longitude,

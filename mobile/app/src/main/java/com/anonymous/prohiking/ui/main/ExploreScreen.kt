@@ -30,7 +30,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -40,9 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.anonymous.prohiking.ui.Screen
-import com.anonymous.prohiking.ui.widgets.EmergencyButton
 import com.anonymous.prohiking.ui.widgets.TrailSymbol
-
 
 @Composable
 fun ExploreScreen(
@@ -50,7 +47,6 @@ fun ExploreScreen(
     modifier: Modifier = Modifier,
     exploreViewModel: ExploreViewModel = viewModel(factory = ExploreViewModel.Factory),
 ) {
-    val context = LocalContext.current
     val isLoading by exploreViewModel.isLoading.collectAsState()
     val recommendedTrails by exploreViewModel.recommendedTrails.collectAsState()
     val searchText by exploreViewModel.searchText.collectAsState()
