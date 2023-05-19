@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/mail"
 	"prohiking-server/api/auth"
+	my_middleware "prohiking-server/api/handler/middleware"
 	"prohiking-server/api/response"
 	"prohiking-server/internal/database"
 	"prohiking-server/internal/model"
@@ -160,4 +161,14 @@ func LogoutUser(w http.ResponseWriter, r *http.Request) {
 	})
 
 	w.Write([]byte("logged out"))
+}
+
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
+	user := r.Context().Value(my_middleware.AuthUserKey).(*model.User)
+	if err := database.DeleteUser(user.Id); err != nil {
+		response.Error(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	w.Write([]byte("deleted user"))
 }

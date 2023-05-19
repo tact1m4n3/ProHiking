@@ -50,7 +50,13 @@ func Routes() chi.Router {
 	r.Route("/user", func(r chi.Router) {
 		r.Post("/login", LoginUser)
 		r.Post("/register", RegisterUser)
-		r.Post("/logout", LogoutUser)
+
+		r.Group(func(r chi.Router) {
+			r.Use(my_middleware.Auth)
+
+			r.Post("/logout", LogoutUser)
+			r.Post("/delete", DeleteUser)
+		})
 	})
 
 	r.Group(func(r chi.Router) {
