@@ -1,7 +1,7 @@
 package com.anonymous.prohiking.ui
 
 sealed class Screen(val route: String) {
-    sealed class Auth {
+    sealed class Start {
         object Login: Screen(route = "login_screen")
         object Register: Screen(route = "register_screen")
     }
@@ -13,7 +13,6 @@ sealed class Screen(val route: String) {
         object Library: Screen(route = "library_screen")
         object Profile: Screen(route = "profile_screen")
         object Account: Screen(route = "account_screen")
-        object Statistics: Screen(route = "statistics_screen")
         object Contact: Screen(route = "contact_screen")
     }
 }

@@ -1,4 +1,4 @@
-package com.anonymous.prohiking.ui.auth
+package com.anonymous.prohiking.ui.start
 
 import android.content.Intent
 import androidx.compose.foundation.Image
@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -42,6 +43,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.anonymous.prohiking.R
+import com.anonymous.prohiking.data.utils.hasCallPermission
+import com.anonymous.prohiking.data.utils.hasLocationPermission
 import com.anonymous.prohiking.ui.MainActivity
 import com.anonymous.prohiking.ui.Screen
 import com.anonymous.prohiking.ui.widgets.CustomTextField
@@ -69,12 +72,22 @@ fun LoginScreen(
             is LoginUiState.Loading -> LoadingScreen()
             is LoginUiState.LoggedOut -> LoggedOutScreen(navController,
                 uiState as LoginUiState.LoggedOut, loginViewModel)
-            is LoginUiState.LoggedIn -> context.startActivity(
-                Intent(
-                    context,
-                    MainActivity::class.java
-                )
-            )
+            is LoginUiState.LoggedIn -> {
+                if (context.hasLocationPermission() && context.hasCallPermission()) {
+                    context.startActivity(
+                        Intent(
+                            context,
+                            MainActivity::class.java
+                        )
+                    )
+                } else {
+                    Text(
+                        text = "Please restart the application for the changes to take place...",
+                        fontSize = 20.sp,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
         }
     }
 }
@@ -131,7 +144,7 @@ private fun LoggedOutScreen(
                     )
 
                     Text(
-                        text = "Sign in to continue",
+                        text = "Log in to continue",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -141,12 +154,12 @@ private fun LoggedOutScreen(
                     CustomTextField(
                         value = uiState.usernameText,
                         label = "Username",
-                        placeholder = "Enter your email address",
+                        placeholder = "Enter your username",
                         onValueChange = {
                             loginViewModel.updateUsernameText(it)
                         },
                         leadingIcon = {
-                            Icon(Icons.Default.Email, contentDescription = "Email")
+                            Icon(Icons.Default.Email, contentDescription = "Username")
                         },
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Email,
@@ -159,7 +172,7 @@ private fun LoggedOutScreen(
                     CustomTextField(
                         value = uiState.passwordText,
                         label = "Password",
-                        placeholder = "Enter your Password",
+                        placeholder = "Enter your password",
                         onValueChange = {
                             loginViewModel.updatePasswordText(it)
                         },
@@ -195,7 +208,7 @@ private fun LoggedOutScreen(
                         Text(text = "Log In")
                     }
 
-                    TextButton(onClick = { navController.navigate(Screen.Auth.Register.route) }) {
+                    TextButton(onClick = { navController.navigate(Screen.Start.Register.route) }) {
                         Text(
                             "Don't have an account, click here",
                             color = MaterialTheme.colorScheme.primary

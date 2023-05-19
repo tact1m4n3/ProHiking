@@ -1,22 +1,14 @@
 package com.anonymous.prohiking.ui
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.compose.runtime.getValue
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -32,22 +24,14 @@ import com.anonymous.prohiking.ui.main.NavigateScreen
 import com.anonymous.prohiking.ui.main.NavigateViewModel
 import com.anonymous.prohiking.ui.main.ProfileScreen
 import com.anonymous.prohiking.ui.main.ProfileViewModel
-import com.anonymous.prohiking.ui.main.StatisticsScreen
 import com.anonymous.prohiking.ui.main.TrailDetailsScreen
 import com.anonymous.prohiking.ui.theme.ProHikingTheme
+import com.anonymous.prohiking.ui.widgets.EmergencyButton
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        requestPermissions(
-            arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ),
-            0
-        )
 
         setContent {
             val navController = rememberNavController()
@@ -67,11 +51,12 @@ class MainActivity : ComponentActivity() {
 private fun NavigationGraph(navHostController: NavHostController, modifier: Modifier = Modifier) {
     val exploreViewModel = viewModel<ExploreViewModel>(factory = ExploreViewModel.Factory)
     val navigateViewModel = viewModel<NavigateViewModel>(factory = NavigateViewModel.Factory)
-    val profileViewModel = viewModel<ProfileViewModel>()
+    val profileViewModel = viewModel<ProfileViewModel>(factory = ProfileViewModel.Factory)
 
     NavHost(navController = navHostController, startDestination = Screen.Main.Explore.route) {
         composable(route = Screen.Main.Explore.route) {
             ExploreScreen(navController = navHostController, exploreViewModel = exploreViewModel, modifier = modifier)
+            EmergencyButton(modifier = modifier)
         }
         composable(route = Screen.Main.TrailDetails.route) {
             TrailDetailsScreen(navController = navHostController, exploreViewModel = exploreViewModel, modifier = modifier)
@@ -83,13 +68,10 @@ private fun NavigationGraph(navHostController: NavHostController, modifier: Modi
             LibraryScreen(navController = navHostController, modifier = modifier)
         }
         composable(route = Screen.Main.Profile.route) {
-            ProfileScreen(navController = navHostController, modifier = modifier)
+            ProfileScreen(navController = navHostController, profileViewModel = profileViewModel, modifier = modifier)
         }
         composable(route = Screen.Main.Account.route) {
             AccountScreen(navController = navHostController, profileViewModel = profileViewModel, modifier = modifier)
-        }
-        composable(route = Screen.Main.Statistics.route) {
-            StatisticsScreen(navController = navHostController, profileViewModel = profileViewModel, modifier = modifier)
         }
         composable(route = Screen.Main.Contact.route) {
             ContactScreen(navController = navHostController, profileViewModel = profileViewModel, modifier = modifier)

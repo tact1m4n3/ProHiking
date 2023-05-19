@@ -1,33 +1,22 @@
 package com.anonymous.prohiking.ui.main
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.TextButton
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.outlined.ChevronRight
-import androidx.compose.material.icons.outlined.Download
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Navigation
-import androidx.compose.material.icons.outlined.Save
-import androidx.compose.material.icons.outlined.SavedSearch
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -81,19 +70,16 @@ fun TrailDetailsScreen(
                         tint = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
-                /*
-                            Text(
-                                text = selectedTrail?.name ?: "Trail",
-                                fontSize = 24.sp,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                overflow = TextOverflow.Ellipsis,
-                                fontWeight = FontWeight.SemiBold,
-                                softWrap = true,
-                                maxLines = 1,
-                                modifier = Modifier.align(Alignment.CenterVertically)
-                            )
-
-                 */
+                Text(
+                    text = selectedTrail?.name ?: "Trail",
+                    fontSize = 24.sp,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = FontWeight.SemiBold,
+                    softWrap = true,
+                    maxLines = 1,
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
             }
 
             Column(
@@ -102,64 +88,58 @@ fun TrailDetailsScreen(
                     .padding(24.dp)
             ) {
                 selectedTrail?.let { trail ->
+//                    Row(
+//                        modifier = Modifier
+//                            .fillMaxWidth(),
+//                        verticalAlignment = Alignment.CenterVertically,
+//                        horizontalArrangement = Arrangement.SpaceEvenly
+//                    ) {
+//                        Button(
+//                            shape = CircleShape,
+//                            onClick = {
+//                                exploreViewModel.onStartTrailButtonPressed(trail)
+//                                navController.navigate(Screen.Main.Navigate.route)
+//                            }
+//                        ) {
+//                            Icon(
+//                                modifier = Modifier
+//                                    .weight(weight = 1f, fill = false),
+//                                imageVector = Icons.Outlined.Navigation,
+//                                contentDescription = "Navigate",
+//                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+//                            )
+//                        }
+//                        Button(
+//                            shape = CircleShape,
+//                            onClick = {
+//                            }
+//                        ) {
+//                            Icon(
+//                                modifier = Modifier
+//                                    .weight(weight = 1f, fill = false),
+//                                imageVector = Icons.Outlined.FavoriteBorder,
+//                                contentDescription = "Save",
+//                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+//                            )
+//                        }
+//
+//                        Button(
+//                            shape = CircleShape,
+//                            onClick = {
+//
+//                            }
+//                        ) {
+//                            Icon(
+//                                modifier = Modifier
+//                                    .weight(weight = 1f, fill = false),
+//                                imageVector = Icons.Outlined.Download,
+//                                contentDescription = "Download",
+//                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+//                            )
+//                        }
+//                    }
 
-
-                    Row( modifier = Modifier
-                        .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                       ){
-                         Button(
-                             shape = CircleShape,
-                             onClick = {
-                                  exploreViewModel.onStartTrailButtonPressed(trail)
-                                 navController.navigate(Screen.Main.Navigate.route)
-                        }){
-                             Icon(
-                                 modifier = Modifier
-                                     .weight(weight = 1f, fill = false),
-                                 imageVector = Icons.Outlined.Navigation,
-                                 contentDescription = "Navigate",
-                                 tint = MaterialTheme.colorScheme.onPrimaryContainer
-                             )
-                        }
-                        Button(
-                            shape = CircleShape,
-                            onClick = {
-
-
-                            }){
-                            Icon(
-                                modifier = Modifier
-                                    .weight(weight = 1f, fill = false),
-                                imageVector = Icons.Outlined.FavoriteBorder,
-                                contentDescription = "Save",
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-
-
-                        Button(
-                            shape = CircleShape,
-                            onClick = {
-
-                            }){
-                            Icon(
-                                modifier = Modifier
-                                    .weight(weight = 1f, fill = false),
-                                imageVector = Icons.Outlined.Download,
-                                contentDescription = "Download",
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-
-                    }
-                    Spacer(modifier = Modifier.height(20.dp))
-
-
-
-
-
+//                    Spacer(modifier = Modifier.height(20.dp))
 
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Text(
@@ -174,27 +154,24 @@ fun TrailDetailsScreen(
                             )
                         )
                         Spacer(modifier = Modifier.height(10.dp))
-                        Row(modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center)
-                        {
-                            Card(
-                                elevation = CardDefaults.elevatedCardElevation(),
-                                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(186.dp)
 
-                                ) {
+                        Card(
+                            elevation = CardDefaults.elevatedCardElevation(),
+                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(175.dp)
+                        ) {
+                            Box(modifier = Modifier.fillMaxSize()) {
                                 Column(
-                                    modifier = Modifier.fillMaxSize()
+                                    modifier = Modifier
+                                        .fillMaxSize()
                                         .padding(15.dp),
-                                    verticalArrangement = Arrangement.Center,
-                                    horizontalAlignment = Alignment.Start
                                 ) {
                                     Text(
                                         text = "Trail",
                                         style = TextStyle(
-                                            fontSize = 14.sp,
+                                            fontSize = 16.sp,
                                             letterSpacing = (0.8).sp,
                                             fontFamily = FontFamily.Default,
                                             color = Color.Gray
@@ -204,65 +181,46 @@ fun TrailDetailsScreen(
                                         text = trail.name,
                                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                                         style = TextStyle(
-                                            fontSize = 19.sp,
+                                            fontSize = 20.sp,
                                             fontFamily = FontFamily.SansSerif
                                         )
                                     )
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
 
+                                    Spacer(modifier = Modifier.size(15.dp))
 
-                                    ) {
-
-
-                                        Card(
-                                            elevation = CardDefaults.elevatedCardElevation(),
-                                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
-                                            modifier = Modifier.size(80.dp)
-
-                                        ) {
-                                            Column(
-                                                modifier = Modifier.fillMaxSize(),
-                                                verticalArrangement = Arrangement.Center,
-                                                horizontalAlignment = Alignment.Start
-                                            ) {
-                                                Text(
-                                                    text = "Length",
-                                                    style = TextStyle(
-                                                        fontSize = 14.sp,
-                                                        letterSpacing = (0.8).sp,
-                                                        fontFamily = FontFamily.Default,
-                                                        color = Color.Gray
-                                                    )
-                                                )
-
-
-                                                Text(
-                                                    text = "${trail.length} km",
-                                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                                    style = TextStyle(
-                                                        fontSize = 20.sp,
-                                                        fontFamily = FontFamily.Default
-                                                    )
-                                                )
-                                            }
-                                        }
-                                        Spacer(modifier = Modifier.width(160.dp))
-                                        TrailSymbol(text = trail.symbol, modifier = Modifier.size(80.dp))
-                                    }
+                                    Text(
+                                        text = "Length",
+                                        style = TextStyle(
+                                            fontSize = 16.sp,
+                                            letterSpacing = (0.8).sp,
+                                            fontFamily = FontFamily.Default,
+                                            color = Color.Gray
+                                        )
+                                    )
+                                    Text(
+                                        text = "${trail.length} km",
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        style = TextStyle(
+                                            fontSize = 20.sp,
+                                            fontFamily = FontFamily.Default
+                                        )
+                                    )
                                 }
+
+                                TrailSymbol(
+                                    text = trail.symbol,
+                                    modifier = Modifier
+                                        .padding(20.dp)
+                                        .size(80.dp)
+                                        .align(Alignment.BottomEnd)
+                                )
                             }
                         }
-
-
-
-
-
                     }
+
                     Spacer(modifier = Modifier.height(50.dp))
 
-
-                    Column() {
+                    Column {
                         Text(
                             text = "Preview",
                             style = TextStyle(
@@ -282,9 +240,9 @@ fun TrailDetailsScreen(
                                 trailPath = trailPath,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .fillMaxHeight(0.5f),
+                                    .height(200.dp),
                             )
-                            Spacer(modifier =  Modifier.height(15.dp))
+                            Spacer(modifier = Modifier.height(15.dp))
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Center

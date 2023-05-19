@@ -1,5 +1,6 @@
 package com.anonymous.prohiking.ui
 
+import android.Manifest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,14 +10,24 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.anonymous.prohiking.ui.auth.LoginScreen
-import com.anonymous.prohiking.ui.auth.LoginViewModel
-import com.anonymous.prohiking.ui.auth.RegisterScreen
+import com.anonymous.prohiking.ui.start.LoginScreen
+import com.anonymous.prohiking.ui.start.LoginViewModel
+import com.anonymous.prohiking.ui.start.RegisterScreen
 import com.anonymous.prohiking.ui.theme.ProHikingTheme
 
-class AuthActivity : ComponentActivity() {
+class StartActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        requestPermissions(
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.CALL_PHONE,
+            ),
+            0
+        )
+
         setContent {
             val navController = rememberNavController()
 
@@ -31,11 +42,11 @@ class AuthActivity : ComponentActivity() {
 private fun NavigationGraph(navHostController: NavHostController) {
     val loginViewModel = viewModel<LoginViewModel>(factory = LoginViewModel.Factory)
 
-    NavHost(navController = navHostController, startDestination = Screen.Auth.Login.route) {
-        composable(route = Screen.Auth.Login.route) {
+    NavHost(navController = navHostController, startDestination = Screen.Start.Login.route) {
+        composable(route = Screen.Start.Login.route) {
             LoginScreen(navController = navHostController, loginViewModel = loginViewModel)
         }
-        composable(route = Screen.Auth.Register.route) {
+        composable(route = Screen.Start.Register.route) {
             RegisterScreen(navController = navHostController)
         }
     }

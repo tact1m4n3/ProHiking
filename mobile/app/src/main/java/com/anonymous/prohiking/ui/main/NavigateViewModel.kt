@@ -6,13 +6,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.anonymous.prohiking.ProHikingApplication
+import com.anonymous.prohiking.data.LocationClient
+import com.anonymous.prohiking.data.LocationDetails
 import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.TrailRepository
 import com.anonymous.prohiking.data.utils.Result
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.maps.android.compose.CameraPositionState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -20,10 +18,19 @@ import kotlinx.coroutines.launch
 
 class NavigateViewModel(
     private val trailRepository: TrailRepository,
-    private val preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository,
+    private val locationClient: LocationClient
 ) : ViewModel() {
-    private val currentTrailId = preferencesRepository.currentTrailId
+    private val currentTrailId = preferencesRepository.trailId
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), -1)
+
+    val location = locationClient
+        .getLocationUpdates(1000)
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            LocationDetails()
+        )
 
     val currentTrail = currentTrailId
         .map { id ->
@@ -59,23 +66,9 @@ class NavigateViewModel(
             null
         )
 
-    val cameraPositionState = CameraPositionState()
-
-    fun focusOnCurrentTrail() {
-        currentTrailPath.value?.let {trailPath ->
-            viewModelScope.launch {
-                val bounds = LatLngBounds.builder().also { builder ->
-                    for (point in trailPath) {
-                        builder.include(point.let { LatLng(it.lat, it.lon) })
-                    }
-                }.build()
-
-                cameraPositionState.animate(
-                    CameraUpdateFactory.newLatLngBounds(
-                        bounds,
-                        100
-                    ))
-            }
+    fun onStopTrailButtonClick() {
+        viewModelScope.launch {
+            preferencesRepository.updateTrailId(-1)
         }
     }
 
@@ -84,7 +77,12 @@ class NavigateViewModel(
             initializer {
                 val trailRepository = ProHikingApplication.instance.trailRepository
                 val preferencesRepository = ProHikingApplication.instance.preferencesRepository
-                NavigateViewModel(trailRepository = trailRepository, preferencesRepository = preferencesRepository)
+                val locationClient = ProHikingApplication.instance.locationClient
+                NavigateViewModel(
+                    trailRepository = trailRepository,
+                    preferencesRepository = preferencesRepository,
+                    locationClient = locationClient
+                )
             }
         }
     }

@@ -19,14 +19,16 @@ import androidx.compose.material.Card
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.ContactPage
-import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -47,15 +49,28 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     profileViewModel: ProfileViewModel = viewModel()
 ) {
+    val currentUser by profileViewModel.currentUser.collectAsState()
+
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.onPrimaryContainer)
     ) {
+
+            Image(
+                painter = painterResource(id = R.drawable.lovepik_com_400203927_green_forest),
+                contentDescription = "Login",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .blur(6.dp)
+            )
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            UserDetails()
+            currentUser?.let { user ->
+                UserDetails(user.username, user.email)
+            }
 
             MenuItem(
                 icon = Icons.Outlined.Person,
@@ -65,13 +80,6 @@ fun ProfileScreen(
                 navController.navigate(Screen.Main.Account.route)
             }
 
-            MenuItem(
-                icon = Icons.Outlined.Explore,
-                title = "Statistics",
-                description = "Check out your stats"
-            ) {
-                navController.navigate(Screen.Main.Statistics.route)
-            }
 
             MenuItem(
                 icon = Icons.Outlined.ContactPage,
@@ -85,7 +93,7 @@ fun ProfileScreen(
 }
 
 @Composable
-private fun UserDetails() {
+private fun UserDetails(username: String, email: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -94,18 +102,18 @@ private fun UserDetails() {
     ) {
         Card(
             shape = CircleShape,
-            backgroundColor = MaterialTheme.colorScheme.secondary,
+            backgroundColor = MaterialTheme.colorScheme.primaryContainer,
             modifier = Modifier
                 .size(100.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.baseline_person_outline_24),
+            Icon(
+                imageVector = Icons.Outlined.Person,
                 contentDescription = null,
                 modifier = Modifier
                     .padding(8.dp)
                     .wrapContentSize()
                     .fillMaxSize(),
-                contentScale = ContentScale.Crop
+                tint = MaterialTheme.colorScheme.onTertiaryContainer
             )
         }
 
@@ -115,7 +123,7 @@ private fun UserDetails() {
                 .padding(16.dp)
         ) {
             Text(
-                text = "Prohiker",
+                text = username,
                 style = TextStyle(
                     fontSize = 22.sp
                 ),
@@ -126,24 +134,11 @@ private fun UserDetails() {
             Spacer(modifier = Modifier.height(2.dp))
 
             Text(
-                text = "email123@email.com",
+                text = email,
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontFamily = FontFamily.Default,
-                    color = Color.Gray,
-                    letterSpacing = (0.8).sp
-                ),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.height(2.dp))
-
-            Text(
-                text = "Bucuresti, RO",
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    fontFamily = FontFamily.Default,
-                    color = Color.Gray,
+                    color = Color.DarkGray,
                     letterSpacing = (0.8).sp
                 ),
                 maxLines = 1,
@@ -197,7 +192,7 @@ private fun MenuItem(icon: ImageVector, title: String, description: String, call
                         fontSize = 14.sp,
                         letterSpacing = (0.8).sp,
                         fontFamily = FontFamily.Default,
-                        color = Color.Gray
+                        color = Color.DarkGray
                     )
                 )
             }

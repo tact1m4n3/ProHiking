@@ -4,20 +4,22 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.sql.Time
 
 interface PreferencesRepository {
     val userId: Flow<Int>
     val username: Flow<String>
     val password: Flow<String>
 
-    val currentTrailId: Flow<Int>
+    val trailId: Flow<Int>
 
     suspend fun updateUserId(id: Int)
     suspend fun updateUsernameAndPassword(username: String, password: String)
-    suspend fun updateCurrentTrailId(id: Int)
+    suspend fun updateTrailId(id: Int)
 }
 
 class DefaultPreferencesRepository(private val dataStore: DataStore<Preferences>): PreferencesRepository {
@@ -26,7 +28,7 @@ class DefaultPreferencesRepository(private val dataStore: DataStore<Preferences>
         val USERNAME = stringPreferencesKey("username")
         val PASSWORD = stringPreferencesKey("password")
 
-        val CURRENT_TRAIL_ID = intPreferencesKey("current_trail_id")
+        val TRAIL_ID = intPreferencesKey("trail_id")
     }
 
     override val userId = dataStore.data.map { preferences ->
@@ -41,8 +43,8 @@ class DefaultPreferencesRepository(private val dataStore: DataStore<Preferences>
         preferences[PASSWORD] ?: ""
     }
 
-    override val currentTrailId = dataStore.data.map { preferences ->
-        preferences[CURRENT_TRAIL_ID] ?: -1
+    override val trailId = dataStore.data.map { preferences ->
+        preferences[TRAIL_ID] ?: -1
     }
 
     override suspend fun updateUserId(id: Int) {
@@ -58,9 +60,9 @@ class DefaultPreferencesRepository(private val dataStore: DataStore<Preferences>
         }
     }
 
-    override suspend fun updateCurrentTrailId(id: Int) {
+    override suspend fun updateTrailId(id: Int) {
         dataStore.edit { preferences ->
-            preferences[CURRENT_TRAIL_ID] = id
+            preferences[TRAIL_ID] = id
         }
     }
 }

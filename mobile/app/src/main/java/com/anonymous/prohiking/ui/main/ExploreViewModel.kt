@@ -19,14 +19,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.single
-import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -88,11 +85,10 @@ class ExploreViewModel(
     private suspend fun loadRecommendedTrails(location: LocationDetails): List<Trail> {
         return when (val result = trailRepository.searchTrails(
             5,
-            0,
             "",
             0.0, 300.0,
-            location.latitude - 1, location.longitude - 1,
-            location.latitude + 1, location.longitude + 1,
+            location.latitude, location.longitude,
+            1.0,
         )) {
             is Result.Success -> result.data
             is Result.Error -> {
@@ -119,10 +115,10 @@ class ExploreViewModel(
     private suspend fun searchTrails(name: String): List<Trail> {
         return when (val result = trailRepository.searchTrails(
             5,
-            0,
             name,
             0.0, 300.0,
-            43.688444729, 20.2201924985, 48.2208812526, 29.62654341
+            location.value.latitude, location.value.longitude,
+            200.0
         )) {
             is Result.Success -> result.data
             is Result.Error -> {
@@ -134,7 +130,9 @@ class ExploreViewModel(
 
     fun onStartTrailButtonPressed(trail: Trail) {
         viewModelScope.launch {
-            preferencesRepository.updateCurrentTrailId(trail.id)
+            if (preferencesRepository.trailId.first() != trail.id) {
+                preferencesRepository.updateTrailId(trail.id)
+            }
         }
     }
 

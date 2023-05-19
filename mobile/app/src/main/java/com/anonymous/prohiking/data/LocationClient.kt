@@ -49,7 +49,11 @@ class DefaultLocationClient(
                     super.onLocationResult(result)
                     result.locations.lastOrNull()?.let { location ->
                         launch {
-                            send(LocationDetails(latitude = location.latitude, longitude = location.longitude))
+                            send(LocationDetails(
+                                latitude = location.latitude,
+                                longitude = location.longitude,
+                                altitude = location.altitude
+                            ))
                         }
                     }
                 }
@@ -66,5 +70,6 @@ class DefaultLocationClient(
 
 data class LocationDetails(
     val latitude: Double = 0.0,
-    val longitude: Double = 0.0
+    val longitude: Double = 0.0,
+    val altitude: Double = 0.0
 )
