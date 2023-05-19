@@ -157,7 +157,7 @@ func LogoutUser(w http.ResponseWriter, r *http.Request) {
 		Value:   "",
 		MaxAge:  0,
 		Path:    "/",
-		Expires: time.Now().Add(-time.Hour),
+		Expires: time.Now().Add(-TokenExpirationTime),
 	})
 
 	w.Write([]byte("logged out"))
