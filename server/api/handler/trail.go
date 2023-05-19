@@ -19,6 +19,12 @@ func SearchTrails(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	offset, err := strconv.Atoi(r.URL.Query().Get("offset"))
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, "offset parameter not valid")
+		return
+	}
+
 	name := r.URL.Query().Get("name")
 
 	lengthRaw := strings.Split(r.URL.Query().Get("length"), ",")
@@ -65,6 +71,7 @@ func SearchTrails(w http.ResponseWriter, r *http.Request) {
 
 	trails, err := database.SearchTrails(
 		limit,
+		offset,
 		name,
 		minLength,
 		maxLength,

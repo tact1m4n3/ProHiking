@@ -8,6 +8,7 @@ import (
 
 func SearchTrails(
 	limit int,
+	offset int,
 	name string,
 	minLength float64,
 	maxLength float64,
@@ -16,7 +17,7 @@ func SearchTrails(
 	radius float64,
 ) ([]*model.Trail, error) {
 	trails := []*model.Trail{}
-	trailsQuery := Instance.Table("trails t").Limit(limit)
+	trailsQuery := Instance.Table("trails t").Limit(limit).Offset(offset)
 
 	if name != "" {
 		trailsQuery.Where("t.name LIKE ?", "%"+strings.ReplaceAll(name, " ", "%")+"%")
