@@ -25,8 +25,8 @@ import com.anonymous.prohiking.ui.main.NavigateViewModel
 import com.anonymous.prohiking.ui.main.ProfileScreen
 import com.anonymous.prohiking.ui.main.ProfileViewModel
 import com.anonymous.prohiking.ui.main.TrailDetailsScreen
+import com.anonymous.prohiking.ui.main.TrailsOnMapScreen
 import com.anonymous.prohiking.ui.theme.ProHikingTheme
-import com.anonymous.prohiking.ui.widgets.EmergencyButton
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -56,7 +56,9 @@ private fun NavigationGraph(navHostController: NavHostController, modifier: Modi
     NavHost(navController = navHostController, startDestination = Screen.Main.Explore.route) {
         composable(route = Screen.Main.Explore.route) {
             ExploreScreen(navController = navHostController, exploreViewModel = exploreViewModel, modifier = modifier)
-            EmergencyButton(modifier = modifier)
+        }
+        composable(route = Screen.Main.TrailsOnMap.route) {
+            TrailsOnMapScreen(navController = navHostController, exploreViewModel = exploreViewModel, modifier = modifier)
         }
         composable(route = Screen.Main.TrailDetails.route) {
             TrailDetailsScreen(navController = navHostController, exploreViewModel = exploreViewModel, modifier = modifier)

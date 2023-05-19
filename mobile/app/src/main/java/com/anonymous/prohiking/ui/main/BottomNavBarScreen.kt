@@ -11,6 +11,7 @@ import androidx.compose.material.icons.outlined.Explore
 import androidx.compose.material.icons.outlined.LibraryBooks
 import androidx.compose.material.icons.outlined.Navigation
 import androidx.compose.material.icons.outlined.People
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -60,23 +61,22 @@ fun BottomNavBarScreen(navController: NavController) {
                             Icons.Outlined.Navigation,
                             tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             contentDescription = null,
-
                         )
                     },
                     label = { Text(text = stringResource(id = R.string.navigate), color = MaterialTheme.colorScheme.onPrimaryContainer) }
                 )
-                BottomNavigationItem(
-                    selected = currentDestination?.route == Screen.Main.Library.route,
-                    onClick = { navController.navigate(Screen.Main.Library.route) },
-                    icon = {
-                        Icon(
-                            Icons.Outlined.LibraryBooks,
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text(text = stringResource(id = R.string.library), color = MaterialTheme.colorScheme.onPrimaryContainer) }
-                )
+//                BottomNavigationItem(
+//                    selected = currentDestination?.route == Screen.Main.Library.route,
+//                    onClick = { navController.navigate(Screen.Main.Library.route) },
+//                    icon = {
+//                        Icon(
+//                            Icons.Outlined.LibraryBooks,
+//                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+//                            contentDescription = null
+//                        )
+//                    },
+//                    label = { Text(text = stringResource(id = R.string.library), color = MaterialTheme.colorScheme.onPrimaryContainer) }
+//                )
                 BottomNavigationItem(
                     selected = currentDestination?.route == Screen.Main.Profile.route,
                     onClick = { navController.navigate(Screen.Main.Profile.route) },

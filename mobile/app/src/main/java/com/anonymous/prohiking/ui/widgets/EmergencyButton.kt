@@ -32,16 +32,14 @@ fun EmergencyButton(modifier: Modifier = Modifier) {
         mutableStateOf(false)
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         FloatingActionButton(
             onClick = {
                 showConfirmDialog = true
             },
             containerColor = Color.Red,
             shape = RoundedCornerShape(16.dp),
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(20.dp)
+            modifier = modifier.align(Alignment.BottomEnd)
         ) {
             Icon(
                 imageVector = Icons.Rounded.Emergency,

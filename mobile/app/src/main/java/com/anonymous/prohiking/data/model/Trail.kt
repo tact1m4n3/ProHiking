@@ -10,6 +10,7 @@ data class Trail(
     val to: String,
     val length: Double,
     val symbol: String,
+    val point: Point
 )
 
 @Serializable

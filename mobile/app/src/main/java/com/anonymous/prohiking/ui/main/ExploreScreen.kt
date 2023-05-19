@@ -18,9 +18,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CompassCalibration
+import androidx.compose.material.icons.filled.ImageSearch
+import androidx.compose.material.icons.filled.TravelExplore
 import androidx.compose.material.icons.outlined.ChevronRight
+import androidx.compose.material.icons.rounded.CompassCalibration
+import androidx.compose.material.icons.rounded.Emergency
+import androidx.compose.material.icons.rounded.ImageSearch
+import androidx.compose.material.icons.rounded.Map
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -39,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.anonymous.prohiking.ui.Screen
+import com.anonymous.prohiking.ui.widgets.EmergencyButton
 import com.anonymous.prohiking.ui.widgets.TrailSymbol
 
 @Composable
@@ -228,6 +237,31 @@ fun ExploreScreen(
                     }
                 }
             }
+        }
+    }
+
+    EmergencyButton(
+        modifier = modifier
+            .padding(10.dp)
+    )
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        FloatingActionButton(
+            onClick = {
+                navController.navigate(Screen.Main.TrailsOnMap.route)
+            },
+            containerColor = Color(0.0f, 0.7f, 0.0f, 1.0f),
+            shape = RoundedCornerShape(16.dp),
+            modifier = modifier
+                .padding(10.dp)
+                .padding(bottom = 65.dp)
+                .align(Alignment.BottomEnd)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.TravelExplore,
+                contentDescription = "Trails On Map",
+                tint = Color.White,
+            )
         }
     }
 }

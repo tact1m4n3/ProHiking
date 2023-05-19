@@ -1,5 +1,6 @@
 package com.anonymous.prohiking.ui.main
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -13,12 +14,15 @@ import com.anonymous.prohiking.data.TrailRepository
 import com.anonymous.prohiking.data.model.Point
 import com.anonymous.prohiking.data.model.Trail
 import com.anonymous.prohiking.data.utils.Result
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.clustering.ClusterItem
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.first
@@ -34,7 +38,7 @@ class ExploreViewModel(
     private val locationClient: LocationClient
 ): ViewModel() {
     private val location = locationClient
-        .getLocationUpdates(10000L)
+        .getLocationUpdates(30000)
         .catch { e -> e.printStackTrace() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), LocationDetails())
 
@@ -43,6 +47,7 @@ class ExploreViewModel(
 
     val recommendedTrails = location
         .dropWhile { location -> location.latitude == 0.0 && location.longitude == 0.0 }
+        .onEach { _isLoading.update { true } }
         .map { location -> loadRecommendedTrails(location) }
         .onEach { _isLoading.update { false } }
         .stateIn(
@@ -75,6 +80,8 @@ class ExploreViewModel(
             SharingStarted.WhileSubscribed(5000),
             _searchedTrails.value
         )
+
+    val allTrails = mutableStateListOf<TrailWrapper>()
 
     private val _selectedTrail = MutableStateFlow<Trail?>(null)
     val selectedTrail = _selectedTrail.asStateFlow()
@@ -138,6 +145,29 @@ class ExploreViewModel(
         }
     }
 
+    suspend fun fetchNextTrails(limit: Int, center: LatLng, radius: Double): Boolean {
+        return when (val result = trailRepository.searchTrails(
+            limit,
+            allTrails.size,
+            "",
+            0.0,
+            100.0,
+            center.latitude,
+            center.longitude,
+            radius,
+        )) {
+            is Result.Success -> {
+                val newTrails = result.data
+                allTrails.addAll(newTrails.map { TrailWrapper(it) })
+                newTrails.isNotEmpty()
+            }
+            is Result.Error -> {
+                println(result.error)
+                true
+            }
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -151,5 +181,21 @@ class ExploreViewModel(
                 )
             }
         }
+    }
+}
+
+class TrailWrapper(
+    val inner: Trail,
+): ClusterItem {
+    override fun getPosition(): LatLng {
+        return LatLng(inner.point.lat, inner.point.lon)
+    }
+
+    override fun getTitle(): String {
+        return inner.name
+    }
+
+    override fun getSnippet(): String? {
+        return null
     }
 }

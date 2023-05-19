@@ -46,8 +46,10 @@ import com.anonymous.prohiking.data.utils.hasLocationPermission
 import com.anonymous.prohiking.ui.widgets.GoogleMapsButton
 import com.anonymous.prohiking.ui.widgets.TrailSymbol
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapEffect
 import com.google.maps.android.compose.MapProperties
@@ -73,6 +75,11 @@ fun NavigateScreen(
     val currentTrail by navigateViewModel.currentTrail.collectAsState()
     val currentTrailPath by navigateViewModel.currentTrailPath.collectAsState()
 
+    val romaniaBounds = LatLngBounds(
+        LatLng(43.6884447292, 20.2201924985),
+        LatLng(48.2208812526, 29.62654341)
+    )
+
     val cameraPositionState = rememberCameraPositionState()
 
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
@@ -80,17 +87,14 @@ fun NavigateScreen(
     )
     val coroutineScope = rememberCoroutineScope()
 
-    val sheetHeight = if (currentTrail != null) 450.dp else 170.dp
-
     if (context.hasLocationPermission()) {
         BottomSheetScaffold(
-            sheetShape = RoundedCornerShape(15.dp),
+            sheetShape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp),
             scaffoldState = bottomSheetScaffoldState,
             sheetContent = {
                 Box(
                     Modifier
                         .fillMaxWidth()
-                        .height(sheetHeight)
                         .background(MaterialTheme.colorScheme.onPrimaryContainer)
                 ) {
                     Column(
@@ -101,7 +105,7 @@ fun NavigateScreen(
                             text = "Current Location",
                             style = TextStyle(
                                 fontSize = 25.sp,
-                                letterSpacing = (0.8).sp,
+                                letterSpacing = 0.8f.sp,
                                 fontFamily = FontFamily.Default,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.tertiary,
@@ -144,9 +148,9 @@ fun NavigateScreen(
                             }
                         }
 
-                        Spacer(modifier = Modifier.size(10.dp))
-
                         currentTrail?.let { trail ->
+                            Spacer(modifier = Modifier.size(10.dp))
+
                             Text(
                                 text = "Description",
                                 style = TextStyle(
@@ -227,13 +231,16 @@ fun NavigateScreen(
                                 }
                             }
                         }
+
+                        Spacer(modifier = Modifier.size(20.dp))
                     }
                 }
             },
-            sheetPeekHeight = 0.dp
+            sheetPeekHeight = 0.dp,
+            modifier = modifier.fillMaxSize()
         ) {
             Box(
-                modifier = modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             ) {
                 GoogleMap(
                     modifier = Modifier.fillMaxSize(),
@@ -264,6 +271,11 @@ fun NavigateScreen(
                                     100
                                 )
                             )
+                        } ?: run {
+                            map.animateCamera(CameraUpdateFactory.newLatLngBounds(
+                                romaniaBounds,
+                                100
+                            ))
                         }
                     }
 
