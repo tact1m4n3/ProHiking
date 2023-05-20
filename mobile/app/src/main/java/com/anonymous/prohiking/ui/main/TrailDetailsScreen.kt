@@ -91,59 +91,60 @@ fun TrailDetailsScreen(
                     .verticalScroll(rememberScrollState())
             ) {
                 selectedTrail?.let { trail ->
-//                    Row(
-//                        modifier = Modifier
-//                            .fillMaxWidth(),
-//                        verticalAlignment = Alignment.CenterVertically,
-//                        horizontalArrangement = Arrangement.SpaceEvenly
-//                    ) {
-//                        Button(
-//                            shape = CircleShape,
-//                            onClick = {
-//                                exploreViewModel.onStartTrailButtonPressed(trail)
-//                                navController.navigate(Screen.Main.Navigate.route)
-//                            }
-//                        ) {
-//                            Icon(
-//                                modifier = Modifier
-//                                    .weight(weight = 1f, fill = false),
-//                                imageVector = Icons.Outlined.Navigation,
-//                                contentDescription = "Navigate",
-//                                tint = MaterialTheme.colorScheme.onPrimaryContainer
-//                            )
-//                        }
-//                        Button(
-//                            shape = CircleShape,
-//                            onClick = {
-//                            }
-//                        ) {
-//                            Icon(
-//                                modifier = Modifier
-//                                    .weight(weight = 1f, fill = false),
-//                                imageVector = Icons.Outlined.FavoriteBorder,
-//                                contentDescription = "Save",
-//                                tint = MaterialTheme.colorScheme.onPrimaryContainer
-//                            )
-//                        }
-//
-//                        Button(
-//                            shape = CircleShape,
-//                            onClick = {
-//
-//                            }
-//                        ) {
-//                            Icon(
-//                                modifier = Modifier
-//                                    .weight(weight = 1f, fill = false),
-//                                imageVector = Icons.Outlined.Download,
-//                                contentDescription = "Download",
-//                                tint = MaterialTheme.colorScheme.onPrimaryContainer
-//                            )
-//                        }
-//                    }
+                    /*
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Button(
+                            shape = CircleShape,
+                            onClick = {
+                                exploreViewModel.onStartTrailButtonPressed(trail)
+                                navController.navigate(Screen.Main.Navigate.route)
+                            }
+                        ) {
+                            Icon(
+                                modifier = Modifier
+                                    .weight(weight = 1f, fill = false),
+                                imageVector = Icons.Outlined.Navigation,
+                                contentDescription = "Navigate",
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                        Button(
+                            shape = CircleShape,
+                            onClick = {
+                            }
+                        ) {
+                            Icon(
+                                modifier = Modifier
+                                    .weight(weight = 1f, fill = false),
+                                imageVector = Icons.Outlined.FavoriteBorder,
+                                contentDescription = "Save",
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
 
-//                    Spacer(modifier = Modifier.height(20.dp))
+                        Button(
+                            shape = CircleShape,
+                            onClick = {
 
+                            }
+                        ) {
+                            Icon(
+                                modifier = Modifier
+                                    .weight(weight = 1f, fill = false),
+                                imageVector = Icons.Outlined.Download,
+                                contentDescription = "Download",
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                     */
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Text(
                             text = "Description",
@@ -284,7 +285,9 @@ fun TrailDetailsScreen(
                             }
 
                             Spacer(modifier = Modifier.height(15.dp))
-                            Column( modifier = Modifier.fillMaxWidth()) {
+                            Column(modifier = Modifier
+                                .fillMaxWidth()
+                                ) {
                                 Text(
                                     text = "Weather Forecast",
                                     style = TextStyle(
@@ -296,18 +299,106 @@ fun TrailDetailsScreen(
                                         textDecoration = TextDecoration.Underline
                                     )
                                 )
-                                Row( modifier = Modifier
-                                    .fillMaxWidth()
-                                    //.horizontalScroll(rememberScrollState())
-                                    .padding(10.dp)){
-
-
+                                Spacer(modifier = Modifier.height(10.dp))
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                ) {
+                                    Card(
+                                        elevation = CardDefaults.elevatedCardElevation(),
+                                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                    ) {
+                                        Column(modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(15.dp))
+                                        {
+                                            Text(
+                                                text = "Day",
+                                                style = TextStyle(
+                                                    fontSize = 20.sp,
+                                                    letterSpacing = (0.8).sp,
+                                                    fontFamily = FontFamily.Default,
+                                                    fontWeight = FontWeight.SemiBold,
+                                                    color = Color.LightGray
+                                                )
+                                            )
+                                            Spacer(modifier = Modifier.height(10.dp))
+                                            Column(modifier = Modifier.padding(10.dp)) {
+                                                Text(
+                                                    text = "Sunnt/Rainy/Cloudy",
+                                                    style = TextStyle(
+                                                        fontSize = 16.sp,
+                                                        letterSpacing = (0.8).sp,
+                                                        fontFamily = FontFamily.Default,
+                                                        color = Color.LightGray
+                                                    )
+                                                )
+                                                Icon(
+                                                    imageVector = Icons.Filled.ArrowBack,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                                )
+                                                Spacer(modifier = Modifier.height(20.dp))
+                                                Text(
+                                                    text = "Temperature",
+                                                    style = TextStyle(
+                                                        fontSize = 16.sp,
+                                                        letterSpacing = (0.8).sp,
+                                                        fontFamily = FontFamily.Default,
+                                                        color = Color.LightGray
+                                                    )
+                                                )
+                                                Text(
+                                                    text = "Max/Min",
+                                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                    style = TextStyle(
+                                                        fontSize = 20.sp,
+                                                        fontFamily = FontFamily.SansSerif
+                                                    )
+                                                )
+                                                Spacer(modifier = Modifier.height(10.dp))
+                                                Text(
+                                                    text = "Wind Speed",
+                                                    style = TextStyle(
+                                                        fontSize = 16.sp,
+                                                        letterSpacing = (0.8).sp,
+                                                        fontFamily = FontFamily.Default,
+                                                        color = Color.LightGray
+                                                    )
+                                                )
+                                                Text(
+                                                    text = "Wind speed value",
+                                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                    style = TextStyle(
+                                                        fontSize = 20.sp,
+                                                        fontFamily = FontFamily.SansSerif
+                                                    )
+                                                )
+                                                Spacer(modifier = Modifier.height(10.dp))
+                                                Text(
+                                                    text = "UV index",
+                                                    style = TextStyle(
+                                                        fontSize = 16.sp,
+                                                        letterSpacing = (0.8).sp,
+                                                        fontFamily = FontFamily.Default,
+                                                        color = Color.LightGray
+                                                    )
+                                                )
+                                                Text(
+                                                    text = "UV index value",
+                                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                    style = TextStyle(
+                                                        fontSize = 20.sp,
+                                                        fontFamily = FontFamily.SansSerif
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    }
                                 }
-
-
-
                             }
-
                         }
                     }
                 }
