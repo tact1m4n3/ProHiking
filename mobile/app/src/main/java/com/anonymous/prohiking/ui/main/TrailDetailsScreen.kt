@@ -1,8 +1,6 @@
 package com.anonymous.prohiking.ui.main
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -222,7 +220,7 @@ fun TrailDetailsScreen(
                                         )
                                     )
                                     Text(
-                                        text = getFormattedTime(trail.length * 0.0455),
+                                        text = getFormattedTime(trail.length * 25),
                                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                                         style = TextStyle(
                                             fontSize = 20.sp,
@@ -284,6 +282,32 @@ fun TrailDetailsScreen(
                                     )
                                 }
                             }
+
+                            Spacer(modifier = Modifier.height(15.dp))
+                            Column( modifier = Modifier.fillMaxWidth()) {
+                                Text(
+                                    text = "Weather Forecast",
+                                    style = TextStyle(
+                                        fontSize = 25.sp,
+                                        letterSpacing = (0.8).sp,
+                                        fontFamily = FontFamily.Default,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colorScheme.tertiary,
+                                        textDecoration = TextDecoration.Underline
+                                    )
+                                )
+                                Row( modifier = Modifier
+                                    .fillMaxWidth()
+                                    //.horizontalScroll(rememberScrollState())
+                                    .padding(10.dp)){
+
+
+                                }
+
+
+
+                            }
+
                         }
                     }
                 }

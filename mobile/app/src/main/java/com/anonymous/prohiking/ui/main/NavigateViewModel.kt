@@ -10,8 +10,6 @@ import com.anonymous.prohiking.data.LocationClient
 import com.anonymous.prohiking.data.LocationDetails
 import com.anonymous.prohiking.data.OfflineTrailRepository
 import com.anonymous.prohiking.data.PreferencesRepository
-import com.anonymous.prohiking.data.TrailRepository
-import com.anonymous.prohiking.data.network.utils.ApiResult
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map

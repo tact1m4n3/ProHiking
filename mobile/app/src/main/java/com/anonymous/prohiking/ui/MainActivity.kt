@@ -20,7 +20,6 @@ import com.anonymous.prohiking.ui.main.BottomNavBarScreen
 import com.anonymous.prohiking.ui.main.ContactScreen
 import com.anonymous.prohiking.ui.main.ExploreScreen
 import com.anonymous.prohiking.ui.main.ExploreViewModel
-import com.anonymous.prohiking.ui.main.LibraryScreen
 import com.anonymous.prohiking.ui.main.NavigateScreen
 import com.anonymous.prohiking.ui.main.NavigateViewModel
 import com.anonymous.prohiking.ui.main.ProfileScreen
@@ -72,9 +71,7 @@ private fun NavigationGraph(navHostController: NavHostController, modifier: Modi
         composable(route = Screen.Main.Navigate.route) {
             NavigateScreen(navController = navHostController, navigateViewModel = navigateViewModel, modifier = modifier)
         }
-        composable(route = Screen.Main.Library.route) {
-            LibraryScreen(navController = navHostController, modifier = modifier)
-        }
+
         composable(route = Screen.Main.Profile.route) {
             ProfileScreen(navController = navHostController, profileViewModel = profileViewModel, modifier = modifier)
         }

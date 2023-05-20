@@ -16,10 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckBox
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Person4
-import androidx.compose.material.icons.filled.SecurityUpdateGood
-import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -27,7 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -36,7 +32,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -47,8 +42,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.anonymous.prohiking.R
-import com.anonymous.prohiking.utils.hasLocationPermission
-import com.anonymous.prohiking.ui.MainActivity
 import com.anonymous.prohiking.ui.Screen
 import com.anonymous.prohiking.ui.widgets.CustomTextField
 import com.anonymous.prohiking.ui.widgets.LoadingAnimation
@@ -58,7 +51,7 @@ fun RegisterScreen(
     navController: NavController,
     registerViewModel: RegisterViewModel = viewModel(factory = RegisterViewModel.Factory)
 ) {
-    val context = LocalContext.current
+
     val uiState by registerViewModel.uiState.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize()) {
