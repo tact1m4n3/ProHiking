@@ -12,7 +12,9 @@ interface OfflineTrailRepository {
     suspend fun insertTrail(trail: TrailEntity)
     suspend fun insertTrailPath(path: List<PointEntity>)
     suspend fun deleteTrail(trail: TrailEntity)
+    suspend fun deleteTrail(id: Int)
     suspend fun deleteTrailPath(path: List<PointEntity>)
+    suspend fun deleteTrailPath(id: Int)
 }
 
 class DefaultOfflineTrailRepository(
@@ -29,5 +31,9 @@ class DefaultOfflineTrailRepository(
 
     override suspend fun deleteTrail(trail: TrailEntity) = trailDao.delete(trail)
 
+    override suspend fun deleteTrail(id: Int) = trailDao.delete(id)
+
     override suspend fun deleteTrailPath(path: List<PointEntity>) = pointDao.deletePath(path)
+
+    override suspend fun deleteTrailPath(id: Int) = pointDao.deletePath(id)
 }

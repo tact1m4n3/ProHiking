@@ -12,8 +12,10 @@ import com.anonymous.prohiking.data.LocationDetails
 import com.anonymous.prohiking.data.OfflineTrailRepository
 import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.TrailRepository
+import com.anonymous.prohiking.data.WeatherRepository
 import com.anonymous.prohiking.data.network.PointApiModel
 import com.anonymous.prohiking.data.network.TrailApiModel
+import com.anonymous.prohiking.data.network.WeatherDataApiModel
 import com.anonymous.prohiking.data.network.utils.ApiResult
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
@@ -35,6 +37,7 @@ import kotlinx.coroutines.launch
 class ExploreViewModel(
     private val trailRepository: TrailRepository,
     private val offlineTrailRepository: OfflineTrailRepository,
+    private val weatherRepository: WeatherRepository,
     private val preferencesRepository: PreferencesRepository,
     private val locationClient: LocationClient
 ): ViewModel() {
@@ -90,6 +93,9 @@ class ExploreViewModel(
     private val _selectedTrailPath = MutableStateFlow<List<PointApiModel>?>(null)
     val selectedTrailPath = _selectedTrailPath.asStateFlow()
 
+    private val _selectedTrailWeather = MutableStateFlow<WeatherDataApiModel?>(null)
+    val selectedTrailWeather = _selectedTrailWeather.asStateFlow()
+
     private suspend fun loadRecommendedTrails(location: LocationDetails): List<TrailApiModel> {
         return when (val result = trailRepository.searchTrails(
             5,
@@ -118,6 +124,20 @@ class ExploreViewModel(
                 is ApiResult.Success -> result.data
                 is ApiResult.Error -> null
             }
+
+            _selectedTrailPath.value?.let { trailPath ->
+                val point = trailPath[trailPath.size / 2]
+                _selectedTrailWeather.value = when (val result = weatherRepository.getWeatherData(point.lat, point.lon)) {
+                    is ApiResult.Success -> {
+                        println(result.data)
+                        result.data
+                    }
+                    is ApiResult.Error -> {
+                        println(result.error)
+                        null
+                    }
+                }
+            }
         }
     }
 
@@ -142,9 +162,15 @@ class ExploreViewModel(
         viewModelScope.launch {
             selectedTrail.value?.let { trail ->
                 selectedTrailPath.value?.let { trailPath ->
-                    if (preferencesRepository.trailId.first() != trail.id) {
+                    val oldTrailId = preferencesRepository.trailId.first()
+
+                    if (oldTrailId != trail.id) {
                         saveCurrentTrailLocally(trail, trailPath)
                         preferencesRepository.updateTrailId(trail.id)
+                    }
+
+                    if (oldTrailId != -1) {
+                        deleteOldTrailLocally(oldTrailId)
                     }
                 }
             }
@@ -156,6 +182,11 @@ class ExploreViewModel(
         val trailPathEntity = trailPath.map { it.toEntity(trail.id) }
         offlineTrailRepository.insertTrail(trailEntity)
         offlineTrailRepository.insertTrailPath(trailPathEntity)
+    }
+
+    private suspend fun deleteOldTrailLocally(id: Int) {
+        offlineTrailRepository.deleteTrail(id)
+        offlineTrailRepository.deleteTrailPath(id)
     }
 
     suspend fun fetchNextTrails(limit: Int, center: LatLng, radius: Double): Boolean {
@@ -186,11 +217,13 @@ class ExploreViewModel(
             initializer {
                 val trailRepository = ProHikingApplication.instance.trailRepository
                 val offlineTrailRepository = ProHikingApplication.instance.offlineTrailRepository
+                val weatherRepository = ProHikingApplication.instance.weatherRepository
                 val preferencesRepository = ProHikingApplication.instance.preferencesRepository
                 val locationClient = ProHikingApplication.instance.locationClient
                 ExploreViewModel(
                     trailRepository = trailRepository,
                     offlineTrailRepository = offlineTrailRepository,
+                    weatherRepository = weatherRepository,
                     preferencesRepository = preferencesRepository,
                     locationClient = locationClient
                 )

@@ -9,9 +9,10 @@ import com.anonymous.prohiking.ProHikingApplication
 import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.UserRepository
 import com.anonymous.prohiking.data.network.utils.ApiResult
+import com.anonymous.prohiking.utils.observeConnectivityAsFlow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -22,8 +23,11 @@ class ProfileViewModel(
     private val currentUserId = preferencesRepository.userId
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), -1)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val connection = ProHikingApplication.instance.observeConnectivityAsFlow()
+
     val currentUser = currentUserId
-        .map { id ->
+        .combine(connection) { id, _ ->
             if (id == -1) {
                 null
             } else {
@@ -33,7 +37,6 @@ class ProfileViewModel(
                 }
             }
         }
-        .onEach { println(it) }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
@@ -61,9 +64,13 @@ class ProfileViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
+                val context = ProHikingApplication.instance
                 val userRepository = ProHikingApplication.instance.userRepository
                 val preferencesRepository = ProHikingApplication.instance.preferencesRepository
-                ProfileViewModel(userRepository = userRepository, preferencesRepository = preferencesRepository)
+                ProfileViewModel(
+                    userRepository = userRepository,
+                    preferencesRepository = preferencesRepository
+                )
             }
         }
     }

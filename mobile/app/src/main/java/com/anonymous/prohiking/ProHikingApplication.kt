@@ -10,14 +10,18 @@ import com.anonymous.prohiking.data.DefaultOfflineTrailRepository
 import com.anonymous.prohiking.data.DefaultPreferencesRepository
 import com.anonymous.prohiking.data.DefaultTrailRepository
 import com.anonymous.prohiking.data.DefaultUserRepository
+import com.anonymous.prohiking.data.DefaultWeatherRepository
 import com.anonymous.prohiking.data.LocationClient
 import com.anonymous.prohiking.data.OfflineTrailRepository
 import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.TrailRepository
 import com.anonymous.prohiking.data.UserRepository
+import com.anonymous.prohiking.data.WeatherRepository
 import com.anonymous.prohiking.data.local.ProHikingDatabase
 import com.anonymous.prohiking.data.network.ProHikingApiService
+import com.anonymous.prohiking.data.network.WeatherApiService
 import com.anonymous.prohiking.data.network.initProHikingApiService
+import com.anonymous.prohiking.data.network.initWeatherApiService
 import com.google.android.gms.location.LocationServices
 
 class ProHikingApplication: Application() {
@@ -32,11 +36,13 @@ class ProHikingApplication: Application() {
     )
 
     private lateinit var proHikingApiService: ProHikingApiService
+    private lateinit var weatherApiService: WeatherApiService
 
     lateinit var preferencesRepository: PreferencesRepository
     lateinit var userRepository: UserRepository
     lateinit var trailRepository: TrailRepository
     lateinit var offlineTrailRepository: OfflineTrailRepository
+    lateinit var weatherRepository: WeatherRepository
 
     lateinit var locationClient: LocationClient
 
@@ -45,6 +51,7 @@ class ProHikingApplication: Application() {
         instance = this
 
         proHikingApiService = initProHikingApiService()
+        weatherApiService = initWeatherApiService()
 
         preferencesRepository = DefaultPreferencesRepository(dataStore)
         userRepository = DefaultUserRepository(applicationContext, proHikingApiService)
@@ -55,6 +62,8 @@ class ProHikingApplication: Application() {
             proHikingDatabase.trailDao(),
             proHikingDatabase.pointDao()
         )
+
+        weatherRepository = DefaultWeatherRepository(weatherApiService)
 
         locationClient = DefaultLocationClient(
             applicationContext,

@@ -12,24 +12,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.anonymous.prohiking.R
 import com.anonymous.prohiking.ui.Screen
-import com.anonymous.prohiking.utils.hasInternetConnection
+import com.anonymous.prohiking.utils.ConnectionState
+import com.anonymous.prohiking.utils.connectivityState
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun BottomNavBarScreen(navController: NavController) {
-    val context = LocalContext.current
+    val connection by connectivityState()
+    val isConnected = connection === ConnectionState.Available
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
     BottomNavigation(backgroundColor = MaterialTheme.colorScheme.primary) {
-        if (context.hasInternetConnection()) {
+        if (isConnected) {
             BottomNavigationItem(
                 selected = currentDestination?.route == Screen.Main.Explore.route,
                 onClick = { navController.navigate(Screen.Main.Explore.route) },

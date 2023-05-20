@@ -27,7 +27,8 @@ import com.anonymous.prohiking.ui.main.ProfileViewModel
 import com.anonymous.prohiking.ui.main.TrailDetailsScreen
 import com.anonymous.prohiking.ui.main.TrailsOnMapScreen
 import com.anonymous.prohiking.ui.theme.ProHikingTheme
-import com.anonymous.prohiking.utils.hasInternetConnection
+import com.anonymous.prohiking.utils.ConnectionState
+import com.anonymous.prohiking.utils.currentConnectivityState
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -41,7 +42,10 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize(), bottomBar = {
                     BottomNavBarScreen(navController = navController)
                 }) {
-                    NavigationGraph(navHostController = navController, modifier = Modifier.padding(it))
+                    NavigationGraph(
+                        navHostController = navController,
+                        modifier = Modifier.padding(it)
+                    )
                 }
             }
         }
@@ -51,35 +55,67 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun NavigationGraph(navHostController: NavHostController, modifier: Modifier = Modifier) {
     val context = LocalContext.current
+
     val exploreViewModel = viewModel<ExploreViewModel>(factory = ExploreViewModel.Factory)
     val navigateViewModel = viewModel<NavigateViewModel>(factory = NavigateViewModel.Factory)
     val profileViewModel = viewModel<ProfileViewModel>(factory = ProfileViewModel.Factory)
 
     NavHost(
         navController = navHostController,
-        startDestination = if (context.hasInternetConnection()) Screen.Main.Explore.route else Screen.Main.Navigate.route
+        startDestination =
+        if (context.currentConnectivityState == ConnectionState.Available)
+            Screen.Main.Explore.route
+        else
+            Screen.Main.Navigate.route
     ) {
         composable(route = Screen.Main.Explore.route) {
-            ExploreScreen(navController = navHostController, exploreViewModel = exploreViewModel, modifier = modifier)
+            ExploreScreen(
+                navController = navHostController,
+                exploreViewModel = exploreViewModel,
+                modifier = modifier
+            )
         }
         composable(route = Screen.Main.TrailsOnMap.route) {
-            TrailsOnMapScreen(navController = navHostController, exploreViewModel = exploreViewModel, modifier = modifier)
+            TrailsOnMapScreen(
+                navController = navHostController,
+                exploreViewModel = exploreViewModel,
+                modifier = modifier
+            )
         }
         composable(route = Screen.Main.TrailDetails.route) {
-            TrailDetailsScreen(navController = navHostController, exploreViewModel = exploreViewModel, modifier = modifier)
+            TrailDetailsScreen(
+                navController = navHostController,
+                exploreViewModel = exploreViewModel,
+                modifier = modifier
+            )
         }
         composable(route = Screen.Main.Navigate.route) {
-            NavigateScreen(navController = navHostController, navigateViewModel = navigateViewModel, modifier = modifier)
+            NavigateScreen(
+                navController = navHostController,
+                navigateViewModel = navigateViewModel,
+                modifier = modifier
+            )
         }
-
         composable(route = Screen.Main.Profile.route) {
-            ProfileScreen(navController = navHostController, profileViewModel = profileViewModel, modifier = modifier)
+            ProfileScreen(
+                navController = navHostController,
+                profileViewModel = profileViewModel,
+                modifier = modifier
+            )
         }
         composable(route = Screen.Main.Account.route) {
-            AccountScreen(navController = navHostController, profileViewModel = profileViewModel, modifier = modifier)
+            AccountScreen(
+                navController = navHostController,
+                profileViewModel = profileViewModel,
+                modifier = modifier
+            )
         }
         composable(route = Screen.Main.Contact.route) {
-            ContactScreen(navController = navHostController, profileViewModel = profileViewModel, modifier = modifier)
+            ContactScreen(
+                navController = navHostController,
+                profileViewModel = profileViewModel,
+                modifier = modifier
+            )
         }
     }
 }

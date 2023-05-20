@@ -6,23 +6,32 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
+import retrofit2.http.GET
+import retrofit2.http.Query
 
-private const val WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/weather"
+const val WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/weather/"
+const val WEATHER_ICON_API_URL = "https://openweathermap.org/img/wn/"
 
 interface WeatherApiService {
-    suspend fun getWeatherData(): WeatherDataApiModel?
+    @GET("?appid=${BuildConfig.WEATHER_API_KEY}&units=metric")
+    suspend fun getWeatherData(
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double
+    ): WeatherDataApiModel
 }
 
-fun initWeatherApiService(): ProHikingApiService {
+fun initWeatherApiService(): WeatherApiService {
     @OptIn(ExperimentalSerializationApi::class)
     val retrofit = Retrofit.Builder()
         .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-        .baseUrl(BuildConfig.PROHIKING_API_URL)
+        .baseUrl(WEATHER_API_URL)
         .build()
 
-    val proHikingApiService: ProHikingApiService by lazy {
-        retrofit.create(ProHikingApiService::class.java)
+    val weatherApiService: WeatherApiService by lazy {
+        retrofit.create(WeatherApiService::class.java)
     }
 
-    return proHikingApiService
+    return weatherApiService
 }
+
+fun getWeatherIconUrl(icon: String): String = "${WEATHER_ICON_API_URL}${icon}@2x.png"

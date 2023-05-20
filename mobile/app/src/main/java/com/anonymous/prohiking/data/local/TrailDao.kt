@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TrailDao {
-    @Query("SELECT * from trails WHERE id = :id")
+    @Query("SELECT * FROM trails WHERE id = :id")
     fun getTrailById(id: Int): Flow<TrailEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -17,4 +17,7 @@ interface TrailDao {
 
     @Delete
     suspend fun delete(trail: TrailEntity)
+
+    @Query("DELETE FROM trails WHERE id = :id")
+    suspend fun delete(id: Int)
 }

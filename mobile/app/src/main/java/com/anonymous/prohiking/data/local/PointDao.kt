@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PointDao {
-    @Query("SELECT * from points WHERE trailId = :trailId")
+    @Query("SELECT * FROM points WHERE trailId = :trailId")
     fun getPath(trailId: Int): Flow<List<PointEntity>>
 
     @Insert
@@ -16,4 +16,7 @@ interface PointDao {
 
     @Delete
     suspend fun deletePath(path: List<PointEntity>)
+
+    @Query("DELETE FROM points WHERE trailId = :trailId")
+    suspend fun deletePath(trailId: Int)
 }

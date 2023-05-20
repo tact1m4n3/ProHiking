@@ -10,6 +10,10 @@ import com.anonymous.prohiking.data.LocationClient
 import com.anonymous.prohiking.data.LocationDetails
 import com.anonymous.prohiking.data.OfflineTrailRepository
 import com.anonymous.prohiking.data.PreferencesRepository
+import com.anonymous.prohiking.data.local.PointEntity
+import com.anonymous.prohiking.data.local.TrailEntity
+import com.anonymous.prohiking.data.network.PointApiModel
+import com.anonymous.prohiking.data.network.TrailApiModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -66,8 +70,18 @@ class NavigateViewModel(
 
     fun onStopTrailButtonClick() {
         viewModelScope.launch {
+            currentTrail.first()?.let { trail ->
+                currentTrailPath.first()?.let { trailPath ->
+                    deleteCurrentTrailLocally(trail, trailPath)
+                }
+            }
             preferencesRepository.updateTrailId(-1)
         }
+    }
+
+    private suspend fun deleteCurrentTrailLocally(trail: TrailEntity, trailPath: List<PointEntity>) {
+        offlineTrailRepository.deleteTrail(trail)
+        offlineTrailRepository.deleteTrailPath(trailPath)
     }
 
     companion object {

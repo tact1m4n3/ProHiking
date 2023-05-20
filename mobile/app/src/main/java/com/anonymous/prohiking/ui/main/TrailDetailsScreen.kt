@@ -39,6 +39,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import com.anonymous.prohiking.data.network.WEATHER_ICON_API_URL
+import com.anonymous.prohiking.data.network.getWeatherIconUrl
 import com.anonymous.prohiking.ui.Screen
 import com.anonymous.prohiking.ui.widgets.TrailPreview
 import com.anonymous.prohiking.ui.widgets.TrailSymbol
@@ -51,6 +54,7 @@ fun TrailDetailsScreen(
 ) {
     val selectedTrail by exploreViewModel.selectedTrail.collectAsState()
     val selectedTrailPath by exploreViewModel.selectedTrailPath.collectAsState()
+    val selectedTrailWeather by exploreViewModel.selectedTrailWeather.collectAsState()
 
     Box(
         modifier = modifier
@@ -91,60 +95,6 @@ fun TrailDetailsScreen(
                     .verticalScroll(rememberScrollState())
             ) {
                 selectedTrail?.let { trail ->
-                    /*
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        Button(
-                            shape = CircleShape,
-                            onClick = {
-                                exploreViewModel.onStartTrailButtonPressed(trail)
-                                navController.navigate(Screen.Main.Navigate.route)
-                            }
-                        ) {
-                            Icon(
-                                modifier = Modifier
-                                    .weight(weight = 1f, fill = false),
-                                imageVector = Icons.Outlined.Navigation,
-                                contentDescription = "Navigate",
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-                        Button(
-                            shape = CircleShape,
-                            onClick = {
-                            }
-                        ) {
-                            Icon(
-                                modifier = Modifier
-                                    .weight(weight = 1f, fill = false),
-                                imageVector = Icons.Outlined.FavoriteBorder,
-                                contentDescription = "Save",
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-
-                        Button(
-                            shape = CircleShape,
-                            onClick = {
-
-                            }
-                        ) {
-                            Icon(
-                                modifier = Modifier
-                                    .weight(weight = 1f, fill = false),
-                                imageVector = Icons.Outlined.Download,
-                                contentDescription = "Download",
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(20.dp))
-                     */
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Text(
                             text = "Description",
@@ -157,6 +107,7 @@ fun TrailDetailsScreen(
                                 textDecoration = TextDecoration.Underline
                             )
                         )
+
                         Spacer(modifier = Modifier.height(10.dp))
 
                         Card(
@@ -228,6 +179,29 @@ fun TrailDetailsScreen(
                                             fontFamily = FontFamily.Default
                                         )
                                     )
+
+                                    selectedTrailWeather?.let { trailWeather ->
+                                        Spacer(modifier = Modifier.size(15.dp))
+
+                                        Text(
+                                            text = "Altitude",
+                                            style = TextStyle(
+                                                fontSize = 16.sp,
+                                                letterSpacing = (0.8).sp,
+                                                fontFamily = FontFamily.Default,
+                                                color = Color.LightGray
+                                            )
+                                        )
+
+                                        Text(
+                                            text = "${trailWeather.main.grnd_level}",
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            style = TextStyle(
+                                                fontSize = 20.sp,
+                                                fontFamily = FontFamily.Default
+                                            )
+                                        )
+                                    }
                                 }
 
                                 TrailSymbol(
@@ -239,25 +213,24 @@ fun TrailDetailsScreen(
                                 )
                             }
                         }
-                    }
-
-                    Spacer(modifier = Modifier.height(50.dp))
-
-                    Column {
-                        Text(
-                            text = "Preview",
-                            style = TextStyle(
-                                fontSize = 25.sp,
-                                letterSpacing = (0.8).sp,
-                                fontFamily = FontFamily.Default,
-                                fontWeight = FontWeight.SemiBold,
-                                color = MaterialTheme.colorScheme.tertiary,
-                                textDecoration = TextDecoration.Underline
-                            )
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
 
                         selectedTrailPath?.let { trailPath ->
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            Text(
+                                text = "Preview",
+                                style = TextStyle(
+                                    fontSize = 25.sp,
+                                    letterSpacing = (0.8).sp,
+                                    fontFamily = FontFamily.Default,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.tertiary,
+                                    textDecoration = TextDecoration.Underline
+                                )
+                            )
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
                             TrailPreview(
                                 trail = trail,
                                 trailPath = trailPath,
@@ -265,29 +238,35 @@ fun TrailDetailsScreen(
                                     .fillMaxWidth()
                                     .height(200.dp),
                             )
-                            Spacer(modifier = Modifier.height(15.dp))
+
+                            Spacer(modifier = Modifier.height(20.dp))
+
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Center
-                            )
-                            {
+                            ) {
                                 Button(
                                     shape = CircleShape,
                                     onClick = {
                                         exploreViewModel.onStartTrailButtonPressed()
                                         navController.navigate(Screen.Main.Navigate.route)
-                                    }) {
+                                    }
+                                ) {
                                     Text(
                                         "Start Trail",
                                         color = MaterialTheme.colorScheme.onPrimaryContainer
                                     )
                                 }
                             }
+                        }
 
-                            Spacer(modifier = Modifier.height(15.dp))
-                            Column(modifier = Modifier
-                                .fillMaxWidth()
-                                ) {
+                        selectedTrailWeather?.let { trailWeather ->
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ) {
                                 Text(
                                     text = "Weather Forecast",
                                     style = TextStyle(
@@ -299,48 +278,36 @@ fun TrailDetailsScreen(
                                         textDecoration = TextDecoration.Underline
                                     )
                                 )
+
                                 Spacer(modifier = Modifier.height(10.dp))
+
                                 Column(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                 ) {
                                     Card(
                                         elevation = CardDefaults.elevatedCardElevation(),
-                                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
+                                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onTertiary),
                                         modifier = Modifier
                                             .fillMaxWidth()
                                     ) {
-                                        Column(modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(15.dp))
-                                        {
-                                            Text(
-                                                text = "Day",
-                                                style = TextStyle(
-                                                    fontSize = 20.sp,
-                                                    letterSpacing = (0.8).sp,
-                                                    fontFamily = FontFamily.Default,
-                                                    fontWeight = FontWeight.SemiBold,
-                                                    color = Color.LightGray
-                                                )
-                                            )
-                                            Spacer(modifier = Modifier.height(10.dp))
-                                            Column(modifier = Modifier.padding(10.dp)) {
+                                        Box(modifier = Modifier.fillMaxSize()) {
+                                            Column(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .padding(15.dp),
+                                            ) {
                                                 Text(
-                                                    text = "Sunnt/Rainy/Cloudy",
+                                                    text = trailWeather.weather[0].main,
+                                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                                                     style = TextStyle(
-                                                        fontSize = 16.sp,
-                                                        letterSpacing = (0.8).sp,
-                                                        fontFamily = FontFamily.Default,
-                                                        color = Color.LightGray
+                                                        fontSize = 24.sp,
+                                                        fontFamily = FontFamily.SansSerif
                                                     )
                                                 )
-                                                Icon(
-                                                    imageVector = Icons.Filled.ArrowBack,
-                                                    contentDescription = null,
-                                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                                )
-                                                Spacer(modifier = Modifier.height(20.dp))
+
+                                                Spacer(modifier = Modifier.size(15.dp))
+
                                                 Text(
                                                     text = "Temperature",
                                                     style = TextStyle(
@@ -351,16 +318,18 @@ fun TrailDetailsScreen(
                                                     )
                                                 )
                                                 Text(
-                                                    text = "Max/Min",
+                                                    text = "${trailWeather.main.temp} °C",
                                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                                                     style = TextStyle(
                                                         fontSize = 20.sp,
-                                                        fontFamily = FontFamily.SansSerif
+                                                        fontFamily = FontFamily.Default
                                                     )
                                                 )
-                                                Spacer(modifier = Modifier.height(10.dp))
+
+                                                Spacer(modifier = Modifier.size(15.dp))
+
                                                 Text(
-                                                    text = "Wind Speed",
+                                                    text = "Humidity",
                                                     style = TextStyle(
                                                         fontSize = 16.sp,
                                                         letterSpacing = (0.8).sp,
@@ -369,16 +338,18 @@ fun TrailDetailsScreen(
                                                     )
                                                 )
                                                 Text(
-                                                    text = "Wind speed value",
+                                                    text = "${trailWeather.main.humidity}%",
                                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                                                     style = TextStyle(
                                                         fontSize = 20.sp,
-                                                        fontFamily = FontFamily.SansSerif
+                                                        fontFamily = FontFamily.Default
                                                     )
                                                 )
-                                                Spacer(modifier = Modifier.height(10.dp))
+
+                                                Spacer(modifier = Modifier.size(15.dp))
+
                                                 Text(
-                                                    text = "UV index",
+                                                    text = "Visibility",
                                                     style = TextStyle(
                                                         fontSize = 16.sp,
                                                         letterSpacing = (0.8).sp,
@@ -387,14 +358,43 @@ fun TrailDetailsScreen(
                                                     )
                                                 )
                                                 Text(
-                                                    text = "UV index value",
+                                                    text = "${trailWeather.visibility / 1000} km",
                                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                                                     style = TextStyle(
                                                         fontSize = 20.sp,
-                                                        fontFamily = FontFamily.SansSerif
+                                                        fontFamily = FontFamily.Default
+                                                    )
+                                                )
+
+                                                Spacer(modifier = Modifier.size(15.dp))
+
+                                                Text(
+                                                    text = "Wind",
+                                                    style = TextStyle(
+                                                        fontSize = 16.sp,
+                                                        letterSpacing = (0.8).sp,
+                                                        fontFamily = FontFamily.Default,
+                                                        color = Color.LightGray
+                                                    )
+                                                )
+                                                Text(
+                                                    text = "${trailWeather.wind.speed} km/h",
+                                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                    style = TextStyle(
+                                                        fontSize = 20.sp,
+                                                        fontFamily = FontFamily.Default
                                                     )
                                                 )
                                             }
+
+                                            AsyncImage(
+                                                model = getWeatherIconUrl(trailWeather.weather[0].icon),
+                                                contentDescription = trailWeather.weather[0].main,
+                                                modifier = Modifier
+                                                    .padding(0.dp)
+                                                    .size(120.dp)
+                                                    .align(Alignment.TopEnd)
+                                            )
                                         }
                                     }
                                 }
