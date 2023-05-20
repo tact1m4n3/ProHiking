@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.kapt'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.10'
 }
@@ -11,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "com.anonymous.prohiking"
-        minSdk 24
+        minSdk 27
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -23,6 +24,7 @@ android {
         Properties properties = new Properties()
         properties.load(project.rootProject.file('local.properties').newDataInputStream())
         buildConfigField "String", "PROHIKING_API_URL", "\"${properties.getProperty('PROHIKING_API_URL')}\""
+        buildConfigField "String", "WEATHER_API_KEY", "\"${properties.getProperty('WEATHER_API_KEY')}\""
     }
 
     buildTypes {
@@ -32,11 +34,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     buildFeatures {
         compose true
@@ -95,4 +97,10 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0"
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
+    implementation "io.coil-kt:coil-compose:2.3.0"
+
+    implementation 'androidx.room:room-runtime:2.5.1'
+    kapt 'androidx.room:room-compiler:2.5.1'
+    implementation 'androidx.room:room-ktx:2.5.1'
 }

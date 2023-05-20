@@ -6,13 +6,16 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.anonymous.prohiking.data.DefaultLocationClient
+import com.anonymous.prohiking.data.DefaultOfflineTrailRepository
 import com.anonymous.prohiking.data.DefaultPreferencesRepository
 import com.anonymous.prohiking.data.DefaultTrailRepository
 import com.anonymous.prohiking.data.DefaultUserRepository
 import com.anonymous.prohiking.data.LocationClient
+import com.anonymous.prohiking.data.OfflineTrailRepository
 import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.TrailRepository
 import com.anonymous.prohiking.data.UserRepository
+import com.anonymous.prohiking.data.local.ProHikingDatabase
 import com.anonymous.prohiking.data.network.ProHikingApiService
 import com.anonymous.prohiking.data.network.initProHikingApiService
 import com.google.android.gms.location.LocationServices
@@ -33,6 +36,7 @@ class ProHikingApplication: Application() {
     lateinit var preferencesRepository: PreferencesRepository
     lateinit var userRepository: UserRepository
     lateinit var trailRepository: TrailRepository
+    lateinit var offlineTrailRepository: OfflineTrailRepository
 
     lateinit var locationClient: LocationClient
 
@@ -45,6 +49,12 @@ class ProHikingApplication: Application() {
         preferencesRepository = DefaultPreferencesRepository(dataStore)
         userRepository = DefaultUserRepository(applicationContext, proHikingApiService)
         trailRepository = DefaultTrailRepository(applicationContext, proHikingApiService)
+
+        val proHikingDatabase = ProHikingDatabase.getDatabase(applicationContext)
+        offlineTrailRepository = DefaultOfflineTrailRepository(
+            proHikingDatabase.trailDao(),
+            proHikingDatabase.pointDao()
+        )
 
         locationClient = DefaultLocationClient(
             applicationContext,

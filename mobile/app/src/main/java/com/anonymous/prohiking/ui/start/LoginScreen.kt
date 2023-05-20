@@ -43,8 +43,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.anonymous.prohiking.R
-import com.anonymous.prohiking.data.utils.hasCallPermission
-import com.anonymous.prohiking.data.utils.hasLocationPermission
+import com.anonymous.prohiking.utils.hasCallPermission
+import com.anonymous.prohiking.utils.hasLocationPermission
 import com.anonymous.prohiking.ui.MainActivity
 import com.anonymous.prohiking.ui.Screen
 import com.anonymous.prohiking.ui.widgets.CustomTextField

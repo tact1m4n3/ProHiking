@@ -1,19 +1,19 @@
 package com.anonymous.prohiking.data.network.utils
 
-import com.anonymous.prohiking.data.utils.Result
-import com.anonymous.prohiking.data.utils.ErrorType
+import com.anonymous.prohiking.data.network.utils.ApiResult
+import com.anonymous.prohiking.data.network.utils.ErrorType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.HttpURLConnection
 
-suspend fun <T> safeApiCall(dispatcher: CoroutineDispatcher, apiCall: suspend () -> T): Result<T> {
+suspend fun <T> safeApiCall(dispatcher: CoroutineDispatcher, apiCall: suspend () -> T): ApiResult<T> {
     return withContext(dispatcher) {
         try {
-            Result.Success(apiCall.invoke())
+            ApiResult.Success(apiCall.invoke())
         } catch (throwable: Throwable) {
-            Result.Error(
+            ApiResult.Error(
                 when (throwable) {
                     is IOException -> ErrorType.Network
                     is HttpException -> {

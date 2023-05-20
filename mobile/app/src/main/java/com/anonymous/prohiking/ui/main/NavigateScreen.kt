@@ -1,5 +1,7 @@
 package com.anonymous.prohiking.ui.main
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,7 +31,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,14 +47,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.anonymous.prohiking.data.utils.hasLocationPermission
+import com.anonymous.prohiking.ui.widgets.ConfirmDialog
+import com.anonymous.prohiking.ui.widgets.EmergencyButton
+import com.anonymous.prohiking.utils.hasLocationPermission
 import com.anonymous.prohiking.ui.widgets.GoogleMapsButton
 import com.anonymous.prohiking.ui.widgets.TrailSymbol
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapEffect
 import com.google.maps.android.compose.MapProperties
@@ -149,8 +154,6 @@ fun NavigateScreen(
                         }
 
                         currentTrail?.let { trail ->
-                            Spacer(modifier = Modifier.size(10.dp))
-
                             Text(
                                 text = "Description",
                                 style = TextStyle(
@@ -219,17 +222,37 @@ fun NavigateScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Center
                             ) {
+                                var showConfirmDialog by remember {
+                                    mutableStateOf(false)
+                                }
+
                                 Button(
                                     shape = CircleShape,
                                     onClick = {
-                                        navigateViewModel.onStopTrailButtonClick()
+                                         showConfirmDialog = true
                                     },
                                 ) {
                                     Text(
                                         "Stop Trail",
                                     )
                                 }
+
+                                if (showConfirmDialog) {
+                                    ConfirmDialog(
+                                        title = "Do you want to stop this trail?",
+                                        onDismiss = {
+                                            showConfirmDialog = false
+                                        },
+                                        onConfirm = {
+                                            showConfirmDialog = false
+
+                                            navigateViewModel.onStopTrailButtonClick()
+                                        }
+                                    )
+                                }
                             }
+                        } ?: run {
+                            Spacer(modifier = Modifier.size(50.dp))
                         }
 
                         Spacer(modifier = Modifier.size(20.dp))
@@ -374,4 +397,9 @@ fun NavigateScreen(
             )
         }
     }
+
+    EmergencyButton(
+        modifier = modifier
+            .padding(10.dp)
+    )
 }

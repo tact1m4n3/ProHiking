@@ -1,6 +1,8 @@
 package com.anonymous.prohiking.ui.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.TopAppBar
@@ -86,6 +90,7 @@ fun TrailDetailsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(24.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
                 selectedTrail?.let { trail ->
 //                    Row(
@@ -160,7 +165,6 @@ fun TrailDetailsScreen(
                             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(175.dp)
                         ) {
                             Box(modifier = Modifier.fillMaxSize()) {
                                 Column(
@@ -174,7 +178,7 @@ fun TrailDetailsScreen(
                                             fontSize = 16.sp,
                                             letterSpacing = (0.8).sp,
                                             fontFamily = FontFamily.Default,
-                                            color = Color.Gray
+                                            color = Color.LightGray
                                         )
                                     )
                                     Text(
@@ -194,11 +198,31 @@ fun TrailDetailsScreen(
                                             fontSize = 16.sp,
                                             letterSpacing = (0.8).sp,
                                             fontFamily = FontFamily.Default,
-                                            color = Color.Gray
+                                            color = Color.LightGray
                                         )
                                     )
                                     Text(
                                         text = "${trail.length} km",
+                                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        style = TextStyle(
+                                            fontSize = 20.sp,
+                                            fontFamily = FontFamily.Default
+                                        )
+                                    )
+
+                                    Spacer(modifier = Modifier.size(15.dp))
+
+                                    Text(
+                                        text = "Estimated Time",
+                                        style = TextStyle(
+                                            fontSize = 16.sp,
+                                            letterSpacing = (0.8).sp,
+                                            fontFamily = FontFamily.Default,
+                                            color = Color.LightGray
+                                        )
+                                    )
+                                    Text(
+                                        text = getFormattedTime(trail.length * 0.0455),
                                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                                         style = TextStyle(
                                             fontSize = 20.sp,
@@ -251,7 +275,7 @@ fun TrailDetailsScreen(
                                 Button(
                                     shape = CircleShape,
                                     onClick = {
-                                        exploreViewModel.onStartTrailButtonPressed(trail)
+                                        exploreViewModel.onStartTrailButtonPressed()
                                         navController.navigate(Screen.Main.Navigate.route)
                                     }) {
                                     Text(
@@ -262,9 +286,17 @@ fun TrailDetailsScreen(
                             }
                         }
                     }
-
                 }
             }
         }
     }
+}
+
+private fun getFormattedTime(time: Double): String {
+    val hours = (time / 60.0).toInt()
+    val minutes = (time % 60.0).toInt()
+    return if (hours == 0)
+        "${minutes}m"
+    else
+        "${hours}h ${minutes}m"
 }

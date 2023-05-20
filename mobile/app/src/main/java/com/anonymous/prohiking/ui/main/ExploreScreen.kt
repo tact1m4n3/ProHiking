@@ -18,14 +18,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CompassCalibration
-import androidx.compose.material.icons.filled.ImageSearch
 import androidx.compose.material.icons.filled.TravelExplore
 import androidx.compose.material.icons.outlined.ChevronRight
-import androidx.compose.material.icons.rounded.CompassCalibration
-import androidx.compose.material.icons.rounded.Emergency
-import androidx.compose.material.icons.rounded.ImageSearch
-import androidx.compose.material.icons.rounded.Map
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
@@ -169,8 +163,6 @@ fun ExploreScreen(
                         }
                     }
                 }
-
-
             } else {
                 if (isSearching) {
                     Box(modifier = Modifier.fillMaxSize()) {

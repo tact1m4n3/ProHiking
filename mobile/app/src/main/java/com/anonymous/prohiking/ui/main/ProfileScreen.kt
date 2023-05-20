@@ -70,16 +70,17 @@ fun ProfileScreen(
         ) {
             currentUser?.let { user ->
                 UserDetails(user.username, user.email)
-            }
 
-            MenuItem(
-                icon = Icons.Outlined.Person,
-                title = "Account",
-                description = "Manage your account"
-            ) {
-                navController.navigate(Screen.Main.Account.route)
+                MenuItem(
+                    icon = Icons.Outlined.Person,
+                    title = "Account",
+                    description = "Manage your account"
+                ) {
+                    navController.navigate(Screen.Main.Account.route)
+                }
+            } ?: run {
+                UserDetails("ProHiker", "anonymous@no.email")
             }
-
 
             MenuItem(
                 icon = Icons.Outlined.ContactPage,
@@ -204,8 +205,6 @@ private fun MenuItem(icon: ImageVector, title: String, description: String, call
                 contentDescription = title,
                 tint = Color.Black.copy(alpha = 0.70f)
             )
-
-
         }
     }
 }

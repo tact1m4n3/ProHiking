@@ -1,9 +1,9 @@
-package com.anonymous.prohiking.data.model
+package com.anonymous.prohiking.data.network
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class User(
+data class UserApiModel(
     val id: Int,
     val username: String,
     val email: String,

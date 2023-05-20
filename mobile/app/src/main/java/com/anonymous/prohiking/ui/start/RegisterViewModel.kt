@@ -6,12 +6,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.anonymous.prohiking.ProHikingApplication
-import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.UserRepository
-import com.anonymous.prohiking.data.utils.Result
+import com.anonymous.prohiking.data.network.utils.ApiResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -83,10 +81,10 @@ class RegisterViewModel(
 
                     if (password == verifyPassword) {
                         when (val result = userRepository.registerUser(username, email, password)) {
-                            is Result.Success -> {
+                            is ApiResult.Success -> {
                                 _uiState.update { RegisterUiState.Registered }
                             }
-                            is Result.Error -> {
+                            is ApiResult.Error -> {
                                 println(result)
                                 _uiState.update { RegisterUiState.NotRegistered(errorMessage = "Failed to register") }
                             }

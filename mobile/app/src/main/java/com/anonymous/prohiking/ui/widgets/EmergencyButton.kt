@@ -2,6 +2,7 @@ package com.anonymous.prohiking.ui.widgets
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -37,7 +38,7 @@ fun EmergencyButton(modifier: Modifier = Modifier) {
             onClick = {
                 showConfirmDialog = true
             },
-            containerColor = Color.Red,
+            containerColor = Color(0.9f, 0.0f, 0.0f, 1.0f),
             shape = RoundedCornerShape(16.dp),
             modifier = modifier.align(Alignment.BottomEnd)
         ) {

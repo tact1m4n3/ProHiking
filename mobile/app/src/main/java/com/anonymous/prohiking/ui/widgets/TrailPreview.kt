@@ -7,8 +7,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.anonymous.prohiking.data.model.Point
-import com.anonymous.prohiking.data.model.Trail
+import com.anonymous.prohiking.data.network.PointApiModel
+import com.anonymous.prohiking.data.network.TrailApiModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -25,7 +25,7 @@ import com.google.maps.android.compose.widgets.ScaleBar
 
 @OptIn(MapsComposeExperimentalApi::class)
 @Composable
-fun TrailPreview(trail: Trail, trailPath: List<Point>, modifier: Modifier = Modifier) {
+fun TrailPreview(trail: TrailApiModel, trailPath: List<PointApiModel>, modifier: Modifier = Modifier) {
     if (trailPath.size < 2) {
         return
     }

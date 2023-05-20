@@ -1,6 +1,5 @@
 package com.anonymous.prohiking.ui.start
 
-import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,11 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckBox
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.LockReset
 import androidx.compose.material.icons.filled.Password
 import androidx.compose.material.icons.filled.Person4
 import androidx.compose.material.icons.filled.SecurityUpdateGood
@@ -50,7 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.anonymous.prohiking.R
-import com.anonymous.prohiking.data.utils.hasLocationPermission
+import com.anonymous.prohiking.utils.hasLocationPermission
 import com.anonymous.prohiking.ui.MainActivity
 import com.anonymous.prohiking.ui.Screen
 import com.anonymous.prohiking.ui.widgets.CustomTextField

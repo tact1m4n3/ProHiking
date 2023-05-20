@@ -8,16 +8,18 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.anonymous.prohiking.ProHikingApplication
 import com.anonymous.prohiking.data.LocationClient
 import com.anonymous.prohiking.data.LocationDetails
+import com.anonymous.prohiking.data.OfflineTrailRepository
 import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.TrailRepository
-import com.anonymous.prohiking.data.utils.Result
+import com.anonymous.prohiking.data.network.utils.ApiResult
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class NavigateViewModel(
-    private val trailRepository: TrailRepository,
+    private val offlineTrailRepository: OfflineTrailRepository,
     private val preferencesRepository: PreferencesRepository,
     private val locationClient: LocationClient
 ) : ViewModel() {
@@ -37,10 +39,7 @@ class NavigateViewModel(
             if (id == -1) {
                 null
             } else {
-                when (val result = trailRepository.getTrailById(id)) {
-                    is Result.Success -> result.data
-                    else -> null
-                }
+                offlineTrailRepository.getTrailById(id).first()
             }
         }
         .stateIn(
@@ -54,9 +53,10 @@ class NavigateViewModel(
             if (id == -1) {
                 null
             } else {
-                when (val result = trailRepository.getTrailPath(id)) {
-                    is Result.Success -> result.data
-                    else -> null
+                offlineTrailRepository.getTrailPath(id).first()?.let { trailPath ->
+                    trailPath.ifEmpty {
+                        null
+                    }
                 }
             }
         }
@@ -75,11 +75,11 @@ class NavigateViewModel(
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val trailRepository = ProHikingApplication.instance.trailRepository
+                val offlineTrailRepository = ProHikingApplication.instance.offlineTrailRepository
                 val preferencesRepository = ProHikingApplication.instance.preferencesRepository
                 val locationClient = ProHikingApplication.instance.locationClient
                 NavigateViewModel(
-                    trailRepository = trailRepository,
+                    offlineTrailRepository = offlineTrailRepository,
                     preferencesRepository = preferencesRepository,
                     locationClient = locationClient
                 )

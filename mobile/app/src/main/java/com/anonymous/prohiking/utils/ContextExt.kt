@@ -1,8 +1,9 @@
-package com.anonymous.prohiking.data.utils
+package com.anonymous.prohiking.utils
 
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.ConnectivityManager
 import androidx.core.content.ContextCompat
 
 fun Context.hasLocationPermission(): Boolean {
@@ -21,4 +22,9 @@ fun Context.hasCallPermission(): Boolean {
         this,
         Manifest.permission.CALL_PHONE
     ) == PackageManager.PERMISSION_GRANTED
+}
+
+fun Context.hasInternetConnection(): Boolean {
+    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    return connectivityManager.activeNetwork != null
 }

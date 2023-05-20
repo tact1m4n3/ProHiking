@@ -9,11 +9,12 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.anonymous.prohiking.ProHikingApplication
 import com.anonymous.prohiking.data.LocationClient
 import com.anonymous.prohiking.data.LocationDetails
+import com.anonymous.prohiking.data.OfflineTrailRepository
 import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.TrailRepository
-import com.anonymous.prohiking.data.model.Point
-import com.anonymous.prohiking.data.model.Trail
-import com.anonymous.prohiking.data.utils.Result
+import com.anonymous.prohiking.data.network.PointApiModel
+import com.anonymous.prohiking.data.network.TrailApiModel
+import com.anonymous.prohiking.data.network.utils.ApiResult
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
 import kotlinx.coroutines.FlowPreview
@@ -22,7 +23,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.first
@@ -34,6 +34,7 @@ import kotlinx.coroutines.launch
 
 class ExploreViewModel(
     private val trailRepository: TrailRepository,
+    private val offlineTrailRepository: OfflineTrailRepository,
     private val preferencesRepository: PreferencesRepository,
     private val locationClient: LocationClient
 ): ViewModel() {
@@ -62,7 +63,7 @@ class ExploreViewModel(
     private val _isSearching = MutableStateFlow(false)
     val isSearching = _isSearching.asStateFlow()
 
-    private val _searchedTrails = MutableStateFlow(listOf<Trail>())
+    private val _searchedTrails = MutableStateFlow(listOf<TrailApiModel>())
     @OptIn(FlowPreview::class)
     val searchedTrails = searchText
         .debounce(500L)
@@ -83,13 +84,13 @@ class ExploreViewModel(
 
     val allTrails = mutableStateListOf<TrailWrapper>()
 
-    private val _selectedTrail = MutableStateFlow<Trail?>(null)
+    private val _selectedTrail = MutableStateFlow<TrailApiModel?>(null)
     val selectedTrail = _selectedTrail.asStateFlow()
 
-    private val _selectedTrailPath = MutableStateFlow<List<Point>?>(null)
+    private val _selectedTrailPath = MutableStateFlow<List<PointApiModel>?>(null)
     val selectedTrailPath = _selectedTrailPath.asStateFlow()
 
-    private suspend fun loadRecommendedTrails(location: LocationDetails): List<Trail> {
+    private suspend fun loadRecommendedTrails(location: LocationDetails): List<TrailApiModel> {
         return when (val result = trailRepository.searchTrails(
             5,
             0,
@@ -98,8 +99,8 @@ class ExploreViewModel(
             location.latitude, location.longitude,
             1.0,
         )) {
-            is Result.Success -> result.data
-            is Result.Error -> {
+            is ApiResult.Success -> result.data
+            is ApiResult.Error -> {
                 println(result.error)
                 listOf()
             }
@@ -110,17 +111,17 @@ class ExploreViewModel(
         _searchText.value = text
     }
 
-    fun onTrailSelect(trail: Trail) {
+    fun onTrailSelect(trail: TrailApiModel) {
         _selectedTrail.value = trail
         viewModelScope.launch {
             _selectedTrailPath.value = when (val result = trailRepository.getTrailPath(trail.id)) {
-                is Result.Success -> result.data
-                is Result.Error -> null
+                is ApiResult.Success -> result.data
+                is ApiResult.Error -> null
             }
         }
     }
 
-    private suspend fun searchTrails(name: String): List<Trail> {
+    private suspend fun searchTrails(name: String): List<TrailApiModel> {
         return when (val result = trailRepository.searchTrails(
             5,
             0,
@@ -129,20 +130,32 @@ class ExploreViewModel(
             location.value.latitude, location.value.longitude,
             200.0
         )) {
-            is Result.Success -> result.data
-            is Result.Error -> {
+            is ApiResult.Success -> result.data
+            is ApiResult.Error -> {
                 println(result.error)
                 listOf()
             }
         }
     }
 
-    fun onStartTrailButtonPressed(trail: Trail) {
+    fun onStartTrailButtonPressed() {
         viewModelScope.launch {
-            if (preferencesRepository.trailId.first() != trail.id) {
-                preferencesRepository.updateTrailId(trail.id)
+            selectedTrail.value?.let { trail ->
+                selectedTrailPath.value?.let { trailPath ->
+                    if (preferencesRepository.trailId.first() != trail.id) {
+                        saveCurrentTrailLocally(trail, trailPath)
+                        preferencesRepository.updateTrailId(trail.id)
+                    }
+                }
             }
         }
+    }
+
+    private suspend fun saveCurrentTrailLocally(trail: TrailApiModel, trailPath: List<PointApiModel>) {
+        val trailEntity = trail.toEntity()
+        val trailPathEntity = trailPath.map { it.toEntity(trail.id) }
+        offlineTrailRepository.insertTrail(trailEntity)
+        offlineTrailRepository.insertTrailPath(trailPathEntity)
     }
 
     suspend fun fetchNextTrails(limit: Int, center: LatLng, radius: Double): Boolean {
@@ -156,12 +169,12 @@ class ExploreViewModel(
             center.longitude,
             radius,
         )) {
-            is Result.Success -> {
+            is ApiResult.Success -> {
                 val newTrails = result.data
                 allTrails.addAll(newTrails.map { TrailWrapper(it) })
                 newTrails.isNotEmpty()
             }
-            is Result.Error -> {
+            is ApiResult.Error -> {
                 println(result.error)
                 true
             }
@@ -172,10 +185,12 @@ class ExploreViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val trailRepository = ProHikingApplication.instance.trailRepository
+                val offlineTrailRepository = ProHikingApplication.instance.offlineTrailRepository
                 val preferencesRepository = ProHikingApplication.instance.preferencesRepository
                 val locationClient = ProHikingApplication.instance.locationClient
                 ExploreViewModel(
                     trailRepository = trailRepository,
+                    offlineTrailRepository = offlineTrailRepository,
                     preferencesRepository = preferencesRepository,
                     locationClient = locationClient
                 )
@@ -185,7 +200,7 @@ class ExploreViewModel(
 }
 
 class TrailWrapper(
-    val inner: Trail,
+    val inner: TrailApiModel,
 ): ClusterItem {
     override fun getPosition(): LatLng {
         return LatLng(inner.point.lat, inner.point.lon)

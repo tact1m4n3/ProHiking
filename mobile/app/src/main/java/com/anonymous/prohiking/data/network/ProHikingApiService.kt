@@ -3,9 +3,6 @@ package com.anonymous.prohiking.data.network
 import com.anonymous.prohiking.BuildConfig
 import com.anonymous.prohiking.ProHikingApplication
 import com.anonymous.prohiking.R
-import com.anonymous.prohiking.data.model.Point
-import com.anonymous.prohiking.data.model.Trail
-import com.anonymous.prohiking.data.model.User
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -28,19 +25,26 @@ import java.security.cert.X509Certificate
 
 interface ProHikingApiService {
     @GET("api/users/{id}")
-    suspend fun getUserById(@Path("id") id: Int): User
+    suspend fun getUserById(@Path("id") id: Int): UserApiModel
+
     @POST("api/user/register")
-    suspend fun registerUser(@Body payload: RegisterPayload): User
+    suspend fun registerUser(@Body payload: RegisterPayload): UserApiModel
+
     @POST("api/user/login")
-    suspend fun loginUser(@Body payload: LoginPayload): User
+    suspend fun loginUser(@Body payload: LoginPayload): UserApiModel
+
     @POST("api/user/logout")
     suspend fun logoutUser(): String
+
     @POST("api/user/delete")
     suspend fun deleteUser(): String
+
     @GET("api/trails/{id}")
-    suspend fun getTrailById(@Path("id") id: Int): Trail
+    suspend fun getTrailById(@Path("id") id: Int): TrailApiModel
+
     @GET("api/trails/{id}/path")
-    suspend fun getTrailPath(@Path("id") id: Int): List<Point>
+    suspend fun getTrailPath(@Path("id") id: Int): List<PointApiModel>
+
     @GET("api/trails/search")
     suspend fun searchTrails(
         @Query("limit") limit: Int,
@@ -49,7 +53,7 @@ interface ProHikingApiService {
         @Query("length") length: String,
         @Query("center") center: String,
         @Query("radius") radius: Double,
-    ): List<Trail>
+    ): List<TrailApiModel>
 }
 
 fun initProHikingApiService(): ProHikingApiService {

@@ -1,8 +1,8 @@
-package com.anonymous.prohiking.data.utils
+package com.anonymous.prohiking.data.network.utils
 
-sealed class Result<out T> {
-    data class Success<out T>(val data: T): Result<T>()
-    data class Error(val error: ErrorType): Result<Nothing>()
+sealed class ApiResult<out T> {
+    data class Success<out T>(val data: T): ApiResult<T>()
+    data class Error(val error: ErrorType): ApiResult<Nothing>()
 }
 
 sealed class ErrorType {

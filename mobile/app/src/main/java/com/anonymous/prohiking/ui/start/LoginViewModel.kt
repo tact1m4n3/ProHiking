@@ -8,7 +8,8 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.anonymous.prohiking.ProHikingApplication
 import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.UserRepository
-import com.anonymous.prohiking.data.utils.Result
+import com.anonymous.prohiking.data.network.utils.ApiResult
+import com.anonymous.prohiking.data.network.utils.ErrorType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -65,12 +66,12 @@ class LoginViewModel(
                     val password = currentState.passwordText
 
                     when (val result = userRepository.loginUser(username, password)) {
-                        is Result.Success -> {
+                        is ApiResult.Success -> {
                             preferencesRepository.updateUserId(result.data.id)
                             preferencesRepository.updateUsernameAndPassword(username, password)
                             _uiState.update { LoginUiState.LoggedIn }
                         }
-                        is Result.Error -> {
+                        is ApiResult.Error -> {
                             preferencesRepository.updateUserId(-1)
                             preferencesRepository.updateUsernameAndPassword("", "")
                             _uiState.update { LoginUiState.LoggedOut(errorMessage = "Failed to login") }
@@ -94,14 +95,19 @@ class LoginViewModel(
             val password = preferencesRepository.password.first()
 
             when (val result = userRepository.loginUser(username, password)) {
-                is Result.Success -> {
+                is ApiResult.Success -> {
                     preferencesRepository.updateUserId(result.data.id)
                     _uiState.update { LoginUiState.LoggedIn }
                 }
-                is Result.Error -> {
-                    preferencesRepository.updateUserId(-1)
-                    preferencesRepository.updateUsernameAndPassword("", "")
-                    _uiState.update { LoginUiState.LoggedOut(errorMessage = "Failed to login") }
+                is ApiResult.Error -> {
+                    when (result.error) {
+                        is ErrorType.Network -> _uiState.update { LoginUiState.LoggedIn }
+                        else -> {
+                            preferencesRepository.updateUserId(-1)
+                            preferencesRepository.updateUsernameAndPassword("", "")
+                            _uiState.update { LoginUiState.LoggedOut(errorMessage = "Failed to login") }
+                        }
+                    }
                 }
             }
         }

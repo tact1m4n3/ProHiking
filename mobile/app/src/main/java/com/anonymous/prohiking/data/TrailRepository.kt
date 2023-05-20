@@ -1,18 +1,18 @@
 package com.anonymous.prohiking.data
 
 import android.content.Context
-import com.anonymous.prohiking.data.model.Point
-import com.anonymous.prohiking.data.model.Trail
+import com.anonymous.prohiking.data.network.PointApiModel
+import com.anonymous.prohiking.data.network.TrailApiModel
 import com.anonymous.prohiking.data.network.ProHikingApiService
 import com.anonymous.prohiking.data.network.utils.enforceLogin
 import com.anonymous.prohiking.data.network.utils.safeApiCall
-import com.anonymous.prohiking.data.utils.Result
+import com.anonymous.prohiking.data.network.utils.ApiResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
 interface TrailRepository {
-    suspend fun getTrailById(id: Int): Result<Trail>
-    suspend fun getTrailPath(id: Int): Result<List<Point>>
+    suspend fun getTrailById(id: Int): ApiResult<TrailApiModel>
+    suspend fun getTrailPath(id: Int): ApiResult<List<PointApiModel>>
     suspend fun searchTrails(
         limit: Int,
         offset: Int,
@@ -22,7 +22,7 @@ interface TrailRepository {
         centerLat: Double,
         centerLon: Double,
         radius: Double
-    ): Result<List<Trail>>
+    ): ApiResult<List<TrailApiModel>>
 }
 
 class DefaultTrailRepository(
@@ -30,11 +30,11 @@ class DefaultTrailRepository(
     private val proHikingApiService: ProHikingApiService,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ): TrailRepository {
-    override suspend fun getTrailById(id: Int): Result<Trail> {
+    override suspend fun getTrailById(id: Int): ApiResult<TrailApiModel> {
         return enforceLogin(context) { safeApiCall(dispatcher) { proHikingApiService.getTrailById(id) } }
     }
 
-    override suspend fun getTrailPath(id: Int): Result<List<Point>> {
+    override suspend fun getTrailPath(id: Int): ApiResult<List<PointApiModel>> {
         return enforceLogin(context) { safeApiCall(dispatcher) { proHikingApiService.getTrailPath(id) } }
     }
 
@@ -47,7 +47,7 @@ class DefaultTrailRepository(
         centerLat: Double,
         centerLon: Double,
         radius: Double
-    ): Result<List<Trail>> {
+    ): ApiResult<List<TrailApiModel>> {
         return enforceLogin(context) { safeApiCall(dispatcher) { proHikingApiService.searchTrails(
             limit,
             offset,

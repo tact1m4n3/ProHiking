@@ -8,7 +8,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.anonymous.prohiking.ProHikingApplication
 import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.UserRepository
-import com.anonymous.prohiking.data.utils.Result
+import com.anonymous.prohiking.data.network.utils.ApiResult
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -28,7 +28,7 @@ class ProfileViewModel(
                 null
             } else {
                 when (val result = userRepository.getUserById(id)) {
-                    is Result.Success -> result.data
+                    is ApiResult.Success -> result.data
                     else -> null
                 }
             }
@@ -52,7 +52,7 @@ class ProfileViewModel(
             preferencesRepository.updateUserId(-1)
             preferencesRepository.updateUsernameAndPassword("", "")
             when (val result = userRepository.deleteUser()) {
-                is Result.Error -> println(result.error)
+                is ApiResult.Error -> println(result.error)
                 else -> {}
             }
         }
