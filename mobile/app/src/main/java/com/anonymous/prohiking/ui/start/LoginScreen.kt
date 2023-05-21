@@ -1,6 +1,9 @@
 package com.anonymous.prohiking.ui.start
 
 import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -56,6 +60,10 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
     val uiState by loginViewModel.uiState.collectAsState()
+
+    LaunchedEffect(true) {
+        loginViewModel.tryLogin()
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(

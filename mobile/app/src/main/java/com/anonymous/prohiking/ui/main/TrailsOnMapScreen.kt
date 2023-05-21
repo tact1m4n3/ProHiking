@@ -80,7 +80,7 @@ fun TrailsOnMapScreen(
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        tint = MaterialTheme.colorScheme.onTertiary
                     )
                 }
 

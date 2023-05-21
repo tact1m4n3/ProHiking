@@ -16,6 +16,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapEffect
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
+import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
@@ -46,6 +47,9 @@ fun TrailPreview(trail: TrailApiModel, trailPath: List<PointApiModel>, modifier:
             cameraPositionState = cameraPositionState,
             properties = MapProperties(
                 mapType = MapType.SATELLITE
+            ),
+            uiSettings = MapUiSettings(
+                compassEnabled = false
             )
         ) {
             MapEffect(trailPath) {map ->

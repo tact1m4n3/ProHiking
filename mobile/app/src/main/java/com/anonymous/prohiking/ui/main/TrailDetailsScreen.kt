@@ -73,7 +73,7 @@ fun TrailDetailsScreen(
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        tint = MaterialTheme.colorScheme.onTertiary
                     )
                 }
                 Text(
@@ -112,7 +112,7 @@ fun TrailDetailsScreen(
 
                         Card(
                             elevation = CardDefaults.elevatedCardElevation(),
-                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
+                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onTertiary),
                             modifier = Modifier
                                 .fillMaxWidth()
                         ) {

@@ -1,5 +1,8 @@
 package com.anonymous.prohiking.ui.main
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -9,12 +12,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetState
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
@@ -29,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -43,13 +47,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.anonymous.prohiking.ui.widgets.ConfirmDialog
 import com.anonymous.prohiking.ui.widgets.EmergencyButton
-import com.anonymous.prohiking.utils.hasLocationPermission
 import com.anonymous.prohiking.ui.widgets.GoogleMapsButton
 import com.anonymous.prohiking.ui.widgets.TrailSymbol
+import com.anonymous.prohiking.utils.hasLocationPermission
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
@@ -64,7 +69,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.launch
-import androidx.compose.material.BottomSheetScaffold as BottomSheetScaffold
+
 
 @OptIn(ExperimentalMaterialApi::class, MapsComposeExperimentalApi::class)
 @Composable
@@ -168,7 +173,7 @@ fun NavigateScreen(
                                 Column(
                                     modifier = Modifier
                                         .height(175.dp)
-                                        .padding(15.dp),
+                                        .padding(horizontal = 15.dp)
                                 ) {
                                     Text(
                                         text = "Trail",
@@ -187,7 +192,7 @@ fun NavigateScreen(
                                         )
                                     )
 
-                                    Spacer(modifier = Modifier.size(15.dp))
+                                    Spacer(modifier = Modifier.size(10.dp))
 
                                     Text(
                                         text = "Length",
@@ -249,11 +254,11 @@ fun NavigateScreen(
                                     )
                                 }
                             }
-                        } ?: run {
-                            Spacer(modifier = Modifier.size(50.dp))
-                        }
 
-                        Spacer(modifier = Modifier.size(20.dp))
+                            Spacer(modifier = Modifier.size(20.dp))
+                        } ?: run {
+                            Spacer(modifier = Modifier.size(70.dp))
+                        }
                     }
                 }
             },
@@ -272,7 +277,8 @@ fun NavigateScreen(
                     ),
                     uiSettings = MapUiSettings(
                         myLocationButtonEnabled = true,
-                        zoomControlsEnabled = false
+                        zoomControlsEnabled = false,
+                        mapToolbarEnabled = false
                     ),
                     onMyLocationClick = {
 
@@ -304,12 +310,18 @@ fun NavigateScreen(
                         currentTrailPath?.let { trailPath ->
                             Marker(
                                 state = MarkerState(position = trailPath[0].let { LatLng(it.lat, it.lon) }),
-                                title = trail.from
+                                title = trail.from,
+                                onInfoWindowClick = {
+                                    openGoogleMapsWithLocation(context, it.position.latitude, it.position.longitude)
+                                }
                             )
 
                             Marker(
                                 state = MarkerState(position = trailPath[trailPath.size-1].let { LatLng(it.lat, it.lon) }),
-                                title = trail.to
+                                title = trail.to,
+                                onInfoWindowClick = {
+                                    openGoogleMapsWithLocation(context, it.position.latitude, it.position.longitude)
+                                }
                             )
 
                             Polyline(
@@ -400,4 +412,13 @@ fun NavigateScreen(
         modifier = modifier
             .padding(10.dp)
     )
+}
+
+private fun openGoogleMapsWithLocation(context: Context, lat: Double, lon: Double) {
+    val intentUri = Uri.parse("google.navigation:q=${lat},${lon}")
+
+    val intent = Intent(Intent.ACTION_VIEW, intentUri)
+    intent.setPackage("com.google.android.apps.maps")
+
+    context.startActivity(intent)
 }

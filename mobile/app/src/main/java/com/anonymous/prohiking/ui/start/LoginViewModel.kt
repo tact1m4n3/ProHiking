@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 sealed interface LoginUiState {
-    object LoggedIn: LoginUiState
+    object Loading: LoginUiState
 
     data class LoggedOut(
         val usernameText: String = "",
@@ -26,7 +26,7 @@ sealed interface LoginUiState {
         val errorMessage: String = "",
     ): LoginUiState
 
-    object Loading: LoginUiState
+    object LoggedIn: LoginUiState
 }
 
 class LoginViewModel(
@@ -35,10 +35,6 @@ class LoginViewModel(
 ): ViewModel() {
     private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState.Loading)
     val uiState = _uiState.asStateFlow()
-
-    init {
-        tryLogin()
-    }
 
     fun updateUsernameText(text: String) {
         _uiState.update { currentState ->
@@ -58,32 +54,7 @@ class LoginViewModel(
         }
     }
 
-    fun onLoginButtonClick() {
-        viewModelScope.launch {
-            when (val currentState = _uiState.getAndUpdate { LoginUiState.Loading }) {
-                is LoginUiState.LoggedOut -> {
-                    val username = currentState.usernameText
-                    val password = currentState.passwordText
-
-                    when (val result = userRepository.loginUser(username, password)) {
-                        is ApiResult.Success -> {
-                            preferencesRepository.updateUserId(result.data.id)
-                            preferencesRepository.updateUsernameAndPassword(username, password)
-                            _uiState.update { LoginUiState.LoggedIn }
-                        }
-                        is ApiResult.Error -> {
-                            preferencesRepository.updateUserId(-1)
-                            preferencesRepository.updateUsernameAndPassword("", "")
-                            _uiState.update { LoginUiState.LoggedOut(errorMessage = "Failed to login") }
-                        }
-                    }
-                }
-                else -> {}
-            }
-        }
-    }
-
-    private fun tryLogin() {
+    fun tryLogin() {
         viewModelScope.launch {
             val userId = preferencesRepository.userId.first()
             if (userId == -1) {
@@ -109,6 +80,31 @@ class LoginViewModel(
                         }
                     }
                 }
+            }
+        }
+    }
+
+    fun onLoginButtonClick() {
+        viewModelScope.launch {
+            when (val currentState = _uiState.getAndUpdate { LoginUiState.Loading }) {
+                is LoginUiState.LoggedOut -> {
+                    val username = currentState.usernameText
+                    val password = currentState.passwordText
+
+                    when (val result = userRepository.loginUser(username, password)) {
+                        is ApiResult.Success -> {
+                            preferencesRepository.updateUserId(result.data.id)
+                            preferencesRepository.updateUsernameAndPassword(username, password)
+                            _uiState.update { LoginUiState.LoggedIn }
+                        }
+                        is ApiResult.Error -> {
+                            preferencesRepository.updateUserId(-1)
+                            preferencesRepository.updateUsernameAndPassword("", "")
+                            _uiState.update { LoginUiState.LoggedOut(errorMessage = "Failed to login") }
+                        }
+                    }
+                }
+                else -> {}
             }
         }
     }

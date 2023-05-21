@@ -58,7 +58,7 @@ fun ProfileScreen(
     ) {
 
             Image(
-                painter = painterResource(id = R.drawable.lovepik_com_400203927_green_forest),
+                painter = painterResource(id = R.drawable.green_forest),
                 contentDescription = "Login",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

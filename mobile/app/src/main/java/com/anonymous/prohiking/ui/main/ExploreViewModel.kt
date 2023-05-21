@@ -55,7 +55,10 @@ class ExploreViewModel(
 
     val recommendedTrails = location
         .dropWhile { location -> location.latitude == 0.0 && location.longitude == 0.0 }
-        .onEach { _isLoading.update { true } }
+        .onEach {
+            _isLoading.update { true }
+            println(location)
+        }
         .map { location -> loadRecommendedTrails(location) }
         .onEach { _isLoading.update { false } }
         .stateIn(
@@ -110,7 +113,7 @@ class ExploreViewModel(
             "",
             0.0, 300.0,
             location.latitude, location.longitude,
-            1.0,
+            4.0,
         )) {
             is ApiResult.Success -> result.data
             is ApiResult.Error -> {
@@ -162,7 +165,7 @@ class ExploreViewModel(
             name,
             0.0, 300.0,
             location.value.latitude, location.value.longitude,
-            200.0
+            1000.0
         )) {
             is ApiResult.Success -> result.data
             is ApiResult.Error -> {
@@ -209,7 +212,7 @@ class ExploreViewModel(
             allTrails.size,
             "",
             0.0,
-            100.0,
+            20.0,
             center.latitude,
             center.longitude,
             radius,

@@ -20,7 +20,6 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.TravelExplore
 import androidx.compose.material.icons.outlined.ChevronRight
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -95,13 +94,13 @@ fun ExploreScreen(
                         )
                     }
                 } else {
-                    Card(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.onPrimaryContainer)
-                            .fillMaxWidth(),
-                        // border = BorderStroke(1.dp,MaterialTheme.colorScheme.primary),
-                        // elevation = CardDefaults.elevatedCardElevation()
-                    ) {
+                    if (recommendedTrails.isEmpty()) {
+                        Text(
+                            "No trails found in your proximity...",
+                            fontSize = 20.sp,
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    } else {
                         LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
