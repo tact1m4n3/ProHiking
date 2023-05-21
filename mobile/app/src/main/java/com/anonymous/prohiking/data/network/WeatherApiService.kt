@@ -9,11 +9,11 @@ import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-const val WEATHER_API_URL = "https://api.openweathermap.org/data/2.5/weather/"
+const val WEATHER_API_URL = "https://api.openweathermap.org/"
 const val WEATHER_ICON_API_URL = "https://openweathermap.org/img/wn/"
 
 interface WeatherApiService {
-    @GET("?appid=${BuildConfig.WEATHER_API_KEY}&units=metric")
+    @GET("data/2.5/weather?appid=${BuildConfig.WEATHER_API_KEY}&units=metric")
     suspend fun getWeatherData(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double

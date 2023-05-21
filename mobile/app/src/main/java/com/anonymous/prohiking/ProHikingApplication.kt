@@ -5,6 +5,8 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.anonymous.prohiking.data.AltitudeRepository
+import com.anonymous.prohiking.data.DefaultAltitudeRepository
 import com.anonymous.prohiking.data.DefaultLocationClient
 import com.anonymous.prohiking.data.DefaultOfflineTrailRepository
 import com.anonymous.prohiking.data.DefaultPreferencesRepository
@@ -18,8 +20,10 @@ import com.anonymous.prohiking.data.TrailRepository
 import com.anonymous.prohiking.data.UserRepository
 import com.anonymous.prohiking.data.WeatherRepository
 import com.anonymous.prohiking.data.local.ProHikingDatabase
+import com.anonymous.prohiking.data.network.AltitudeApiService
 import com.anonymous.prohiking.data.network.ProHikingApiService
 import com.anonymous.prohiking.data.network.WeatherApiService
+import com.anonymous.prohiking.data.network.initAltitudeApiService
 import com.anonymous.prohiking.data.network.initProHikingApiService
 import com.anonymous.prohiking.data.network.initWeatherApiService
 import com.google.android.gms.location.LocationServices
@@ -37,12 +41,14 @@ class ProHikingApplication: Application() {
 
     private lateinit var proHikingApiService: ProHikingApiService
     private lateinit var weatherApiService: WeatherApiService
+    private lateinit var altitudeApiService: AltitudeApiService
 
     lateinit var preferencesRepository: PreferencesRepository
     lateinit var userRepository: UserRepository
     lateinit var trailRepository: TrailRepository
     lateinit var offlineTrailRepository: OfflineTrailRepository
     lateinit var weatherRepository: WeatherRepository
+    lateinit var altitudeRepository: AltitudeRepository
 
     lateinit var locationClient: LocationClient
 
@@ -52,6 +58,7 @@ class ProHikingApplication: Application() {
 
         proHikingApiService = initProHikingApiService()
         weatherApiService = initWeatherApiService()
+        altitudeApiService = initAltitudeApiService()
 
         preferencesRepository = DefaultPreferencesRepository(dataStore)
         userRepository = DefaultUserRepository(applicationContext, proHikingApiService)
@@ -64,6 +71,7 @@ class ProHikingApplication: Application() {
         )
 
         weatherRepository = DefaultWeatherRepository(weatherApiService)
+        altitudeRepository = DefaultAltitudeRepository(altitudeApiService)
 
         locationClient = DefaultLocationClient(
             applicationContext,

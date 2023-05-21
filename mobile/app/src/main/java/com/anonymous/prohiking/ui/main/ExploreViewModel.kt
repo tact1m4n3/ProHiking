@@ -7,12 +7,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.anonymous.prohiking.ProHikingApplication
+import com.anonymous.prohiking.data.AltitudeRepository
 import com.anonymous.prohiking.data.LocationClient
 import com.anonymous.prohiking.data.LocationDetails
 import com.anonymous.prohiking.data.OfflineTrailRepository
 import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.TrailRepository
 import com.anonymous.prohiking.data.WeatherRepository
+import com.anonymous.prohiking.data.network.AltitudeApiModel
 import com.anonymous.prohiking.data.network.PointApiModel
 import com.anonymous.prohiking.data.network.TrailApiModel
 import com.anonymous.prohiking.data.network.WeatherDataApiModel
@@ -33,11 +35,13 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 
 class ExploreViewModel(
     private val trailRepository: TrailRepository,
     private val offlineTrailRepository: OfflineTrailRepository,
     private val weatherRepository: WeatherRepository,
+    private val altitudeRepository: AltitudeRepository,
     private val preferencesRepository: PreferencesRepository,
     private val locationClient: LocationClient
 ): ViewModel() {
@@ -96,6 +100,9 @@ class ExploreViewModel(
     private val _selectedTrailWeather = MutableStateFlow<WeatherDataApiModel?>(null)
     val selectedTrailWeather = _selectedTrailWeather.asStateFlow()
 
+    private val _selectedTrailAltitudeDifference = MutableStateFlow<Int?>(null)
+    val selectedTrailAltitudeDifference = _selectedTrailAltitudeDifference.asStateFlow()
+
     private suspend fun loadRecommendedTrails(location: LocationDetails): List<TrailApiModel> {
         return when (val result = trailRepository.searchTrails(
             5,
@@ -126,16 +133,23 @@ class ExploreViewModel(
             }
 
             _selectedTrailPath.value?.let { trailPath ->
-                val point = trailPath[trailPath.size / 2]
-                _selectedTrailWeather.value = when (val result = weatherRepository.getWeatherData(point.lat, point.lon)) {
-                    is ApiResult.Success -> {
-                        println(result.data)
-                        result.data
-                    }
-                    is ApiResult.Error -> {
-                        println(result.error)
-                        null
-                    }
+                val startPoint = trailPath[0]
+                val endPoint = trailPath[trailPath.size - 1]
+
+                _selectedTrailWeather.value = when (val result = weatherRepository.getWeatherData(
+                    endPoint.lat,
+                    endPoint.lon
+                )) {
+                    is ApiResult.Success -> result.data
+                    is ApiResult.Error -> null
+                }
+
+                _selectedTrailAltitudeDifference.value = when (val result = altitudeRepository.getAltitude(
+                    listOf(startPoint.lat, endPoint.lat),
+                    listOf(startPoint.lon, endPoint.lon)
+                )) {
+                    is ApiResult.Success -> abs(result.data.elevation[1] - result.data.elevation[0]).toInt()
+                    is ApiResult.Error -> null
                 }
             }
         }
@@ -218,12 +232,14 @@ class ExploreViewModel(
                 val trailRepository = ProHikingApplication.instance.trailRepository
                 val offlineTrailRepository = ProHikingApplication.instance.offlineTrailRepository
                 val weatherRepository = ProHikingApplication.instance.weatherRepository
+                val altitudeRepository = ProHikingApplication.instance.altitudeRepository
                 val preferencesRepository = ProHikingApplication.instance.preferencesRepository
                 val locationClient = ProHikingApplication.instance.locationClient
                 ExploreViewModel(
                     trailRepository = trailRepository,
                     offlineTrailRepository = offlineTrailRepository,
                     weatherRepository = weatherRepository,
+                    altitudeRepository = altitudeRepository,
                     preferencesRepository = preferencesRepository,
                     locationClient = locationClient
                 )

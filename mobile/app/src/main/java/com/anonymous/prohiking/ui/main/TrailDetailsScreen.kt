@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.anonymous.prohiking.data.network.WEATHER_ICON_API_URL
 import com.anonymous.prohiking.data.network.getWeatherIconUrl
 import com.anonymous.prohiking.ui.Screen
 import com.anonymous.prohiking.ui.widgets.TrailPreview
@@ -55,6 +54,7 @@ fun TrailDetailsScreen(
     val selectedTrail by exploreViewModel.selectedTrail.collectAsState()
     val selectedTrailPath by exploreViewModel.selectedTrailPath.collectAsState()
     val selectedTrailWeather by exploreViewModel.selectedTrailWeather.collectAsState()
+    val selectedTrailAltitudeDifference by exploreViewModel.selectedTrailAltitudeDifference.collectAsState()
 
     Box(
         modifier = modifier
@@ -180,11 +180,11 @@ fun TrailDetailsScreen(
                                         )
                                     )
 
-                                    selectedTrailWeather?.let { trailWeather ->
+                                    selectedTrailAltitudeDifference?.let { altitudeDifference ->
                                         Spacer(modifier = Modifier.size(15.dp))
 
                                         Text(
-                                            text = "Altitude",
+                                            text = "Altitude Difference",
                                             style = TextStyle(
                                                 fontSize = 16.sp,
                                                 letterSpacing = (0.8).sp,
@@ -194,7 +194,7 @@ fun TrailDetailsScreen(
                                         )
 
                                         Text(
-                                            text = "${trailWeather.main.grnd_level}",
+                                            text = "$altitudeDifference m",
                                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                                             style = TextStyle(
                                                 fontSize = 20.sp,
@@ -268,7 +268,7 @@ fun TrailDetailsScreen(
                                     .fillMaxWidth()
                             ) {
                                 Text(
-                                    text = "Weather Forecast",
+                                    text = "Weather",
                                     style = TextStyle(
                                         fontSize = 25.sp,
                                         letterSpacing = (0.8).sp,
@@ -303,6 +303,26 @@ fun TrailDetailsScreen(
                                                     style = TextStyle(
                                                         fontSize = 24.sp,
                                                         fontFamily = FontFamily.SansSerif
+                                                    )
+                                                )
+
+                                                Spacer(modifier = Modifier.size(15.dp))
+
+                                                Text(
+                                                    text = "Location",
+                                                    style = TextStyle(
+                                                        fontSize = 16.sp,
+                                                        letterSpacing = (0.8).sp,
+                                                        fontFamily = FontFamily.Default,
+                                                        color = Color.LightGray
+                                                    )
+                                                )
+                                                Text(
+                                                    text = trail.to,
+                                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                    style = TextStyle(
+                                                        fontSize = 20.sp,
+                                                        fontFamily = FontFamily.Default
                                                     )
                                                 )
 
@@ -378,7 +398,7 @@ fun TrailDetailsScreen(
                                                     )
                                                 )
                                                 Text(
-                                                    text = "${trailWeather.wind.speed} km/h",
+                                                    text = "${trailWeather.wind.speed} m/s",
                                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                                                     style = TextStyle(
                                                         fontSize = 20.sp,
