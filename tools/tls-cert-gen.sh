@@ -10,9 +10,6 @@ CA_KEY=$CERTS_FOLDER/ca-key.pem
 SERVER_REQ=$CERTS_FOLDER/server-req.pem
 SERVER_CERT=$CERTS_FOLDER/server-cert.pem
 SERVER_KEY=$CERTS_FOLDER/server-key.pem
-CLIENT_REQ=$CERTS_FOLDER/client-req.pem
-CLIENT_CERT=$CERTS_FOLDER/client-cert.pem
-CLIENT_KEY=$CERTS_FOLDER/client-key.pem
 
 mkdir -pv $CERTS_FOLDER
 
@@ -34,14 +31,3 @@ openssl x509 -req -days 365 -set_serial 01 \
     -CAkey $CA_KEY \
     -extensions SAN \
     -extfile <(printf "\n[SAN]\nsubjectAltName=$HOST\nextendedKeyUsage=serverAuth")
-
-openssl req -newkey rsa:2048 -nodes -sha256 -days 365 \
-    -keyout $CLIENT_KEY \
-    -out $CLIENT_REQ \
-    -subj '/O=Pro Hiking Inc./C=RO'
-
-openssl x509 -req -sha256 -days 365 -set_serial 01 \
-    -in $CLIENT_REQ \
-    -out $CLIENT_CERT \
-    -CA $CA_CERT \
-    -CAkey $CA_KEY \

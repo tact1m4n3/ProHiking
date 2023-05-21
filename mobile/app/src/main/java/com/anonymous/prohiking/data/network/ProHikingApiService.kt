@@ -76,14 +76,8 @@ private fun newHttpClient(): OkHttpClient {
     val serverCertInputStream = ProHikingApplication.instance.resources.openRawResource(R.raw.server_cert)
     val serverCert = certificateFactory.generateCertificate(serverCertInputStream)
 
-    val clientKeyString = String(ProHikingApplication.instance.resources.openRawResource(R.raw.client_key).readBytes(), Charset.defaultCharset())
-    val clientCertString = String(ProHikingApplication.instance.resources.openRawResource(R.raw.client_cert).readBytes(), Charset.defaultCharset())
-
-    val clientCert = HeldCertificate.decode(clientCertString + clientKeyString)
-
     val handshakeCertificates = HandshakeCertificates.Builder()
         .addTrustedCertificate(serverCert as X509Certificate)
-        .heldCertificate(clientCert)
         .build()
 
     val cookieManager = CookieManager()
