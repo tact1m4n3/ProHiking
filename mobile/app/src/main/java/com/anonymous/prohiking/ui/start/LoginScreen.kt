@@ -1,9 +1,7 @@
 package com.anonymous.prohiking.ui.start
 
+import android.app.Activity
 import android.content.Intent
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,9 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -38,7 +34,6 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -49,12 +44,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.anonymous.prohiking.R
-import com.anonymous.prohiking.utils.hasCallPermission
-import com.anonymous.prohiking.utils.hasLocationPermission
 import com.anonymous.prohiking.ui.MainActivity
 import com.anonymous.prohiking.ui.Screen
 import com.anonymous.prohiking.ui.widgets.CustomTextField
 import com.anonymous.prohiking.ui.widgets.LoadingAnimation
+import com.anonymous.prohiking.utils.hasCallPermission
+import com.anonymous.prohiking.utils.hasLocationPermission
 
 @Composable
 fun LoginScreen(
@@ -63,6 +58,10 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
     val uiState by loginViewModel.uiState.collectAsState()
+
+    LaunchedEffect(true) {
+        loginViewModel.tryLogin()
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -86,6 +85,7 @@ fun LoginScreen(
                             MainActivity::class.java
                         )
                     )
+                    (context as? Activity)?.finish()
                 } else {
                     Text(
                         text = "Please restart the application for the changes to take place...",

@@ -36,10 +36,6 @@ class LoginViewModel(
     private val _uiState = MutableStateFlow<LoginUiState>(LoginUiState.Loading)
     val uiState = _uiState.asStateFlow()
 
-    init {
-        tryLogin()
-    }
-
     fun updateUsernameText(text: String) {
         _uiState.update { currentState ->
             when (currentState) {
@@ -58,7 +54,7 @@ class LoginViewModel(
         }
     }
 
-    private fun tryLogin() {
+    fun tryLogin() {
         viewModelScope.launch {
             val userId = preferencesRepository.userId.first()
             if (userId == -1) {

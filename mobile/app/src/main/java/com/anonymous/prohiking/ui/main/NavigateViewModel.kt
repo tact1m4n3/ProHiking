@@ -12,8 +12,6 @@ import com.anonymous.prohiking.data.OfflineTrailRepository
 import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.local.PointEntity
 import com.anonymous.prohiking.data.local.TrailEntity
-import com.anonymous.prohiking.data.network.PointApiModel
-import com.anonymous.prohiking.data.network.TrailApiModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map

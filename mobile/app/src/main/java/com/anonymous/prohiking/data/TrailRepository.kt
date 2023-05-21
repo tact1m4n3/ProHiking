@@ -2,11 +2,11 @@ package com.anonymous.prohiking.data
 
 import android.content.Context
 import com.anonymous.prohiking.data.network.PointApiModel
-import com.anonymous.prohiking.data.network.TrailApiModel
 import com.anonymous.prohiking.data.network.ProHikingApiService
+import com.anonymous.prohiking.data.network.TrailApiModel
+import com.anonymous.prohiking.data.network.utils.ApiResult
 import com.anonymous.prohiking.data.network.utils.enforceLogin
 import com.anonymous.prohiking.data.network.utils.safeApiCall
-import com.anonymous.prohiking.data.network.utils.ApiResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 

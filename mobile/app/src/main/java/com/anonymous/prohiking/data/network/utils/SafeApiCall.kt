@@ -1,7 +1,5 @@
 package com.anonymous.prohiking.data.network.utils
 
-import com.anonymous.prohiking.data.network.utils.ApiResult
-import com.anonymous.prohiking.data.network.utils.ErrorType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException

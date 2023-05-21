@@ -2,8 +2,6 @@ package com.anonymous.prohiking.data.network.utils
 
 import android.content.Context
 import com.anonymous.prohiking.ProHikingApplication
-import com.anonymous.prohiking.data.network.utils.ErrorType
-import com.anonymous.prohiking.data.network.utils.ApiResult
 import kotlinx.coroutines.flow.first
 
 suspend fun <T> enforceLogin(context: Context, safeApiCall: suspend () -> ApiResult<T>): ApiResult<T> {

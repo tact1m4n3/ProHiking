@@ -10,7 +10,6 @@ import okhttp3.JavaNetCookieJar
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.tls.HandshakeCertificates
-import okhttp3.tls.HeldCertificate
 import retrofit2.Retrofit
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -19,7 +18,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import java.net.CookieManager
 import java.net.CookiePolicy
-import java.nio.charset.Charset
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 

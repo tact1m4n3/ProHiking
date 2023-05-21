@@ -14,7 +14,6 @@ import com.anonymous.prohiking.data.OfflineTrailRepository
 import com.anonymous.prohiking.data.PreferencesRepository
 import com.anonymous.prohiking.data.TrailRepository
 import com.anonymous.prohiking.data.WeatherRepository
-import com.anonymous.prohiking.data.network.AltitudeApiModel
 import com.anonymous.prohiking.data.network.PointApiModel
 import com.anonymous.prohiking.data.network.TrailApiModel
 import com.anonymous.prohiking.data.network.WeatherDataApiModel
