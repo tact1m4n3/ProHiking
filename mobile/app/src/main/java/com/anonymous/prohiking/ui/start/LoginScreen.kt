@@ -26,7 +26,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -36,6 +38,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -60,10 +63,6 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
     val uiState by loginViewModel.uiState.collectAsState()
-
-    LaunchedEffect(true) {
-        loginViewModel.tryLogin()
-    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -192,15 +191,6 @@ private fun LoggedOutScreen(
                             imeAction = ImeAction.Go
                         )
                     )
-
-                    TextButton(
-                        onClick = {
-                            // forgot password
-                        },
-                        modifier = Modifier.align(Alignment.End)
-                    ) {
-                        Text("Forgot Password", color = MaterialTheme.colorScheme.primary)
-                    }
 
                     if (uiState.errorMessage.isNotEmpty())
                         Text(uiState.errorMessage, color = MaterialTheme.colorScheme.error)
