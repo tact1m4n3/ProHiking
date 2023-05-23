@@ -143,7 +143,10 @@ class ExploreViewModel(
                     endPoint.lon
                 )) {
                     is ApiResult.Success -> result.data
-                    is ApiResult.Error -> null
+                    is ApiResult.Error -> {
+                        println(result.error)
+                        null
+                    }
                 }
 
                 _selectedTrailAltitudeDifference.value = when (val result = altitudeRepository.getAltitude(
@@ -183,10 +186,10 @@ class ExploreViewModel(
                     if (oldTrailId != trail.id) {
                         saveCurrentTrailLocally(trail, trailPath)
                         preferencesRepository.updateTrailId(trail.id)
-                    }
 
-                    if (oldTrailId != -1) {
-                        deleteOldTrailLocally(oldTrailId)
+                        if (oldTrailId != -1) {
+                            deleteOldTrailLocally(oldTrailId)
+                        }
                     }
                 }
             }

@@ -45,39 +45,40 @@ fun ContactScreen(
     modifier: Modifier = Modifier,
     profileViewModel: ProfileViewModel = viewModel()
 ) {
-    Box(modifier = modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.onPrimaryContainer)) {
-            Image(
-                painter = painterResource(id = R.drawable.green_forest),
-                contentDescription = "Login",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .blur(6.dp)
-            )
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.onPrimaryContainer)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.green_forest),
+            contentDescription = "Login",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxSize()
+                .blur(6.dp)
+        )
 
         Column(modifier = Modifier.fillMaxSize()) {
-            TopAppBar( backgroundColor = MaterialTheme.colorScheme.primary) {
+            TopAppBar(backgroundColor = MaterialTheme.colorScheme.primary) {
                 IconButton(onClick = {
                     navController.popBackStack()
                 }) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null , tint = MaterialTheme.colorScheme.primaryContainer)
-                }
-
-
-
-                    Text(
-                        text = "Contact",
-                        fontSize = 24.sp,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        overflow = TextOverflow.Ellipsis,
-                        fontWeight = FontWeight.SemiBold,
-                        softWrap = true,
-                        maxLines = 1,
-
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primaryContainer
                     )
-
+                }
+                Text(
+                    text = "Contact",
+                    fontSize = 24.sp,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = FontWeight.SemiBold,
+                    softWrap = true,
+                    maxLines = 1,
+                )
             }
 
             Row(
@@ -88,11 +89,11 @@ fun ContactScreen(
             ) {
                 Card(
                     shape = CircleShape,
-                   backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                    backgroundColor = MaterialTheme.colorScheme.primaryContainer,
                     modifier = Modifier
-                        .size(100.dp)
+                        .size(80.dp)
                 ) {
-                   androidx.compose.material3.Icon(
+                    androidx.compose.material3.Icon(
                         imageVector = Icons.Outlined.Person,
                         contentDescription = null,
                         modifier = Modifier
@@ -101,19 +102,17 @@ fun ContactScreen(
                             .fillMaxSize(),
                         tint = MaterialTheme.colorScheme.onTertiaryContainer
                     )
-
-
                 }
 
                 Column(
                     modifier = Modifier
                         .weight(weight = 3f, fill = false)
-                        .padding(16.dp)
+                        .padding(horizontal = 16.dp)
                 ) {
                     Text(
                         text = "Tudor-Andrei Dicu",
                         style = TextStyle(
-                            fontSize = 22.sp
+                            fontSize = 20.sp
                         ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -152,14 +151,14 @@ fun ContactScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Card(
                     shape = CircleShape,
                     backgroundColor = MaterialTheme.colorScheme.primaryContainer,
                     modifier = Modifier
-                        .size(100.dp)
+                        .size(80.dp)
                 ) {
                     androidx.compose.material3.Icon(
                         imageVector = Icons.Outlined.Person,
@@ -180,7 +179,7 @@ fun ContactScreen(
                     Text(
                         text = "Andrei-Mathias Peța",
                         style = TextStyle(
-                            fontSize = 22.sp
+                            fontSize = 20.sp
                         ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis

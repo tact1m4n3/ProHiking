@@ -53,10 +53,10 @@ data class WeatherDataApiModelRain(
 @Serializable
 data class WeatherDataApiModelSys(
     val country: String,
-    val id: Int,
+    val id: Int = -1,
     val sunrise: Int,
     val sunset: Int,
-    val type: Int
+    val type: Int = -1
 )
 
 @Serializable

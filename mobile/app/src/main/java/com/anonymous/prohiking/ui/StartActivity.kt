@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.anonymous.prohiking.ui.start.LoginScreen
 import com.anonymous.prohiking.ui.start.LoginViewModel
 import com.anonymous.prohiking.ui.start.RegisterScreen
+import com.anonymous.prohiking.ui.start.RegisterViewModel
 import com.anonymous.prohiking.ui.theme.ProHikingTheme
 
 class StartActivity : ComponentActivity() {
@@ -41,13 +42,14 @@ class StartActivity : ComponentActivity() {
 @Composable
 private fun NavigationGraph(navHostController: NavHostController) {
     val loginViewModel = viewModel<LoginViewModel>(factory = LoginViewModel.Factory)
+    val registerViewModel = viewModel<RegisterViewModel>(factory = RegisterViewModel.Factory)
 
     NavHost(navController = navHostController, startDestination = Screen.Start.Login.route) {
         composable(route = Screen.Start.Login.route) {
             LoginScreen(navController = navHostController, loginViewModel = loginViewModel)
         }
         composable(route = Screen.Start.Register.route) {
-            RegisterScreen(navController = navHostController)
+            RegisterScreen(navController = navHostController, registerViewModel = registerViewModel)
         }
     }
 }

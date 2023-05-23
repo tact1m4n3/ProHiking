@@ -62,6 +62,7 @@ fun ProfileScreen(
                 contentDescription = "Login",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
+                    .padding(top = 20.dp)
                     .fillMaxSize()
                     .blur(6.dp)
             )
